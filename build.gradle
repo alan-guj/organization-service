@@ -1,0 +1,44 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.0.RELEASE'
+	}
+	repositories {
+		//mavenCentral()
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'  }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+    id "org.gradle.java"
+    id "com.scuilion.syntastic" version "0.3.6"
+
+}
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+jar {
+	baseName = 'organizationService'
+	version = '0.0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	//mavenCentral()
+    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'  }
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.security.oauth:spring-security-oauth2')
+    compile('org.springframework.ldap:spring-ldap-core:2.1.0.RELEASE')
+    compile 'org.springframework.hateoas:spring-hateoas:0.20.0.RELEASE'
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+}
