@@ -19,10 +19,6 @@ public final class Department {
 
     @Attribute(name="ou")
     private String name;
-
-    @Attribute(name="o")
-    private Name company;
-
     private String description;
 
     @Attribute(name="st")
@@ -44,22 +40,20 @@ public final class Department {
         return description;
     }
 
-    public String getId() {
-        return id.toString();
+    public Name getId() {
+        return id;
     }
 
     public void setCompany(String company) {
-        this.company = LdapNameBuilder.newInstance(company).build();
-        this.id = LdapNameBuilder.newInstance(company)
-            .add("ou","departments")
-            .add("ou",this.name)
-            .build();
+        if(this.id == null)
+            this.id = LdapNameBuilder.newInstance(company)
+                .add("ou","departments")
+                .add("ou",this.name)
+                .build();
     }
 
     public String getCompany() {
-        if(company != null)
-            return this.company.toString();
-        else return null;
+        return id.getPrefix(1).toString();
     }
 
     public void setParent(String parent) {
@@ -72,7 +66,7 @@ public final class Department {
         return id.getPrefix(id.size()-1).toString();
     }
 
-    public void setProvinces(List<Name> provinces) {
+    public void setProvinces(List<Name> prvinces) {
         //this.provinces = provinces.stream()
                                 //.map(p->LdapNameBuilder.newInstance(p).build())
                                 //.collect(Collectors.toList());

@@ -21,6 +21,9 @@ public final class Staff {
     @Attribute(name="sn")
     private String surname;
 
+    private String description;
+
+
     @Attribute(name="ou")
     private Name department;
 
@@ -62,12 +65,12 @@ public final class Staff {
         return surname;
     }
 
-    public void setDepartment(String department) {
-        this.department = LdapNameBuilder.newInstance(department).build();
+    public void setDepartment(Name department) {
+        this.department = department;
     }
 
-    public String getDepartment() {
-        return department!=null?department.toString():null;
+    public Name getDepartment() {
+        return department;
     }
 
 
@@ -81,6 +84,7 @@ public final class Staff {
 
     public void setCompany(Name company) {
         this.company = company;
+        this.domain = company.get(0);
     }
 
     public Name getCompany() {
@@ -88,11 +92,19 @@ public final class Staff {
     }
 
 
-    public void setDomain(String domain) {
-        this.domain = domain;
+    //public void setDomain(String domain) {
+        //this.domain = domain;
+    //}
+
+    //public String getDomain() {
+        //return domain;
+    //}
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getDomain() {
-        return domain;
+    public String getDescription() {
+        return description;
     }
 }

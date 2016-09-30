@@ -1,5 +1,6 @@
 package top.jyx365.organizationService;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
@@ -9,6 +10,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.ldap.support.LdapNameBuilder;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import top.jyx365.organizationService.Department;
 public class OrganizationRepository {
     @Autowired
     private LdapTemplate ldapTemplate;
@@ -22,6 +24,14 @@ public class OrganizationRepository {
         context.setAttributeValue("ou", type);
         context.setAttributeValue("description", type);
         ldapTemplate.bind(context);
+
+    }
+
+    private void removeNode(Name parentNode, String type) {
+        Name dn = LdapNameBuilder.newInstance(parentNode)
+            .add("ou",type)
+            .build();
+        ldapTemplate.unbind(dn);
 
     }
 
@@ -44,6 +54,14 @@ public class OrganizationRepository {
         return ldapTemplate.findByDn(dn, Company.class);
     }
 
+    public void removeCompany(String companyId) {
+        Name dn = LdapNameBuilder.newInstance(companyId).build();
+        Company company = ldapTemplate.findByDn(dn, Company.class);
+        removeNode(company.getId(),"departments");
+        removeNode(company.getId(),"staffs");
+        removeNode(company.getId(),"groups");
+        ldapTemplate.delete(company);
+    }
 
     /*departments*/
     public Department findDepartment(String departmentId) {
@@ -51,18 +69,33 @@ public class OrganizationRepository {
         return ldapTemplate.findByDn(dn, Department.class);
     }
 
-    public List<Department> findDepartments(String companyId) {
-        SearchControls sc = new SearchControls();
+    public List<Department> findCompanyDepartments(String companyId,boolean recursive) {
         Name dn = LdapNameBuilder.newInstance(companyId)
             .add("ou","departments")
             .build();
-        return ldapTemplate.findAll(dn,sc,Department.class);
+        return findDepartment(dn,recursive);
     }
 
-    public List<Department> findSubDepartments(String parent) {
-        SearchControls sc = new SearchControls();
+    public List<Department> findSubDepartments(String parent, boolean recursive) {
         Name dn = LdapNameBuilder.newInstance(parent).build();
-        return ldapTemplate.findAll(dn,sc,Department.class);
+        return findDepartment(dn, recursive);
+    }
+
+
+    public List<Department> findDepartment(Name root, boolean recursive) {
+        SearchControls sc = new SearchControls();
+        List<Department> firstLevel = ldapTemplate.findAll(root,sc,Department.class);
+        if(recursive) {
+            List<Department> allLevel = new ArrayList<Department>();
+            sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            firstLevel.forEach(d->{
+                allLevel.addAll(ldapTemplate.findAll(d.getId(),sc,Department.class));
+            });
+
+            return allLevel;
+        } else {
+            return firstLevel;
+        }
     }
 
     public void addDepartment(Department dept) {

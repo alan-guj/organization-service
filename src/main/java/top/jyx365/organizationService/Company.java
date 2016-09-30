@@ -1,6 +1,7 @@
 package top.jyx365.organizationService;
 
 import javax.naming.Name;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
