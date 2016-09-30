@@ -1,3 +1,4 @@
 build/*
 .syntastic_javac_config 
-*.log
+*.log.*
+.gradle/*
