@@ -156,8 +156,46 @@ public class OrganizationRepository {
         return ldapTemplate.findByDn(dn, Staff.class);
     }
 
+    public Staff findStaff(Name dn) {
+        return ldapTemplate.findByDn(dn, Staff.class);
+    }
+
+
     public void addStaff(Staff staff) {
         ldapTemplate.create(staff);
+    }
+
+    public void updateStaff(Staff staff) {
+        ldapTemplate.update(staff);
+    }
+
+
+    /*Groups*/
+    public List<Group> findAllGroups(String companyId) {
+        SearchControls sc = new SearchControls();
+        Name dn = LdapNameBuilder.newInstance(companyId)
+            .add("ou","groups")
+            .build();
+        return ldapTemplate.findAll(dn,sc,Group.class);
+    }
+
+    public Group findGroup(String groupId) {
+        Name dn = LdapNameBuilder.newInstance(groupId)
+            .build();
+        return ldapTemplate.findByDn(dn, Group.class);
+    }
+
+    public Group findGroup(Name dn) {
+        return ldapTemplate.findByDn(dn, Group.class);
+    }
+
+
+    public void addGroup(Group group) {
+        ldapTemplate.create(group);
+    }
+
+    public void updateGroup(Group group) {
+        ldapTemplate.update(group);
     }
 }
 

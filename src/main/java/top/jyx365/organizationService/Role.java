@@ -1,5 +1,6 @@
 package top.jyx365.organizationService;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Name;
 import org.springframework.ldap.odm.annotations.Attribute;
@@ -27,6 +28,10 @@ public final class Role {
 
     public void setName(String name) {
         this.name = name;
+        if(this.id == null && this.department!= null)
+            this.id = LdapNameBuilder.newInstance(department)
+                .add("cn",name)
+                .build();
     }
 
     public String getName() {
@@ -38,6 +43,7 @@ public final class Role {
     }
 
     public void addOccupant(String occupant) {
+        if(this.occupants == null) this.occupants = new ArrayList<String>();
         this.occupants.add(occupant);
     }
 
@@ -59,9 +65,10 @@ public final class Role {
 
     public void setDepartment(String department) {
         this.department = department;
-        this.id = LdapNameBuilder.newInstance(department)
-            .add("cn",name)
-            .build();
+        if(this.id == null && this.name != null)
+            this.id = LdapNameBuilder.newInstance(department)
+                .add("cn",name)
+                .build();
     }
 
     public String getDepartment() {
@@ -72,7 +79,14 @@ public final class Role {
         this.id = id;
     }
 
-    public String getId() {
-        return id.toString();
+    public Name getId() {
+        return id;
     }
+
+
+    public String getCompany() {
+        return id.getPrefix(1).toString();
+    }
+
+
 }

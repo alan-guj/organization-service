@@ -1,7 +1,10 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 import javax.naming.Name;
+import javax.naming.ldap.LdapName;
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -25,7 +28,7 @@ public final class Staff {
 
 
     @Attribute(name="ou")
-    private Name department;
+    private List<Name> departments;
 
     @Attribute(name="mobile")
     private String mobile;
@@ -65,12 +68,21 @@ public final class Staff {
         return surname;
     }
 
-    public void setDepartment(Name department) {
-        this.department = department;
+    public void setDepartments(List<Name> departments) {
+        this.departments = departments;
     }
 
-    public Name getDepartment() {
-        return department;
+    public void addDepartment(Name department) {
+        if(this.departments == null) this.departments = new ArrayList<Name>();
+        this.departments.add(department);
+    }
+
+    public void removeDepartment(Name department) {
+        if(this.departments != null) this.departments.remove(department);
+    }
+
+    public List<Name> getDepartments() {
+        return departments;
     }
 
 
@@ -84,21 +96,13 @@ public final class Staff {
 
     public void setCompany(Name company) {
         this.company = company;
-        this.domain = company.get(0);
+        this.domain = (String)((LdapName)company).getRdn(0).getValue();
     }
 
     public Name getCompany() {
         return company;
     }
 
-
-    //public void setDomain(String domain) {
-        //this.domain = domain;
-    //}
-
-    //public String getDomain() {
-        //return domain;
-    //}
 
     public void setDescription(String description) {
         this.description = description;

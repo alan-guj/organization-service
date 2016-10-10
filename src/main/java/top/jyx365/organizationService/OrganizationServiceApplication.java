@@ -45,7 +45,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class OrganizationServiceApplication {
 
 
-    private static Logger logger = LoggerFactory.getLogger(OrganizationServiceApplication.class);
+    private static Logger logger =
+        LoggerFactory.getLogger(OrganizationServiceApplication.class);
 
     @Bean
     @ConfigurationProperties(prefix="ldap")
@@ -81,81 +82,5 @@ class OrganizationServiceContollerAdvice {
     }
 }
 
-@RestController
-@EnableResourceServer
-@RequestMapping({
-"/api/v1.0/companies/**/staffs"
-})
-class StaffController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private OrganizationRepository repository;
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/staffs",method = RequestMethod.GET)
-        public List<Staff> getStaffs(@PathVariable String companyId) {
-            return repository.findAllStaffs(companyId);
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/departments/{departmentId}/staffs",method = RequestMethod.GET)
-        public List<Staff> getStaffs(@PathVariable String companyId, @PathVariable String departmentId) {
-            return repository.findStaffs(companyId,departmentId);
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/staffs",method = RequestMethod.POST)
-        public Staff addCompanyStaff(@PathVariable String companyId, @RequestBody Staff staff) {
-            Company company = repository.findCompany(companyId);
-            staff.setCompany(company.getId());
-            repository.addStaff(staff);
-            return staff;
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/departments/{departmentId}/staffs",method = RequestMethod.POST)
-        public Staff addDepartmentStaff(@PathVariable String companyId, @PathVariable String departmentId, @RequestBody Staff staff) {
-            Company company = repository.findCompany(companyId);
-            staff.setCompany(company.getId());
-            Department dept = repository.findDepartment(departmentId);
-            staff.setDepartment(dept.getId());
-            repository.addStaff(staff);
-            return staff;
-        }
-    @RequestMapping(value="/{staffId}",method = RequestMethod.GET)
-        public Staff getStaff(@PathVariable String staffId) {
-            return repository.findStaff(staffId);
-        }
-
-}
-
-@RestController
-@EnableResourceServer
-@RequestMapping("/api/v1.0/companies/**/roles")
-class RoleController {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private OrganizationRepository repository;
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/departments/{departmentId}/roles", method = RequestMethod.POST)
-        public Role addRole(@PathVariable String departmentId, @RequestBody Role role) {
-            role.setDepartment(departmentId);
-            repository.addRole(role);
-            return role;
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/departments/{departmentId}/roles", method = RequestMethod.GET)
-        public List<Role> getDepartmentRoles(@PathVariable String departmentId) {
-            return repository.findDepartmentRoles(departmentId);
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/roles", method = RequestMethod.GET)
-        public List<Role> getCompanyRoles(@PathVariable String companyId) {
-            return repository.findAllRoles(companyId);
-        }
-
-    @RequestMapping(value="/roles/{roleId}", method = RequestMethod.GET)
-        public Role getRoles(@PathVariable String roleId) {
-            return repository.findRole(roleId);
-        }
-}
 
