@@ -2,11 +2,14 @@ package top.jyx365.organizationService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.query.ContainerCriteria;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.query.SearchScope;
 import org.springframework.ldap.support.LdapNameBuilder;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -47,6 +50,8 @@ public class OrganizationRepository {
         addNode(company.getId(),"departments");
         addNode(company.getId(),"staffs");
         addNode(company.getId(),"groups");
+        addNode(company.getId(),"applicants");
+        addNode(company.getId(),"invitees");
     }
 
     public Company findCompany(String companyId) {
@@ -60,6 +65,8 @@ public class OrganizationRepository {
         removeNode(company.getId(),"departments");
         removeNode(company.getId(),"staffs");
         removeNode(company.getId(),"groups");
+        removeNode(company.getId(),"applicants");
+        removeNode(company.getId(),"invitees");
         ldapTemplate.delete(company);
     }
 
@@ -131,17 +138,28 @@ public class OrganizationRepository {
     }
 
     /*Staffs*/
-    public List<Staff> findAllStaffs(String companyId) {
+    public List<Staff> findAllStaffs(String companyId, String type) {
         SearchControls sc = new SearchControls();
         Name dn = LdapNameBuilder.newInstance(companyId)
-            .add("ou","staffs")
+            .add("ou",type)
             .build();
         return ldapTemplate.findAll(dn,sc,Staff.class);
     }
 
-    public List<Staff> findStaffs(String companyId, String departmentId) {
+    public List<Staff> findStaffs(Map<String, String> searchCondition) {
+        ContainerCriteria query = query().where("objectclass").is("inetOrgPerson")
+                .and("employeeType").is("staffs");
+
+        for(Map.Entry<String,String> entry:searchCondition.entrySet()){
+            if(entry.getValue()!= null)
+                query=query.and(entry.getKey()).like(entry.getValue());
+        }
+        return ldapTemplate.find(query,Staff.class);
+    }
+
+    public List<Staff> findStaffs(String companyId, String departmentId,String type) {
         Name dn = LdapNameBuilder.newInstance(companyId)
-            .add("ou","staffs")
+            .add("ou",type)
             .build();
         return ldapTemplate.find(
                 query().base(dn)

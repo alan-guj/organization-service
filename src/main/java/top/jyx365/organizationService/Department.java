@@ -1,5 +1,6 @@
 package top.jyx365.organizationService;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,15 +15,38 @@ import org.springframework.ldap.support.LdapNameBuilder;
 @Entry(objectClasses = {"organizationalUnit"})
 public final class Department {
     @Id
-    private Name id;
+    @JsonIgnore private Name id;
 
 
     @Attribute(name="ou")
     private String name;
     private String description;
 
-    @Attribute(name="st")
-    private List<Name> provinces;
+    //@Attribute(name="st")
+    //private List<Name> provinces;
+
+    @Attribute(name="businessCategory")
+    private List <String> businessCategories;
+
+
+    public void setBusinessCategories(List<String> businessCategories) {
+        this.businessCategories = businessCategories;
+    }
+
+    public List<String> getBusinessCategories() {
+        return businessCategories;
+    }
+
+    public void addBusinessCategory(String businessCategory) {
+        if(this.businessCategories == null)
+            this.businessCategories = new ArrayList<String>();
+        this.businessCategories.add(businessCategory);
+    }
+
+    public void removeBusinessCategory(String businessCategory) {
+        if(this.businessCategories != null)
+            this.businessCategories.remove(businessCategory);
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -64,21 +88,5 @@ public final class Department {
 
     public String getParent() {
         return id.getPrefix(id.size()-1).toString();
-    }
-
-    public void setProvinces(List<Name> prvinces) {
-        //this.provinces = provinces.stream()
-                                //.map(p->LdapNameBuilder.newInstance(p).build())
-                                //.collect(Collectors.toList());
-        this.provinces = provinces;
-    }
-
-    public List<Name> getProvinces() {
-        //if(provinces!=null)
-            //return provinces.stream()
-                            //.map(p->p.toString())
-                            //.collect(Collectors.toList());
-        //else return new ArrayList<String>();
-        return provinces;
     }
 }

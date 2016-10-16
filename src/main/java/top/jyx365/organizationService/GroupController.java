@@ -69,6 +69,11 @@ class GroupResource extends ResourceSupport {
     public List<Name> getMembers() {
         return this.group.getMembers();
     }
+
+    public List<String> getBusinessCategories() {
+        return this.group.getBusinessCategories();
+    }
+
 }
 
 

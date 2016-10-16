@@ -1,5 +1,6 @@
 package top.jyx365.organizationService;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.naming.Name;
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.ldap.odm.annotations.Attribute;
@@ -12,7 +13,7 @@ import org.springframework.ldap.support.LdapNameBuilder;
 @Entry(objectClasses = {"organization","dcObject","top"})
 public final class Company {
     @Id
-    private Name id;
+    @JsonIgnore private Name id;
 
     @Attribute(name="o")
     private String name;

@@ -1,6 +1,7 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Name;
@@ -12,10 +13,23 @@ import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.ldap.support.LdapNameBuilder;
 
-@Entry(objectClasses = {"inetOrgPerson","organizationalPerson","Person"})
+@Entry(objectClasses = {"inetOrgPerson","organizationalPerson","Person","uidObject"})
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class Staff {
     @Id
+    @JsonIgnore
     private Name id;
+
+    @Attribute(name="uid")
+    private String uid;
+
+    private String employeeNumber;
+
+    @Attribute(name="seeAlso")
+    private Name relatedStaff;
+
+    @Attribute(name="businessCategory")
+    private List <String> businessCategories;
 
     @Attribute(name="cn")
     @DnAttribute(value="cn", index=2)
@@ -35,14 +49,23 @@ public final class Staff {
 
     @DnAttribute(value="dc", index=0)
     @Transient
-    private @JsonIgnore String domain;
+    @JsonIgnore
+    private String domain;
 
     @Attribute(name="o")
+    @JsonIgnore
     private Name company;
 
     @DnAttribute(value="ou", index=1)
-    @Transient
-    private final String type = "staffs";
+    @Attribute(name="employeeType")
+    @JsonIgnore
+    private String type;
+
+    public Staff() {
+        this.uid = "null";
+        this.type = "staffs";
+    }
+
 
     public void setId(Name id) {
         this.id = id;
@@ -110,5 +133,56 @@ public final class Staff {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setBusinessCategories(List<String> businessCategories) {
+        this.businessCategories = businessCategories;
+    }
+
+    public List<String> getBusinessCategories() {
+        return businessCategories;
+    }
+
+    public void addBusinessCategory(String businessCategory) {
+        if(this.businessCategories == null)
+            this.businessCategories = new ArrayList<String>();
+        this.businessCategories.add(businessCategory);
+    }
+
+    public void removeBusinessCategory(String businessCategory) {
+        if(this.businessCategories != null)
+            this.businessCategories.remove(businessCategory);
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
+    }
+
+    public String getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    public void setRelatedStaff(Name relatedStaff) {
+        this.relatedStaff = relatedStaff;
+    }
+
+    public Name getRelatedStaff() {
+        return relatedStaff;
     }
 }

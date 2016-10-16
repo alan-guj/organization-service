@@ -19,7 +19,7 @@ public final class Group {
     private final Name DEFAULT_MEMBER_ID = LdapNameBuilder.newInstance("cn=nobody").build();
 
     @Id
-    private Name id;
+    @JsonIgnore private Name id;
 
     @Attribute(name="description")
     private String description;
@@ -39,11 +39,36 @@ public final class Group {
     private @JsonIgnore String domain;
 
     @Attribute(name="o")
+    @JsonIgnore
     private Name company;
 
     @DnAttribute(value="ou", index=1)
     @Transient
     private final String type = "groups";
+
+    @Attribute(name="businessCategory")
+    private List <String> businessCategories;
+
+
+    public void setBusinessCategories(List<String> businessCategories) {
+        this.businessCategories = businessCategories;
+    }
+
+    public List<String> getBusinessCategories() {
+        return businessCategories;
+    }
+
+    public void addBusinessCategory(String businessCategory) {
+        if(this.businessCategories == null)
+            this.businessCategories = new ArrayList<String>();
+        this.businessCategories.add(businessCategory);
+    }
+
+    public void removeBusinessCategory(String businessCategory) {
+        if(this.businessCategories != null)
+            this.businessCategories.remove(businessCategory);
+    }
+
 
     public Group() {
         this.members.add(DEFAULT_MEMBER_ID);

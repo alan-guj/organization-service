@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -45,6 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.Assert.*;
 import top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
@@ -54,10 +56,9 @@ import top.jyx365.organizationService.OrganizationServiceApplicationTests.TestPr
 @ProfileValueSourceConfiguration(TestProfileValueSource.class)
 public class OrganizationServiceApplicationTests {
 
-    @ConfigurationProperties
     public static class TestProfileValueSource implements ProfileValueSource {
         public String get(String key) {
-            return "group";
+            return "staff";
         }
     }
 
@@ -104,6 +105,7 @@ public class OrganizationServiceApplicationTests {
     private Staff s_1, s_2;
     private Role r_2;
     private Group g_1, g_2;
+    private Staff s_a_1,s_i_1;
 
 
     @Before
@@ -159,25 +161,47 @@ public class OrganizationServiceApplicationTests {
         d_3.setName("测试部门3");
         d_3.setDescription("测试部门3描述");
         d_3.setCompany(c_2.getId().toString());
+        d_3.addBusinessCategory("locality:jiangsu;product:nasaichang");
         repository.addDepartment(d_3);
 
         /*Add test staffs*/
         s_1 = new Staff();
         s_1.setName("staff1");
         s_1.setSurname("测试员工1");
-        s_1.setMobile("123");
+        s_1.setMobile("13851811909");
         s_1.setDescription("无部门员工");
+        s_1.addBusinessCategory("locality:jiangsu;product:nasaichang");
+        s_1.addBusinessCategory("locality:jiangsu1;product:nasaichang");
         s_1.setCompany(c_1.getId());
         repository.addStaff(s_1);
 
         s_2 = new Staff();
         s_2.setName("staff2");
         s_2.setSurname("测试员工2");
-        s_2.setMobile("123");
+        s_2.setMobile("13813811111");
         s_2.setDescription("有部门员工");
         s_2.setCompany(c_1.getId());
         s_2.addDepartment(d_1.getId());
         repository.addStaff(s_2);
+
+        s_a_1 = new Staff();
+        s_a_1.setType("applicants");
+        s_a_1.setName("applicant-1");
+        s_a_1.setSurname("申请加入员工1");
+        s_a_1.setMobile("123");
+        s_a_1.setDescription("申请加入员工1");
+        s_a_1.setCompany(c_1.getId());
+        repository.addStaff(s_a_1);
+
+        s_i_1 = new Staff();
+        s_i_1.setType("invitees");
+        s_i_1.setName("invitee-1");
+        s_i_1.setSurname("邀请加入员工1");
+        s_i_1.setMobile("123");
+        s_i_1.setDescription("邀请加入员工1");
+        s_i_1.setCompany(c_1.getId());
+        repository.addStaff(s_i_1);
+
 
         r_2 = new Role();
         r_2.setName("director");
@@ -206,12 +230,13 @@ public class OrganizationServiceApplicationTests {
     /*1.1 Add
     /*1.1.1 Test add a new company*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","add"})
+    @IfProfileValue(name="test-group", values={"all","company"})
     public void _1_1_1_testAddCompany() throws Exception {
         Company nc= new Company();
         nc.setName("测试新增企业");
         nc.setDomain("testcompany");
         nc.setDescription("测试增加企业描述");
+        String id = "dc="+nc.getDomain();
         try {
             RequestBuilder request = post("/api/v1.0/companies")
                 .contentType(CONTENT_TYPE)
@@ -223,12 +248,11 @@ public class OrganizationServiceApplicationTests {
                 .andExpect(jsonPath("$.name",is(nc.getName())))
                 .andExpect(jsonPath("$.description",is(nc.getDescription())))
                 .andExpect(jsonPath("$.domain",is(nc.getDomain())))
-                .andExpect(jsonPath("$.id",is("dc="+nc.getDomain())));
+                .andExpect(jsonPath("$.id",is("dc="+nc.getDomain())))
+                .andExpect(jsonPath("$._links.departments.href",endsWith(id+"/departments")));
         } catch(Exception e) {
-            e.printStackTrace();
             throw(e);
         } finally {
-            repository.removeCompany("dc="+nc.getDomain());
         }
     }
 
@@ -270,9 +294,11 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$._embedded.companies[0].name", is(testCompanies.get(0).getName())))
             .andExpect(jsonPath("$._embedded.companies[0].domain", is(testCompanies.get(0).getDomain())))
             .andExpect(jsonPath("$._embedded.companies[0].description", is(testCompanies.get(0).getDescription())))
+            .andExpect(jsonPath("$._embedded.companies[0]._links.departments.href",endsWith(testCompanies.get(0).getId().toString()+"/departments")))
             .andExpect(jsonPath("$._embedded.companies[1].id", is(testCompanies.get(1).getId().toString())))
             .andExpect(jsonPath("$._embedded.companies[1].name", is(testCompanies.get(1).getName())))
             .andExpect(jsonPath("$._embedded.companies[1].domain", is(testCompanies.get(1).getDomain())))
+            .andExpect(jsonPath("$._embedded.companies[1]._links.departments.href",endsWith(testCompanies.get(1).getId().toString()+"/departments")))
             .andExpect(jsonPath("$._embedded.companies[1].departments").doesNotExist());
 
     }
@@ -288,9 +314,9 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.id", is(testCompanies.get(0).getId().toString())))
             .andExpect(jsonPath("$.name", is(testCompanies.get(0).getName())))
             .andExpect(jsonPath("$.domain", is(testCompanies.get(0).getDomain())))
-            .andExpect(jsonPath("$.description", is(testCompanies.get(0).getDescription())));
+            .andExpect(jsonPath("$.description", is(testCompanies.get(0).getDescription())))
+            .andExpect(jsonPath("$._links.departments.href",endsWith(testCompanies.get(0).getId().toString()+"/departments")));
     }
-
     /*1.2.3 Test get an not exist company*/
     @Test
     @IfProfileValue(name="test-group", values={"all","company"})
@@ -548,6 +574,30 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$._embedded.staffs[0].id",is(s.getId().toString())));
     }
 
+    /*3.1.5 query by mobile*/
+    @Test
+    @IfProfileValue(name="test-group", values={"all","staff"})
+    public void _3_1_5_getStaffsByMobile() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/**/staffs?mobile=13851811909")
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.staffs",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.staffs[0].id",is(s_1.getId().toString())));
+    }
+
+    /*3.1.6 query by name*/
+    @Test
+    @IfProfileValue(name="test-group", values={"all","staff"})
+    public void _3_1_6_getStaffsByName() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/**/staffs?name=staff2")
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.staffs",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.staffs[0].id",is(s_2.getId().toString())));
+    }
+
     /*3.2 Add */
 
     /*3.2.1 add non-department staff*/
@@ -594,6 +644,7 @@ public class OrganizationServiceApplicationTests {
         Department d = d_1;
         s.setName("new_dept_staff");
         s.setSurname("新增部门测试员工");
+        s.addDepartment(d.getId());
         String s_id = LdapNameBuilder.newInstance(d.getCompany())
                 .add("ou","staffs")
                 .add("cn",s.getName())
@@ -603,8 +654,6 @@ public class OrganizationServiceApplicationTests {
             RequestBuilder request = post(
                     "/api/v1.0/companies/"+
                     d.getCompany()+
-                    "/departments/"+
-                    d_1.getId().toString()+
                     "/staffs"
                     )
                 .contentType(CONTENT_TYPE)
@@ -626,6 +675,7 @@ public class OrganizationServiceApplicationTests {
 
     /*3.2.3 add multi-department staff */
     @Test
+    @Ignore
     @IfProfileValue(name="test-group", values={"all","staff"})
     public void _3_2_3_addMultiDeptStaff() throws Exception {
         Staff s = s_2;
@@ -947,6 +997,190 @@ public class OrganizationServiceApplicationTests {
         } finally {
             cleanNode(groupId);
         }
+    }
+
+    /*6. Applicant and Invitee*/
+    /*6.1 Add*/
+    /*6.1.1 Applicant*/
+    /*6.1.1.1 add*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    public void _6_1_1_1_addNewApplicant() throws Exception {
+        Staff s = new Staff();
+        s.setName("new_applicant");
+        s.setSurname("新增申请员工");
+        s.setType("applicants");
+        String s_id = LdapNameBuilder.newInstance(c_1.getId())
+                .add("ou","applicants")
+                .add("cn",s.getName())
+                .build().toString();
+
+        try {
+            RequestBuilder request = post(
+                    "/api/v1.0/companies/"+
+                    c_1.getId().toString()+
+                    "/applicants"
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(s));
+            this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id",is(s_id)))
+                .andExpect(jsonPath("$.company", is(c_1.getId().toString())))
+                .andExpect(jsonPath("$.departments").doesNotExist());
+        } catch (Exception e) {
+            throw(e);
+        } finally {
+            cleanNode(s_id);
+        }
+
+    }
+
+    /*6.1.1.2 get one*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    public void _6_1_1_2_getOneApplicant() throws Exception {
+        Staff s = s_a_1;
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/applicants/"+
+                    s.getId().toString())
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name",is(s.getName())))
+            .andExpect(jsonPath("$.surname",is(s.getSurname())))
+            .andExpect(jsonPath("$.mobile",is(s.getMobile())))
+            .andExpect(jsonPath("$.id",is(s.getId().toString())))
+            .andExpect(jsonPath("$.company",is(s.getCompany().toString())));
+    }
+
+    /*6.1.1.3 approval*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    public void _6_1_1_3_approveApplicant() throws Exception {
+        Staff s = s_a_1;
+        String id = LdapNameBuilder.newInstance(s.getCompany())
+            .add("ou","staffs")
+            .add("cn",s.getName())
+            .build().toString();
+        try {
+            RequestBuilder request = post(
+                    "/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/applicants/"+
+                    s.getId().toString()+
+                    "/approval"
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN);
+            this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id",is(id)))
+                .andExpect(jsonPath("$.company", is(c_1.getId().toString())))
+                .andExpect(jsonPath("$.departments").doesNotExist());
+            Staff as = repository.findStaff(id);
+            assertEquals(as.getId().toString(),id);
+            assertTrue(as.getId().toString().equals(id));
+        } catch (Exception e) {
+            throw(e);
+        } finally {
+        }
+
+    }
+
+    /*6.1.2 Invitee*/
+    /*6.1.2.1 add*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    public void _6_1_2_1_addNewInvitee() throws Exception {
+        Staff s = new Staff();
+        s.setName("new_invitee");
+        s.setSurname("新增邀请员工");
+        s.setType("invitees");
+        String s_id = LdapNameBuilder.newInstance(c_1.getId())
+                .add("ou","invitees")
+                .add("cn",s.getName())
+                .build().toString();
+
+        try {
+            RequestBuilder request = post(
+                    "/api/v1.0/companies/"+
+                    c_1.getId().toString()+
+                    "/invitees"
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(s));
+            this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id",is(s_id)))
+                .andExpect(jsonPath("$.company", is(c_1.getId().toString())))
+                .andExpect(jsonPath("$.departments").doesNotExist());
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            cleanNode(s_id);
+        }
+
+    }
+
+
+    /*6.1.2.2 get one*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    public void _6_1_2_2_getOneInvitee() throws Exception {
+        Staff s = s_i_1;
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/invitees/"+
+                    s.getId().toString())
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name",is(s.getName())))
+            .andExpect(jsonPath("$.surname",is(s.getSurname())))
+            .andExpect(jsonPath("$.mobile",is(s.getMobile())))
+            .andExpect(jsonPath("$.id",is(s.getId().toString())))
+            .andExpect(jsonPath("$.company",is(s.getCompany().toString())));
+    }
+
+    /*6.1.2.3 confirm*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    public void _6_1_2_3_confirmInivtee() throws Exception {
+        Staff s = s_i_1;
+        String id = LdapNameBuilder.newInstance(s.getCompany())
+            .add("ou","staffs")
+            .add("cn",s.getName())
+            .build().toString();
+        try {
+            RequestBuilder request = post(
+                    "/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/invitees/"+
+                    s.getId().toString()+
+                    "/confirmation"
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN);
+            this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id",is(id)))
+                .andExpect(jsonPath("$.company", is(c_1.getId().toString())))
+                .andExpect(jsonPath("$.departments").doesNotExist());
+            Staff as = repository.findStaff(id);
+            assertEquals(as.getId().toString(),id);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+        }
+
     }
 
     private void cleanNode(String node) {

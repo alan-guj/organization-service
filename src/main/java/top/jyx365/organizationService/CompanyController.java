@@ -79,6 +79,11 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
     @Override
     public CompanyResource toResource(Company company) {
         CompanyResource resource = createResourceWithId(company.getId(),company);
+        resource.add(
+                linkTo(
+                    methodOn(DepartmentController.class)
+                    .getDepartments(company.getId().toString(),null)
+                    ).withRel("departments"));
         return resource;
     }
 
@@ -90,7 +95,7 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
 
 
 @RestController
-@EnableResourceServer
+//@EnableResourceServer
 @RequestMapping("/api/v1.0/companies")
 public class CompanyController {
 

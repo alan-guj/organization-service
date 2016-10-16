@@ -70,6 +70,10 @@ class DepartmentResource extends ResourceSupport {
         return this.dept.getParent();
     }
 
+    public List<String> getBusinessCategories() {
+        return this.dept.getBusinessCategories();
+    }
+
 }
 
 class DepartmentResourceAssembler extends ResourceAssemblerSupport<Department, DepartmentResource> {

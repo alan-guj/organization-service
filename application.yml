@@ -1,6 +1,6 @@
 spring:
     profiles:
-        active: development
+        active: test
     jackson:
          serialization-inclusion: NON_EMPTY
 app:
@@ -16,8 +16,8 @@ app:
     license:
     licenseUrl:
 security:
-    basic: 
-        enabled: false
+    basic:
+        enabled: true
     ignored: /**/*swagger*,/**/*swagger*/**,/v2/api-docs,/webjars/**
     oauth2:
         client:
@@ -33,12 +33,6 @@ security:
             userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
 server:
     port: 8810
-ldap:
-    password: 6Jw8fd7TfnPRd7Gr
-    url: ldap://localhost:389
-    base: dc=jyx365,dc=top
-    userDn: cn=Manager,dc=jyx365,dc=top
-
 logging:
     level:
         #org.springframework.security: DEBUG
@@ -67,11 +61,29 @@ server:
 ldap:
     password: 6Jw8fd7TfnPRd7Gr
     url: ldap://localhost:389
+    base: dc=development,dc=jyx365,dc=top
+    userDn: cn=Manager,dc=jyx365,dc=top
+access_token: bearer fjw0fBG14fHoIs8ij9CoXD9uClhKHz
+---
+spring:
+    profiles: test
+security:
+    oauth2:
+        client:
+            client-id: customer_care_web_server_guj
+            clientSecret: 654322
+            accessTokenUri: http://dev.jyx365.top/oauth/access_token
+            userAuthorizationUri: http://dev.jyx365.top/sso/login
+            tokenName: access_token
+            #authenticationScheme: query
+            #clientAuthenticationScheme: form
+            scope: userinfo
+        resource:
+            userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
+server:
+    port: 8810
+ldap:
+    password: 6Jw8fd7TfnPRd7Gr
+    url: ldap://localhost:389
     base: dc=test,dc=jyx365,dc=top
     userDn: cn=Manager,dc=jyx365,dc=top
-test:
-    company: none
-    development: none
-    staff: none
-    role: all
-access_token: bearer BuGXo3IH1ERsrBoUQX7qyKD3HVcqTD

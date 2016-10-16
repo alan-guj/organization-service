@@ -1,5 +1,6 @@
 package top.jyx365.organizationService;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Name;
@@ -11,7 +12,7 @@ import org.springframework.ldap.support.LdapNameBuilder;
 @Entry(objectClasses = {"organizationalRole"})
 public final class Role {
     @Id
-    private Name id;
+    @JsonIgnore private Name id;
 
     @Attribute(name="cn")
     private String name;
