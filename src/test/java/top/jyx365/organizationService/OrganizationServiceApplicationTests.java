@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -12,22 +13,35 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import org.springframework.core.env.Environment;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.context.WebApplicationContext;
+
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapNameBuilder;
+
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
@@ -39,31 +53,57 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+
+import org.springframework.security.oauth2.client.OAuth2RestOperations;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.Assert.*;
 import top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
+
+
+@EnableOAuth2Client
+@Configuration
+class OAuth2ClientConfigure {
+
+    @Bean
+    @ConfigurationProperties("security.oauth2.client")
+    public ClientCredentialsResourceDetails resource() {
+        return new ClientCredentialsResourceDetails();
+    }
+
+    @Bean
+    public OAuth2RestOperations systemRestTemplate() {
+        return new OAuth2RestTemplate(resource());
+    }
+}
+
+
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("development")
+@ActiveProfiles("dev-int-test")
 @ProfileValueSourceConfiguration(TestProfileValueSource.class)
 public class OrganizationServiceApplicationTests {
 
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public static class TestProfileValueSource implements ProfileValueSource {
         public String get(String key) {
-            return "staff";
+            return "company";
         }
     }
 
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private MockMvc mockMvc;
@@ -74,11 +114,14 @@ public class OrganizationServiceApplicationTests {
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
 
-    @Value("${access_token}")
     private String ACCESS_TOKEN;
 
 
     private String AUTHORIZATION = "Authorization";
+
+    @Autowired
+    private OAuth2RestOperations systemRestTemplate;
+
 
     @Autowired
     private OrganizationRepository repository;
@@ -106,7 +149,12 @@ public class OrganizationServiceApplicationTests {
     private Role r_2;
     private Group g_1, g_2;
     private Staff s_a_1,s_i_1;
+    private Product p_1,p_2;
+    private Locality l_1,l_1_1,l_2;
 
+    private void setupTestData() {
+
+    }
 
     @Before
     public void setup() {
@@ -115,8 +163,8 @@ public class OrganizationServiceApplicationTests {
         companies.forEach(c->{
             ldapTemplate.unbind(c.getId(),true);
         });
-
-
+        this.ACCESS_TOKEN ="bearer "+systemRestTemplate.getAccessToken();
+        logger.info("ACCESS_TOKEN:{}",ACCESS_TOKEN);
 
         /*add test companies*/
         c_1 = new Company();
@@ -134,13 +182,13 @@ public class OrganizationServiceApplicationTests {
 
         /*Add test department*/
         d_1 = new Department();
-        d_1.setName("测试部门1");
+        d_1.setName("test_deparment_1");
         d_1.setDescription("测试部门1描述");
         d_1.setCompany(c_1.getId().toString());
         repository.addDepartment(d_1);
 
         d_1_1 = new Department();
-        d_1_1.setName("测试部门1.1");
+        d_1_1.setName("test_deparment_1.1");
         d_1_1.setDescription("测试部门1.1描述");
         d_1_1.setParent(d_1.getId().toString());
         repository.addDepartment(d_1_1);
@@ -170,8 +218,8 @@ public class OrganizationServiceApplicationTests {
         s_1.setSurname("测试员工1");
         s_1.setMobile("13851811909");
         s_1.setDescription("无部门员工");
-        s_1.addBusinessCategory("locality:jiangsu;product:nasaichang");
-        s_1.addBusinessCategory("locality:jiangsu1;product:nasaichang");
+        //s_1.addBusinessCategory("locality:jiangsu;product:nasaichang");
+        //s_1.addBusinessCategory("locality:jiangsu1;product:nasaichang");
         s_1.setCompany(c_1.getId());
         repository.addStaff(s_1);
 
@@ -224,6 +272,42 @@ public class OrganizationServiceApplicationTests {
         g_2.setDescription("空测试组2描述");
         g_2.setCompany(c_1.getId());
         repository.addGroup(g_2);
+
+
+        p_1 = new Product();
+        p_1.setName("test_product_1");
+        p_1.setDescription("test_product_1");
+        p_1.setProductId("test_product_ID1");
+        p_1.setCompany(s_1.getId());
+        repository.addProduct(p_1);
+
+        p_2 = new Product();
+        p_2.setName("test_product_2");
+        p_2.setDescription("test_product_2");
+        p_2.setCompany(s_1.getId());
+        repository.addProduct(p_2);
+
+        l_1 = new Locality();
+        l_1.setName("test_locality_1");
+        l_1.setDescription("test_locality_1_desc");
+        l_1.setLocalityId("test_locality_1_localId");
+        l_1.setCompany(c_1.getId());
+        repository.addLocality(l_1);
+
+        l_1_1 = new Locality();
+        l_1_1.setName("test_locality_1_1");
+        l_1_1.setDescription("test_locality_1_1_desc");
+        l_1_1.setLocalityId("test_locality_1_1_localId");
+        l_1_1.setParent(l_1.getId());
+        repository.addLocality(l_1);
+
+
+        l_2 = new Locality();
+        l_2.setName("test_locality_2");
+        l_2.setDescription("test_locality_2_desc");
+        l_2.setCompany(c_1.getId());
+        repository.addLocality(l_1);
+
     }
 
     /*1. Test Company Service*/
@@ -471,7 +555,10 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.name",is(d_1_1.getName())))
             .andExpect(jsonPath("$.description",is(d_1_1.getDescription())))
             .andExpect(jsonPath("$.parent",is(d_1_1.getParent())))
-            .andExpect(jsonPath("$.company",is(d_1_1.getCompany())));
+            .andExpect(jsonPath("$.company",is(d_1_1.getCompany())))
+            .andExpect(jsonPath("$._links.roles.href",endsWith(
+                            d_1_1.getCompany()+"/departments/"
+                            +d_1_1.getId().toString()+"/roles")));
     }
 
     /*2.2.3 Get sub departments*/
@@ -564,9 +651,8 @@ public class OrganizationServiceApplicationTests {
         Staff s = s_2;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     s.getCompany().toString()+
-                    "/departments/"+
-                    s.getDepartments().get(0).toString()+
-                    "/staffs")
+                    "/staffs?department="+
+                    s.getDepartments().get(0).toString())
                 .header(AUTHORIZATION,ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk())
@@ -1180,7 +1266,220 @@ public class OrganizationServiceApplicationTests {
             throw e;
         } finally {
         }
+    }
 
+    /*7. Product*/
+    /*7.1 Add*/
+    /*7.1.1 Add new product*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "product"})
+    public void _7_1_1_addNewProduct() throws Exception {
+        Product p = new Product();
+        p.setName("test_add_product");
+        p.setDescription("test_add_product_desc");
+        p.setProductId("test_add_product_prodId");
+        String id = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","products")
+            .add("cn",p.getName())
+            .build().toString();
+        RequestBuilder request = post(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/products"
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id",is(id)))
+            .andExpect(jsonPath("$.description",is(p.getDescription())))
+            .andExpect(jsonPath("$.productId",is(p.getProductId())))
+            .andExpect(jsonPath("$.name", is(p.getName())))
+            .andExpect(jsonPath("$.company", is(c_1.getId().toString())));
+    }
+
+    /*7.2 Query*/
+    /*7.2.1 Get all product*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "product"})
+    public void _7_2_1_getAllProducts() throws Exception {
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/products"
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.products",hasSize(2)))
+            .andExpect(jsonPath("$._embedded.products[0].id",is(p_1.getId().toString())))
+            .andExpect(jsonPath("$._embedded.products[0].name",is(p_1.getName())))
+            .andExpect(jsonPath("$._embedded.products[0].description",is(p_1.getDescription())))
+            .andExpect(jsonPath("$._embedded.products[0].productId",is(p_1.getProductId())))
+            .andExpect(jsonPath("$._embedded.products[0].company",is(p_1.getCompany().toString())))
+            .andExpect(jsonPath("$._embedded.products[1].id",is(p_1.getId().toString())))
+            .andExpect(jsonPath("$._embedded.products[1].name",is(p_1.getName())))
+            .andExpect(jsonPath("$._embedded.products[1].description",is(p_1.getDescription())))
+            .andExpect(jsonPath("$._embedded.products[1].productId").doesNotExist())
+            .andExpect(jsonPath("$._embedded.products[1].company",is(p_1.getCompany().toString())));
+    }
+
+    /*7.2.2 Get one product*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all", "product"})
+    public void _7_2_2_getOneProduct() throws Exception {
+        Product p = p_2;
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/products/"+
+                p.getId().toString()
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(p.getId().toString())))
+            .andExpect(jsonPath("$.name",is(p.getName())))
+            .andExpect(jsonPath("$.description",is(p.getDescription())))
+            .andExpect(jsonPath("$.company",is(p.getCompany())))
+            .andExpect(jsonPath("$.productId").doesNotExist());
+    }
+
+    /*8. Locality*/
+    /*8.1 Add*/
+    /*8.1.1 Add new locality*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","locality"})
+    public void _8_1_1_addNewLocality() throws Exception {
+        Locality l = new Locality();
+        l.setName("test_add_locality");
+        l.setDescription("test_add_locality_desc");
+        l.setLocalityId("test_add_locality_localityId");
+        String id = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","localities")
+            .add("l",l.getName())
+            .build().toString();
+        String parent = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","localities")
+            .build().toString();
+        RequestBuilder request = post(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities"
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id",is(id)))
+            .andExpect(jsonPath("$.description",is(l.getDescription())))
+            .andExpect(jsonPath("$.localityId",is(l.getLocalityId())))
+            .andExpect(jsonPath("$.name", is(l.getName())))
+            .andExpect(jsonPath("$.parent", is(parent)))
+            .andExpect(jsonPath("$.company", is(c_1.getId().toString())));
+    }
+    /*8.1.2 Add new sub locality*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","locality"})
+    public void _8_1_1_addNewSubLocality() throws Exception {
+        Locality l = new Locality();
+        l.setName("test_add_locality");
+        l.setDescription("test_add_locality_desc");
+        l.setLocalityId("test_add_locality_localityId");
+        l.setParent(l_1.getId());
+        String id = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","localities")
+            .add("l",l.getName())
+            .build().toString();
+        String parent = l_1.getId().toString();
+        RequestBuilder request = post(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities"
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id",is(id)))
+            .andExpect(jsonPath("$.description",is(l.getDescription())))
+            .andExpect(jsonPath("$.localityId",is(l.getLocalityId())))
+            .andExpect(jsonPath("$.name", is(l.getName())))
+            .andExpect(jsonPath("$.parent", is(parent)))
+            .andExpect(jsonPath("$.company", is(l_1.getCompany().toString())));
+    }
+
+    /*8.2 Query*/
+    /*8.2.1 get all Localities*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","locality"})
+    public void _8_2_1_getAllLocalities() throws Exception {
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities"
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.products",hasSize(3)));
+    }
+
+    /*8.2.2 get one Locality*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","locality"})
+    public void _8_2_2_getOneLocality() throws Exception {
+        Locality l = l_2;
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities/"+
+                l.getId().toString()
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(l.getId().toString())))
+            .andExpect(jsonPath("$.name",is(l.getName())))
+            .andExpect(jsonPath("$.description",is(l.getDescription())))
+            .andExpect(jsonPath("$.parent",is(l.getParent())))
+            .andExpect(jsonPath("$.company",is(l.getCompany())))
+            .andExpect(jsonPath("$.localityId").doesNotExist());
+    }
+
+    /*8.2.3 get one Sub Locality*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","locality"})
+    public void _8_2_3_getOneSubLocality() throws Exception {
+        Locality l = l_1_1;
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities/"+
+                l.getId().toString()
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(l.getId().toString())))
+            .andExpect(jsonPath("$.name",is(l.getName())))
+            .andExpect(jsonPath("$.description",is(l.getDescription())))
+            .andExpect(jsonPath("$.parent",is(l.getParent())))
+            .andExpect(jsonPath("$.company",is(l.getCompany())))
+            .andExpect(jsonPath("$.localityId").doesNotExist());
     }
 
     private void cleanNode(String node) {

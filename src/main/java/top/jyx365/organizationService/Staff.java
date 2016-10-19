@@ -2,16 +2,23 @@ package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.jayway.jsonpath.JsonPath;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.Name;
 import javax.naming.ldap.LdapName;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
 import org.springframework.ldap.odm.annotations.Transient;
 import org.springframework.ldap.support.LdapNameBuilder;
+
 
 @Entry(objectClasses = {"inetOrgPerson","organizationalPerson","Person","uidObject"})
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -29,12 +36,14 @@ public final class Staff {
     private Name relatedStaff;
 
     @Attribute(name="businessCategory")
-    private List <String> businessCategories;
+    private List <BusinessCategory> businessCategories;
 
     @Attribute(name="cn")
     @DnAttribute(value="cn", index=2)
+    @NotNull
     private String name;
 
+    @NotNull
     @Attribute(name="sn")
     private String surname;
 
@@ -143,17 +152,17 @@ public final class Staff {
         return uid;
     }
 
-    public void setBusinessCategories(List<String> businessCategories) {
+    public void setBusinessCategories(List<BusinessCategory> businessCategories) {
         this.businessCategories = businessCategories;
     }
 
-    public List<String> getBusinessCategories() {
+    public List<BusinessCategory> getBusinessCategories() {
         return businessCategories;
     }
 
-    public void addBusinessCategory(String businessCategory) {
+    public void addBusinessCategory(BusinessCategory businessCategory) {
         if(this.businessCategories == null)
-            this.businessCategories = new ArrayList<String>();
+            this.businessCategories = new ArrayList<BusinessCategory>();
         this.businessCategories.add(businessCategory);
     }
 

@@ -1,6 +1,6 @@
 spring:
     profiles:
-        active: test
+        active: dev-test
     jackson:
          serialization-inclusion: NON_EMPTY
 app:
@@ -35,14 +35,39 @@ server:
     port: 8810
 logging:
     level:
-        #org.springframework.security: DEBUG
+        org.springframework.ldap: DEBUG
         #org.springframework.boot.autoconfigure: DEBUG
         top.jyx365: DEBUG
         #org.springframework.core.env: DEBUG
     file: ./springboot.log
 ---
+#单元测试
 spring:
-    profiles: development
+    profiles: dev-int-test 
+security:
+    oauth2:
+        client:
+            client-id: customer_care_web_server_guj
+            clientSecret: 654322
+            accessTokenUri: http://dev.jyx365.top/oauth/access_token
+            userAuthorizationUri: http://dev.jyx365.top/sso/login
+            tokenName: access_token
+            #authenticationScheme: query
+            #clientAuthenticationScheme: form
+            scope: userinfo
+        resource:
+            userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
+server:
+    port: 8710
+ldap:
+    password: 6Jw8fd7TfnPRd7Gr
+    url: ldap://localhost:389
+    base: dc=development,dc=jyx365,dc=top
+    userDn: cn=Manager,dc=jyx365,dc=top
+access_token: bearer etM1tZkFRwDrLzCJrRi74USMcdPWYN
+---
+spring:
+    profiles: dev-prod
 security:
     oauth2:
         client:
@@ -61,12 +86,11 @@ server:
 ldap:
     password: 6Jw8fd7TfnPRd7Gr
     url: ldap://localhost:389
-    base: dc=development,dc=jyx365,dc=top
+    base: dc=test,dc=jyx365,dc=top
     userDn: cn=Manager,dc=jyx365,dc=top
-access_token: bearer fjw0fBG14fHoIs8ij9CoXD9uClhKHz
 ---
 spring:
-    profiles: test
+    profiles: dev-test
 security:
     oauth2:
         client:
@@ -81,7 +105,7 @@ security:
         resource:
             userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
 server:
-    port: 8810
+    port: 8812
 ldap:
     password: 6Jw8fd7TfnPRd7Gr
     url: ldap://localhost:389

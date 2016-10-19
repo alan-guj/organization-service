@@ -102,7 +102,7 @@ class StaffResource extends ResourceSupport {
         return this.staff.getUid();
     }
 
-    public List<String> getBusinessCategories() {
+    public List<BusinessCategory> getBusinessCategories() {
         return this.staff.getBusinessCategories();
     }
 
@@ -179,8 +179,53 @@ class StaffResourceAssembler extends ResourceAssemblerSupport<Staff, StaffResour
 
 @RestController
 @EnableResourceServer
-@RequestMapping("/api/v1.0/companies/**/staffs")
+@RequestMapping("/api/v1.0/companies/{companyId}/staffs")
 public class StaffController {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private StaffResourceAssembler resourceAssember= new StaffResourceAssembler();
+
+    @Autowired
+    private OrganizationRepository repository;
+
+    @RequestMapping(method = RequestMethod.POST)
+        public ResponseEntity<StaffResource> addCompanyStaff(
+                @PathVariable String companyId, @RequestBody Staff staff)
+        {
+            Company company = repository.findCompany(companyId);
+            staff.setCompany(company.getId());
+            staff.setType("staffs");
+            repository.addStaff(staff);
+            return new ResponseEntity<StaffResource>(
+                    resourceAssember.toResource(staff),HttpStatus.CREATED);
+        }
+
+
+    @RequestMapping(method = RequestMethod.GET)
+        public Resources<StaffResource> getStaffs(
+                @PathVariable String companyId,
+                @RequestParam(required = false) String mobile,
+                @RequestParam(required = false) String department,
+                @RequestParam(required = false) String name
+                )
+        {
+            if(companyId.equals("**")) companyId = null;
+            Map<String, String> searchCondition = new HashMap<String, String>();
+            searchCondition.put("mobile",mobile);
+            searchCondition.put("ou",department);
+            searchCondition.put("name",name);
+            return new Resources<StaffResource>(resourceAssember.toResources(
+                    repository.findStaffs(companyId,searchCondition)));
+        }
+
+    @RequestMapping(value="/{staffId}",method = RequestMethod.GET)
+        public StaffResource getStaff(
+                @PathVariable String staffId
+                )
+        {
+            return resourceAssember.toResource(repository.findStaff(staffId));
+        }
+
 
     @RestController
     @EnableResourceServer
@@ -259,7 +304,7 @@ public class StaffController {
 
 
         @RequestMapping(method = RequestMethod.GET)
-            public Resources<InviteeResource> getApplicants(@PathVariable String companyId) {
+            public Resources<InviteeResource> getInvitees(@PathVariable String companyId) {
                 return new Resources<InviteeResource>(
                         assember.toResources(
                             repository.findAllStaffs(companyId,"invitees"))
@@ -309,93 +354,6 @@ public class StaffController {
                         );
             }
     }
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private StaffResourceAssembler resourceAssember= new StaffResourceAssembler();
-
-    @Autowired
-    private OrganizationRepository repository;
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/staffs",method = RequestMethod.GET)
-        public Resources<StaffResource> getStaffs(@PathVariable String companyId) {
-            return new Resources<StaffResource>(
-                    resourceAssember.toResources(repository.findAllStaffs(companyId,"staffs")));
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/departments/{departmentId}/staffs",method = RequestMethod.GET)
-        public Resources<StaffResource> getStaffs(@PathVariable String companyId, @PathVariable String departmentId) {
-            return new Resources<StaffResource>(
-                    resourceAssember.toResources(repository.findStaffs(companyId,departmentId,"staffs")));
-        }
-
-    @RequestMapping(path="/api/v1.0/companies/{companyId}/staffs",method = RequestMethod.POST)
-        public ResponseEntity<StaffResource> addCompanyStaff(
-                @PathVariable String companyId, @RequestBody Staff staff)
-        {
-            Company company = repository.findCompany(companyId);
-            staff.setCompany(company.getId());
-            staff.setType("staffs");
-            repository.addStaff(staff);
-            return new ResponseEntity<StaffResource>(
-                    resourceAssember.toResource(staff),HttpStatus.CREATED);
-        }
-
-    //@RequestMapping(path="/api/v1.0/companies/{companyId}/departments/{departmentId}/staffs",method = RequestMethod.POST)
-        //public ResponseEntity<StaffResource> addDepartmentStaff(
-                //@PathVariable String companyId, @PathVariable String departmentId, @RequestBody Staff staff)
-        //{
-            //if(staff.getId() != null) {
-
-                //[>id isn't none, try to find the staff<]
-                //Staff _staff = repository.findStaff(staff.getId());
-                //if(_staff != null) {
-                    //[>get a staff, add department<]
-                    //Department dept = repository.findDepartment(departmentId);
-                    //_staff.addDepartment(dept.getId());
-                    //repository.updateStaff(_staff);
-                    //return new ResponseEntity<StaffResource>(
-                            //resourceAssember.toResource(_staff),HttpStatus.CREATED);
-                //}
-            //}
-
-            //[>id is null ,or staff is not exist, add a new staff<]
-            //Company company = repository.findCompany(companyId);
-            //staff.setCompany(company.getId());
-            //staff.setType("staffs");
-            //Department dept = repository.findDepartment(departmentId);
-            //staff.addDepartment(dept.getId());
-            //repository.addStaff(staff);
-            //return new ResponseEntity<StaffResource>(
-                    //resourceAssember.toResource(staff),HttpStatus.CREATED);
-
-        //}
-
-    @RequestMapping(method = RequestMethod.GET)
-        public Resources<StaffResource> getStaff(
-                @RequestParam(required = false) String mobile,
-                @RequestParam(required = false) String name
-                )
-        {
-            Map<String, String> searchCondition = new HashMap<String, String>();
-            searchCondition.put("mobile",mobile);
-            searchCondition.put("name",name);
-            return new Resources<StaffResource>(resourceAssember.toResources(
-                    repository.findStaffs(searchCondition)));
-        }
-
-    @RequestMapping(value="/{staffId}",method = RequestMethod.GET)
-        public StaffResource getStaff(
-                @PathVariable String staffId
-                )
-        {
-            return resourceAssember.toResource(repository.findStaff(staffId));
-        }
-
-    //@RequestMapping(value="/api/v1.0/companies/{companyId}/invitees/{inviteeId}",method = RequestMethod.GET)
-        //public StaffResource getStaff(@PathVariable String inviteeId) {
-            //return resourceAssember.toResource(repository.findStaff(staffId));
-        //}
-
 }
 
 

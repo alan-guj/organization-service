@@ -87,7 +87,7 @@ class RoleResourceAssembler extends ResourceAssemblerSupport<Role, RoleResource>
     @Override
     public RoleResource toResource(Role role) {
         RoleResource resource = createResourceWithId(
-                role.getId().toString(),role,role.getCompany());
+                role.getId().toString(),role,role.getCompany(),role.getDepartment());
         return resource;
     }
 
@@ -100,7 +100,7 @@ class RoleResourceAssembler extends ResourceAssemblerSupport<Role, RoleResource>
 
 @RestController
 @EnableResourceServer
-@RequestMapping("/api/v1.0/companies/**/roles")
+@RequestMapping("/api/v1.0/companies/{companyId}/departments/{departmentId}/roles")
 class RoleController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private RoleResourceAssembler assember = new RoleResourceAssembler();
@@ -108,9 +108,7 @@ class RoleController {
     @Autowired
     private OrganizationRepository repository;
 
-    @RequestMapping(
-            path="/api/v1.0/companies/{companyId}/departments/{departmentId}/roles",
-            method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<RoleResource> addRole(
                 @PathVariable String departmentId,
                 @RequestBody Role role)
@@ -121,10 +119,9 @@ class RoleController {
                     assember.toResource(role),HttpStatus.CREATED);
         }
 
-    @RequestMapping(
-            path="/api/v1.0/companies/{companyId}/departments/{departmentId}/roles",
-            method = RequestMethod.GET)
-        public Resources<RoleResource> getDepartmentRoles(
+    @RequestMapping(method = RequestMethod.GET)
+        public Resources<RoleResource> getRoles(
+                @PathVariable String companyId,
                 @PathVariable String departmentId)
         {
             return new Resources<RoleResource>(
@@ -134,15 +131,9 @@ class RoleController {
                     );
         }
 
-    //@RequestMapping(
-            //path="/api/v1.0/companies/{companyId}/roles",
-            //method = RequestMethod.GET)
-        //public List<Role> getCompanyRoles(@PathVariable String companyId) {
-            //return repository.findAllRoles(companyId);
-        //}
 
     @RequestMapping(value="/{roleId}", method = RequestMethod.GET)
-        public RoleResource getRoles(@PathVariable String roleId) {
+        public RoleResource getRole(@PathVariable String roleId) {
             return assember.toResource(repository.findRole(roleId));
         }
 }

@@ -52,6 +52,8 @@ public class OrganizationRepository {
         addNode(company.getId(),"groups");
         addNode(company.getId(),"applicants");
         addNode(company.getId(),"invitees");
+        addNode(company.getId(),"products");
+        addNode(company.getId(),"localities");
     }
 
     public Company findCompany(String companyId) {
@@ -67,6 +69,8 @@ public class OrganizationRepository {
         removeNode(company.getId(),"groups");
         removeNode(company.getId(),"applicants");
         removeNode(company.getId(),"invitees");
+        removeNode(company.getId(),"products");
+        removeNode(company.getId(),"localities");
         ldapTemplate.delete(company);
     }
 
@@ -146,10 +150,18 @@ public class OrganizationRepository {
         return ldapTemplate.findAll(dn,sc,Staff.class);
     }
 
-    public List<Staff> findStaffs(Map<String, String> searchCondition) {
-        ContainerCriteria query = query().where("objectclass").is("inetOrgPerson")
+    public List<Staff> findStaffs(String companyId,Map<String, String> searchCondition) {
+        ContainerCriteria query;
+        if(companyId != null) {
+            Name dn = LdapNameBuilder.newInstance(companyId)
+                .add("ou","staffs")
+                .build();
+            query = query().base(dn).where("objectclass").is("inetOrgPerson")
                 .and("employeeType").is("staffs");
-
+        }else {
+            query = query().where("objectclass").is("inetOrgPerson")
+                .and("employeeType").is("staffs");
+        }
         for(Map.Entry<String,String> entry:searchCondition.entrySet()){
             if(entry.getValue()!= null)
                 query=query.and(entry.getKey()).like(entry.getValue());
@@ -215,5 +227,73 @@ public class OrganizationRepository {
     public void updateGroup(Group group) {
         ldapTemplate.update(group);
     }
+
+
+    /*Products*/
+    public List<Product> findProducts(String companyId) {
+        SearchControls sc = new SearchControls();
+        Name dn = LdapNameBuilder.newInstance(companyId)
+            .add("ou","products")
+            .build();
+        return ldapTemplate.findAll(dn,sc,Product.class);
+    }
+
+    public Product findProduct(String productId) {
+        Name dn = LdapNameBuilder.newInstance(productId)
+            .build();
+        return ldapTemplate.findByDn(dn, Product.class);
+    }
+
+    public Product findProduct(Name dn) {
+        return ldapTemplate.findByDn(dn, Product.class);
+    }
+
+
+    public void addProduct(Product product) {
+        ldapTemplate.create(product);
+    }
+
+    public void updateProduct(Product product) {
+        ldapTemplate.update(product);
+    }
+
+    /*Locality*/
+    public List<Locality> findLocalities(Name root, boolean recursive) {
+        SearchControls sc = new SearchControls();
+        List<Locality> firstLevel = ldapTemplate.findAll(root,sc,Locality.class);
+        if(recursive) {
+            List<Locality> allLevel = ldapTemplate.findAll(root,sc,Locality.class);
+            sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            firstLevel.forEach(l->{
+                allLevel.addAll(ldapTemplate.findAll(l.getId(),sc,Locality.class));
+            });
+            return allLevel;
+        } else {
+            return firstLevel;
+        }
+    }
+
+    public List<Locality> findLocalities(String root, boolean recursive) {
+        Name dn = LdapNameBuilder.newInstance(root).build();
+        return findLocalities(dn,recursive);
+    }
+
+    public Locality findLocality(Name dn) {
+        return ldapTemplate.findByDn(dn,Locality.class);
+    }
+
+    public Locality findLocality(String localityId) {
+        Name dn = LdapNameBuilder.newInstance(localityId).build();
+        return findLocality(dn);
+    }
+
+    public void addLocality(Locality l) {
+        ldapTemplate.create(l);
+    }
+
+    public void updateLocality(Locality l) {
+        ldapTemplate.update(l);
+    }
+
 }
 

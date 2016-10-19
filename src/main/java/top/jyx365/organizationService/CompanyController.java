@@ -84,6 +84,27 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
                     methodOn(DepartmentController.class)
                     .getDepartments(company.getId().toString(),null)
                     ).withRel("departments"));
+        resource.add(
+                linkTo(
+                    methodOn(StaffController.class)
+                    .getStaffs(company.getId().toString(),null,null,null)
+                    ).withRel("staffs"));
+        resource.add(
+                linkTo(
+                    methodOn(StaffController.InviteeController.class)
+                    .getInvitees(company.getId().toString())
+                    ).withRel("invitees"));
+        resource.add(
+                linkTo(
+                    methodOn(StaffController.ApplicantController.class)
+                    .getApplicants(company.getId().toString())
+                    ).withRel("applicants"));
+        resource.add(
+                linkTo(
+                    methodOn(GroupController.class)
+                    .getAllGroups(company.getId().toString())
+                    ).withRel("groups"));
+
         return resource;
     }
 
@@ -95,7 +116,7 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
 
 
 @RestController
-//@EnableResourceServer
+@EnableResourceServer
 @RequestMapping("/api/v1.0/companies")
 public class CompanyController {
 

@@ -76,23 +76,29 @@ class DepartmentResource extends ResourceSupport {
 
 }
 
-class DepartmentResourceAssembler extends ResourceAssemblerSupport<Department, DepartmentResource> {
-    public DepartmentResourceAssembler() {
-        super(DepartmentController.class, DepartmentResource.class);
-    }
+class DepartmentResourceAssembler
+    extends ResourceAssemblerSupport<Department, DepartmentResource>
+    {
+        public DepartmentResourceAssembler() {
+            super(DepartmentController.class, DepartmentResource.class);
+        }
 
-    @Override
-    public DepartmentResource toResource(Department dept) {
-        DepartmentResource resource = createResourceWithId(
-                dept.getId().toString(),dept,dept.getCompany());
-        return resource;
-    }
+        @Override
+        public DepartmentResource toResource(Department dept) {
+            DepartmentResource resource = createResourceWithId(
+                    dept.getId().toString(),dept,dept.getCompany());
+            resource.add(linkTo(
+                        methodOn(RoleController.class)
+                        .getRoles(dept.getCompany(),dept.getId().toString())
+                        ).withRel("roles"));
+            return resource;
+        }
 
-    @Override
-    protected DepartmentResource instantiateResource(Department dept) {
-        return new DepartmentResource(dept);
+        @Override
+        protected DepartmentResource instantiateResource(Department dept) {
+            return new DepartmentResource(dept);
+        }
     }
-}
 
 
 @RestController
