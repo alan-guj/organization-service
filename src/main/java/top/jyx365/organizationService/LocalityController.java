@@ -1,14 +1,19 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.naming.Name;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.core.Relation;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.ldap.support.LdapNameBuilder;
 
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
@@ -38,7 +44,7 @@ class LocalityResource extends ResourceSupport {
         return this.l.getName();
     }
 
-    public String getDescrption() {
+    public String getDescription() {
         return this.l.getDescription();
     }
 
@@ -89,11 +95,14 @@ public class LocalityController {
                 @PathVariable String companyId
                 )
         {
+            Name root = LdapNameBuilder.newInstance(companyId)
+                .add("ou","localities")
+                .build();
             return new Resources<LocalityResource>(
-                    assember.toResources(repository.findLocalities(companyId,true)));
+                    assember.toResources(repository.findLocalities(root,true)));
         }
 
-    @RequestMapping(value="/{LocalityId}",method = RequestMethod.GET)
+    @RequestMapping(value="/{localityId}",method = RequestMethod.GET)
         public LocalityResource getLocality(
                 @PathVariable String companyId,
                 @PathVariable String localityId

@@ -262,7 +262,7 @@ public class OrganizationRepository {
         SearchControls sc = new SearchControls();
         List<Locality> firstLevel = ldapTemplate.findAll(root,sc,Locality.class);
         if(recursive) {
-            List<Locality> allLevel = ldapTemplate.findAll(root,sc,Locality.class);
+            List<Locality> allLevel = new ArrayList<Locality>();
             sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
             firstLevel.forEach(l->{
                 allLevel.addAll(ldapTemplate.findAll(l.getId(),sc,Locality.class));

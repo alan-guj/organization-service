@@ -3,8 +3,14 @@ spring:
         active: dev-test
     jackson:
          serialization-inclusion: NON_EMPTY
+    application:
+        name: OrganizationService
+    cloud:
+        consul:
+            discovery:
+                tags: ${spring.profiles.active}
 app:
-    key: OrganizationManagement
+    key: OrganizationService
     name: 企业管理
     desc: 企业管理
     version: v0.1
@@ -18,7 +24,7 @@ app:
 security:
     basic:
         enabled: true
-    ignored: /**/*swagger*,/**/*swagger*/**,/v2/api-docs,/webjars/**
+    ignored: /health,/**/*swagger*,/**/*swagger*/**,/v2/api-docs,/webjars/**
     oauth2:
         client:
             clientId: customer_care_web_server_guj
@@ -40,6 +46,9 @@ logging:
         top.jyx365: DEBUG
         #org.springframework.core.env: DEBUG
     file: ./springboot.log
+lombok:
+    log:
+        fieldName: logger
 ---
 #单元测试
 spring:

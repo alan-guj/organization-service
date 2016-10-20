@@ -33,7 +33,7 @@ public final class Product {
     @JsonIgnore
     private String domain;
 
-    @Attribute(name="organizationName")
+    @Attribute(name="o")
     @JsonIgnore
     private Name company;
 

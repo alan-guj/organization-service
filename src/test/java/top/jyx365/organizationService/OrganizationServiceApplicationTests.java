@@ -100,7 +100,7 @@ public class OrganizationServiceApplicationTests {
 
     public static class TestProfileValueSource implements ProfileValueSource {
         public String get(String key) {
-            return "company";
+            return "all";
         }
     }
 
@@ -299,14 +299,14 @@ public class OrganizationServiceApplicationTests {
         l_1_1.setDescription("test_locality_1_1_desc");
         l_1_1.setLocalityId("test_locality_1_1_localId");
         l_1_1.setParent(l_1.getId());
-        repository.addLocality(l_1);
+        repository.addLocality(l_1_1);
 
 
         l_2 = new Locality();
         l_2.setName("test_locality_2");
         l_2.setDescription("test_locality_2_desc");
         l_2.setCompany(c_1.getId());
-        repository.addLocality(l_1);
+        repository.addLocality(l_2);
 
     }
 
@@ -1288,7 +1288,8 @@ public class OrganizationServiceApplicationTests {
                 "/products"
                 )
             .contentType(CONTENT_TYPE)
-            .header(AUTHORIZATION, ACCESS_TOKEN);
+            .header(AUTHORIZATION, ACCESS_TOKEN)
+            .content(json(p));
         this.mockMvc.perform(request)
             .andDo(print())
             .andExpect(status().isCreated())
@@ -1320,11 +1321,11 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$._embedded.products[0].description",is(p_1.getDescription())))
             .andExpect(jsonPath("$._embedded.products[0].productId",is(p_1.getProductId())))
             .andExpect(jsonPath("$._embedded.products[0].company",is(p_1.getCompany().toString())))
-            .andExpect(jsonPath("$._embedded.products[1].id",is(p_1.getId().toString())))
-            .andExpect(jsonPath("$._embedded.products[1].name",is(p_1.getName())))
-            .andExpect(jsonPath("$._embedded.products[1].description",is(p_1.getDescription())))
+            .andExpect(jsonPath("$._embedded.products[1].id",is(p_2.getId().toString())))
+            .andExpect(jsonPath("$._embedded.products[1].name",is(p_2.getName())))
+            .andExpect(jsonPath("$._embedded.products[1].description",is(p_2.getDescription())))
             .andExpect(jsonPath("$._embedded.products[1].productId").doesNotExist())
-            .andExpect(jsonPath("$._embedded.products[1].company",is(p_1.getCompany().toString())));
+            .andExpect(jsonPath("$._embedded.products[1].company",is(p_2.getCompany().toString())));
     }
 
     /*7.2.2 Get one product*/
@@ -1346,7 +1347,7 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.id",is(p.getId().toString())))
             .andExpect(jsonPath("$.name",is(p.getName())))
             .andExpect(jsonPath("$.description",is(p.getDescription())))
-            .andExpect(jsonPath("$.company",is(p.getCompany())))
+            .andExpect(jsonPath("$.company",is(p.getCompany().toString())))
             .andExpect(jsonPath("$.productId").doesNotExist());
     }
 
@@ -1373,7 +1374,8 @@ public class OrganizationServiceApplicationTests {
                 "/localities"
                 )
             .contentType(CONTENT_TYPE)
-            .header(AUTHORIZATION, ACCESS_TOKEN);
+            .header(AUTHORIZATION, ACCESS_TOKEN)
+            .content(json(l));
         this.mockMvc.perform(request)
             .andDo(print())
             .andExpect(status().isCreated())
@@ -1395,6 +1397,7 @@ public class OrganizationServiceApplicationTests {
         l.setParent(l_1.getId());
         String id = LdapNameBuilder.newInstance(c_1.getId())
             .add("ou","localities")
+            .add("l",l_1.getName())
             .add("l",l.getName())
             .build().toString();
         String parent = l_1.getId().toString();
@@ -1404,7 +1407,8 @@ public class OrganizationServiceApplicationTests {
                 "/localities"
                 )
             .contentType(CONTENT_TYPE)
-            .header(AUTHORIZATION, ACCESS_TOKEN);
+            .header(AUTHORIZATION, ACCESS_TOKEN)
+            .content(json(l));
         this.mockMvc.perform(request)
             .andDo(print())
             .andExpect(status().isCreated())
@@ -1431,7 +1435,7 @@ public class OrganizationServiceApplicationTests {
         this.mockMvc.perform(request)
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.products",hasSize(3)));
+            .andExpect(jsonPath("$._embedded.localities",hasSize(3)));
     }
 
     /*8.2.2 get one Locality*/
@@ -1453,8 +1457,8 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.id",is(l.getId().toString())))
             .andExpect(jsonPath("$.name",is(l.getName())))
             .andExpect(jsonPath("$.description",is(l.getDescription())))
-            .andExpect(jsonPath("$.parent",is(l.getParent())))
-            .andExpect(jsonPath("$.company",is(l.getCompany())))
+            .andExpect(jsonPath("$.parent",is(l.getParent().toString())))
+            .andExpect(jsonPath("$.company",is(l.getCompany().toString())))
             .andExpect(jsonPath("$.localityId").doesNotExist());
     }
 
@@ -1477,9 +1481,9 @@ public class OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.id",is(l.getId().toString())))
             .andExpect(jsonPath("$.name",is(l.getName())))
             .andExpect(jsonPath("$.description",is(l.getDescription())))
-            .andExpect(jsonPath("$.parent",is(l.getParent())))
-            .andExpect(jsonPath("$.company",is(l.getCompany())))
-            .andExpect(jsonPath("$.localityId").doesNotExist());
+            .andExpect(jsonPath("$.parent",is(l.getParent().toString())))
+            .andExpect(jsonPath("$.company",is(l.getCompany().toString())))
+            .andExpect(jsonPath("$.localityId",is(l.getLocalityId())));
     }
 
     private void cleanNode(String node) {

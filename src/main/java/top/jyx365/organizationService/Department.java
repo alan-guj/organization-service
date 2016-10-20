@@ -77,7 +77,7 @@ public final class Department {
     }
 
     public String getCompany() {
-        return id.getPrefix(1).toString();
+        return (id==null)?null:id.getPrefix(1).toString();
     }
 
     public void setParent(String parent) {
@@ -87,6 +87,6 @@ public final class Department {
     }
 
     public String getParent() {
-        return id.getPrefix(id.size()-1).toString();
+        return (id==null)?null:id.getPrefix(id.size()-1).toString();
     }
 }

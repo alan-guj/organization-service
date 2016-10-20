@@ -20,8 +20,8 @@ public final class Locality {
 
     private String description;
 
-    @Attribute(name="seeAlso")
-    private String localityId;
+    @Attribute(name="st")
+    private String localityId="null";
 
 
     public Name getId() {
@@ -45,11 +45,11 @@ public final class Locality {
     }
 
     public void setLocalityId(String localityId) {
-        this.localityId = localityId;
+        this.localityId= localityId==null?"null":localityId;
     }
 
     public String getLocalityId() {
-        return localityId;
+        return localityId.equals("null")?null:localityId;
     }
 
     public void setCompany(Name company) {
@@ -61,7 +61,7 @@ public final class Locality {
     }
 
     public Name getCompany() {
-        return id.getPrefix(1);
+        return (id==null)?null:id.getPrefix(1);
     }
 
     public void setParent(Name parent) {
@@ -71,7 +71,7 @@ public final class Locality {
     }
 
     public Name getParent() {
-        return id.getPrefix(id.size()-1);
+        return (id==null)?null:id.getPrefix(id.size()-1);
     }
 
 }
