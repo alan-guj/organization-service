@@ -41,7 +41,7 @@ server:
     port: 8810
 logging:
     level:
-        org.springframework.ldap: DEBUG
+        #org.springframework.ldap: DEBUG
         #org.springframework.boot.autoconfigure: DEBUG
         top.jyx365: DEBUG
         #org.springframework.core.env: DEBUG

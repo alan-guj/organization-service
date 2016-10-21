@@ -119,6 +119,7 @@ public class LocalityController {
         {
             Company company = repository.findCompany(companyId);
             l.setCompany(company.getId());
+            repository.addLocality(l);
             return new ResponseEntity<LocalityResource>(
                     assember.toResource(l), HttpStatus.CREATED);
         }
