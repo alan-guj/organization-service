@@ -37,8 +37,11 @@ security:
             scope: userinfo
         resource:
             userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
+authority:
+    authorities: system_service, system_web
 server:
     port: 8810
+    address: cc-dev.jyx365.top
 logging:
     level:
         #org.springframework.ldap: DEBUG

@@ -1,17 +1,24 @@
 package top.jyx365.organizationService;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import org.springframework.hateoas.VndErrors;
 
@@ -28,6 +35,11 @@ import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
 
 @SpringBootApplication
@@ -82,4 +94,29 @@ class OrganizationServiceContollerAdvice {
 }
 
 
+@EnableResourceServer
+@Configuration
+@EnableConfigurationProperties(AuthorityConfiguration.class)
+class ResourceServerConfigurer extends ResourceServerConfigurerAdapter{
+    @Autowired
+    AuthorityConfiguration config;
 
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+            .antMatchers("/api/**").hasAnyAuthority(config.getAuthorities());
+    }
+}
+
+@ConfigurationProperties(prefix="authority")
+class AuthorityConfiguration {
+    private String authorities;
+
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getAuthorities() {
+        return authorities;
+    }
+}
