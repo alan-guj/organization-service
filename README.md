@@ -14,3 +14,7 @@
 这些关联关系与企业的组织架构和资源所在位置密切相关。
 本模块所提供的组织架构和资源位置，为企业运营数据的分析提供了基础。
 
+# 开发环境调试地址
+* http://cc-dev.jyx365.top:8810/api/v1.0
+
+* Swagger UI : http://cc-dev.jyx365.top:8810/swagger-ui.html
