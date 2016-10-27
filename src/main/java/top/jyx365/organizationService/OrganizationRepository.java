@@ -156,8 +156,7 @@ public class OrganizationRepository {
             Name dn = LdapNameBuilder.newInstance(companyId)
                 .add("ou","staffs")
                 .build();
-            query = query().base(dn).where("objectclass").is("inetOrgPerson")
-                .and("employeeType").is("staffs");
+            query = query().base(dn).where("objectclass").is("inetOrgPerson");
         }else {
             query = query().where("objectclass").is("inetOrgPerson")
                 .and("employeeType").is("staffs");

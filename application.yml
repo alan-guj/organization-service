@@ -38,7 +38,7 @@ security:
         resource:
             userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
 authority:
-    authorities: system_service, system_web
+    authorities: system_service, system_web, enterprise_user, system_admin
 server:
     port: 8810
     address: cc-dev.jyx365.top
@@ -98,7 +98,7 @@ server:
 ldap:
     password: 6Jw8fd7TfnPRd7Gr
     url: ldap://localhost:389
-    base: dc=test,dc=jyx365,dc=top
+    base: dc=dev-prod,dc=jyx365,dc=top
     userDn: cn=Manager,dc=jyx365,dc=top
 ---
 spring:
