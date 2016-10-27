@@ -1,0 +1,105 @@
+version: 1
+
+dn: ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: departments
+objectclass: top
+objectclass: organizationalUnit
+ou: departments
+#######################################################################################
+dn: ou=Academic Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 学术部
+objectclass: organizationalUnit
+ou: Academic Dept
+
+dn: cn=Manager,ou=Academic Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=Academic Dept,ou=departments,dc=nkf
+########################################################################################
+
+
+dn: ou=Business Management Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 经营管理部
+objectclass: organizationalUnit
+ou: Business Management Dept
+
+dn: cn=Manager,ou=Business Management Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=Business Management Dept,ou=departments,dc=nkf
+
+##############################################################################################
+
+dn: ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 营销中心
+objectclass: organizationalUnit
+ou: Marketing Dept
+
+dn: cn=Manager,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+
+dn: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 第一战区
+objectclass: organizationalUnit
+ou: district-1
+
+dn: cn=Manager,ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+
+
+dn: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 第二战区
+objectclass: organizationalUnit
+ou: district-2
+
+dn: cn=Manager,ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+
+
+dn: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 第三战区
+objectclass: organizationalUnit
+ou: district-3
+
+dn: cn=Manager,ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf
+
+
+dn: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 第四战区
+objectclass: organizationalUnit
+ou: district-4
+
+dn: cn=Manager,ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf
+
+
+dn: ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: 第五战区
+objectclass: organizationalUnit
+ou: district-5
+
+dn: cn=Manager,ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: Manager
+description: 经理
+objectclass: organizationalRole
+ou: ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf
+
+

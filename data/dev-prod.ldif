@@ -1,0 +1,1160 @@
+# extended LDIF
+#
+# LDAPv3
+# base <dc=dev-prod,dc=jyx365,dc=top> with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# dev-prod.jyx365.top
+dn: dc=dev-prod,dc=jyx365,dc=top
+dc: dev-prod
+o: dev-prod
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+
+# nkf.dev-prod.jyx365.top
+dn: dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+dc: nkf
+o: nkf
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+
+# departments, nkf.dev-prod.jyx365.top
+dn: ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: departments
+objectClass: top
+objectClass: organizationalUnit
+ou: departments
+
+# Academic Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=Academic Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5a2m5pyv6YOo
+objectClass: organizationalUnit
+objectClass: top
+ou: Academic Dept
+
+# Manager, Academic Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=Academic Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc
+ =top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=Academic Dept,ou=departments,dc=nkf
+roleOccupant: cn=zhuang.lihong,ou=staffs,dc=nkf
+
+# Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6JCl6ZSA5Lit5b+D
+objectClass: organizationalUnit
+objectClass: top
+ou: Marketing Dept
+
+# Manager, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,d
+ c=top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+roleOccupant: cn=zhou.xiaoming,ou=staffs,dc=nkf
+
+# district-1, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx36
+ 5,dc=top
+description:: 56ys5LiA5oiY5Yy6
+objectClass: organizationalUnit
+objectClass: top
+ou: district-1
+businessCategory: {"locality":"l=BeiJing,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+businessCategory: {"locality":"l=YunNan,ou=localities,dc=nkf","product":"ou=pr
+ oducts,dc=nkf"}
+businessCategory: {"locality":"l=JiLin,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+businessCategory: {"locality":"l=ShanXi,ou=localities,dc=nkf","product":"ou=pr
+ oducts,dc=nkf"}
+businessCategory: {"locality":"l=GuangXi,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf","product":"ou=pr
+ oducts,dc=nkf"}
+businessCategory: {"locality":"l=HuBei,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+businessCategory: {"locality":"l=LiaoLing,ou=localities,dc=nkf","product":"ou=
+ products,dc=nkf"}
+businessCategory: {"locality":"l=HeiLongJiang,ou=localities,dc=nkf","product":
+ "ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangSu,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+businessCategory: {"locality":"l=AnHui,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+businessCategory: {"locality":"l=HuNan,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+businessCategory: {"locality":"l=TianJin,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+
+# Manager, district-1, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-pr
+ od,dc=jyx365,dc=top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+roleOccupant: cn=hu.le,ou=staffs,dc=nkf
+
+# district-2, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx36
+ 5,dc=top
+description:: 56ys5LqM5oiY5Yy6
+objectClass: organizationalUnit
+objectClass: top
+ou: district-2
+businessCategory: {"locality":"l=ShangHai,ou=localities,dc=nkf","product":"ou=
+ products,dc=nkf"}
+businessCategory: {"locality":"l=HeBei,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+businessCategory: {"locality":"l=JiangXi,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+businessCategory: {"locality":"l=HeNan,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+
+# Manager, district-2, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-pr
+ od,dc=jyx365,dc=top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+roleOccupant: cn=ma.yan515,ou=staffs,dc=nkf
+
+# district-3, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx36
+ 5,dc=top
+description:: 56ys5LiJ5oiY5Yy6
+objectClass: organizationalUnit
+objectClass: top
+ou: district-3
+businessCategory: {"locality":"l=SiChuan,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+businessCategory: {"locality":"l=ChongQing,ou=localities,dc=nkf","product":"ou
+ =products,dc=nkf"}
+
+# Manager, district-3, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-pr
+ od,dc=jyx365,dc=top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf
+roleOccupant: cn=huang.yong,ou=staffs,dc=nkf
+
+# district-4, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx36
+ 5,dc=top
+description:: 56ys5Zub5oiY5Yy6
+objectClass: organizationalUnit
+objectClass: top
+ou: district-4
+businessCategory: {"locality":"l=ShanDong,ou=localities,dc=nkf","product":"ou=
+ products,dc=nkf"}
+
+# Manager, district-4, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-pr
+ od,dc=jyx365,dc=top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf
+roleOccupant: cn=mao.junfeng,ou=staffs,dc=nkf
+
+# district-5, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx36
+ 5,dc=top
+description:: 56ys5LqU5oiY5Yy6
+objectClass: organizationalUnit
+objectClass: top
+ou: district-5
+businessCategory: {"locality":"l=GanSu,ou=localities,dc=nkf","product":"ou=pro
+ ducts,dc=nkf"}
+businessCategory: {"locality":"l=ShaanXi,ou=localities,dc=nkf","product":"ou=p
+ roducts,dc=nkf"}
+businessCategory: {"locality":"l=GuangDong,ou=localities,dc=nkf","product":"ou
+ =products,dc=nkf"}
+
+# Manager, district-5, Marketing Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf,dc=dev-pr
+ od,dc=jyx365,dc=top
+cn: Manager
+description:: 57uP55CG
+objectClass: organizationalRole
+objectClass: top
+ou: ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf
+roleOccupant: cn=zhou.xiaoming,ou=staffs,dc=nkf
+
+# Business Mgt Dept, departments, nkf.dev-prod.jyx365.top
+dn: ou=Business Mgt Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 57uP6JCl566h55CG6YOo
+objectClass: organizationalUnit
+objectClass: top
+ou: Business Mgt Dept
+
+# Manager, Business Mgt Dept, departments, nkf.dev-prod.jyx365.top
+dn: cn=Manager,ou=Business Mgt Dept,ou=departments,dc=nkf,dc=dev-prod,dc=jyx36
+ 5,dc=top
+cn: Manager
+objectClass: organizationalRole
+objectClass: top
+ou: ou=Business Mgt Dept,ou=departments,dc=nkf
+roleOccupant: cn=qian.xiaojie,ou=staffs,dc=nkf
+
+# staffs, nkf.dev-prod.jyx365.top
+dn: ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description: staffs
+objectClass: top
+objectClass: organizationalUnit
+ou: staffs
+
+# zhu.qiang, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhu.qiang,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhu.qiang
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5pyx5by6
+uid: null
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=HuBei,ou=localities,dc=nkf", "product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HuBei,ou=localities,dc=nkf", "product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HuBei,ou=localities,dc=nkf", "product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+
+# zhou.jing, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhou.jing,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhou.jing
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5ZGo6Z2Z
+uid: null
+
+# zhang.kangjie, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhang.kangjie,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhang.kangjie
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5byg5Lqi5rSB
+uid: null
+
+# zhang.guoqin, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhang.guoqin,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhang.guoqin
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5byg5Zu955C0
+uid: null
+
+# xu.peng, staffs, nkf.dev-prod.jyx365.top
+dn: cn=xu.peng,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: xu.peng
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5b6Q6bmP
+uid: null
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=GuangXi,ou=localities,dc=nkf","product":"cn=D
+ aGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GuangXi,ou=localities,dc=nkf","product":"cn=N
+ aQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf","product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf","product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf","product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GuangXi,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GuangXi,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf", "product":"cn=D
+ aGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf", "product":"cn=N
+ aQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HaiNan,ou=localities,dc=nkf", "product":"cn=Y
+ iNuo,ou=products,dc=nkf"}
+
+# xie.fei, staffs, nkf.dev-prod.jyx365.top
+dn: cn=xie.fei,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: xie.fei
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6LCi6I+y
+uid: null
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=ShangHai,ou=localities,dc=nkf", "product":"cn
+ =NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ShangHai,ou=localities,dc=nkf", "product":"cn
+ =YiNuo,ou=products,dc=nkf"}
+
+# wu.yue, staffs, nkf.dev-prod.jyx365.top
+dn: cn=wu.yue,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: wu.yue
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5ZC06LeD
+uid: null
+businessCategory: {"locality":"l=GanSu,ou=localities,dc=nkf", "product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GanSu,ou=localities,dc=nkf", "product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GanSu,ou=localities,dc=nkf", "product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ShanXi,ou=localities,dc=nkf", "product":"cn=D
+ aGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ShanXi,ou=localities,dc=nkf", "product":"cn=Y
+ iNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=NingXia,ou=localities,dc=nkf", "product":"cn=
+ YiNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=NingXia,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=XinJiang,ou=localities,dc=nkf", "product":"cn
+ =NaQu,ou=products,dc=nkf"}
+ou: ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf
+
+# wang.baoqing, staffs, nkf.dev-prod.jyx365.top
+dn: cn=wang.baoqing,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: wang.baoqing
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 546L5L+d5bqG
+uid: null
+ou: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=SiChuan,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ChongQing,ou=localities,dc=nkf", "product":"c
+ n=DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HeNan,ou=localities,dc=nkf", "product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HeNan,ou=localities,dc=nkf", "product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HeNan,ou=localities,dc=nkf", "product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+
+# qiu.dongliang, staffs, nkf.dev-prod.jyx365.top
+dn: cn=qiu.dongliang,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: qiu.dongliang
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6YKx5qCL5qKB
+uid: null
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=HeBei,ou=localities,dc=nkf", "product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+
+# mao.junfeng, staffs, nkf.dev-prod.jyx365.top
+dn: cn=mao.junfeng,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: mao.junfeng
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+uid: null
+ou: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5q+b5L+K5bOw
+businessCategory: {"locality":"l=ShanDong,ou=localities,dc=nkf", "product":"cn
+ =NaQu,ou=products,dc=nkf"}
+
+# huang.yong, staffs, nkf.dev-prod.jyx365.top
+dn: cn=huang.yong,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: huang.yong
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6buE55So
+uid: null
+ou: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=SiChuan,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ChongQing,ou=localities,dc=nkf", "product":"c
+ n=NaQu,ou=products,dc=nkf"}
+
+# gu.pengpeng, staffs, nkf.dev-prod.jyx365.top
+dn: cn=gu.pengpeng,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: gu.pengpeng
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6aG+6bmP6bmP
+uid: null
+ou: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=ShanDong,ou=localities,dc=nkf", "product":"cn
+ =DaGan,ou=products,dc=nkf"}
+
+# ge.cong, staffs, nkf.dev-prod.jyx365.top
+dn: cn=ge.cong,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: ge.cong
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6JGb6IGq
+uid: null
+ou: ou=district-5,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=GuangDong,ou=localities,dc=nkf", "product":"c
+ n=YiNuo,ou=products,dc=nkf"}
+
+# zhou.xiaoming, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhou.xiaoming,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhou.xiaoming
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5ZGo5bCP5piO
+uid: null
+
+# hu.le, staffs, nkf.dev-prod.jyx365.top
+dn: cn=hu.le,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: hu.le
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6IOh5LmQ
+uid: null
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=AnHui,ou=localities,dc=nkf", "product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=AnHui,ou=localities,dc=nkf", "product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=AnHui,ou=localities,dc=nkf", "product":"cn=,o
+ u=products,dc=nkf"}
+businessCategory: {"locality":"l=GuiZhou,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GuiZhou,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=GuiZhou,ou=localities,dc=nkf", "product":"cn=
+ YiNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HuNan,ou=localities,dc=nkf", "product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HuNan,ou=localities,dc=nkf", "product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HuNan,ou=localities,dc=nkf", "product":"cn=Yi
+ Nuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangSu,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangSu,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangSu,ou=localities,dc=nkf", "product":"cn=
+ YiNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=NeiMengGu,ou=localities,dc=nkf", "product":"c
+ n=NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=NeiMengGu,ou=localities,dc=nkf", "product":"c
+ n=DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=NeiMengGu,ou=localities,dc=nkf", "product":"c
+ n=YiNuo,ou=products,dc=nkf"}
+
+# ma.yan515, staffs, nkf.dev-prod.jyx365.top
+dn: cn=ma.yan515,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: ma.yan515
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6ams54KO
+uid: null
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=FuJian,ou=localities,dc=nkf", "product":"cn=N
+ aQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=FuJian,ou=localities,dc=nkf", "product":"cn=D
+ aGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangXi,ou=localities,dc=nkf", "product":"cn=
+ YiNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangXi,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiangXi,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ZheJiang,ou=localities,dc=nkf", "product":"cn
+ =NaQu,ou=products,dc=nkf"}
+
+# kong.shanshan, staffs, nkf.dev-prod.jyx365.top
+dn: cn=kong.shanshan,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: kong.shanshan
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5a2U54+K54+K
+uid: null
+ou: ou=district-4,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=ShanDong,ou=localities,dc=nkf", "product":"cn
+ =YiNuo,ou=products,dc=nkf"}
+
+# cheng.kai, staffs, nkf.dev-prod.jyx365.top
+dn: cn=cheng.kai,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: cheng.kai
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 56iL5Yev
+uid: null
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=HeiLongJiang,ou=localities,dc=nkf", "product"
+ :"cn=NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=HeiLongJiang,ou=localities,dc=nkf", "product"
+ :"cn=YiNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=JiLin,ou=localities,dc=nkf", "product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=LiaoNing,ou=localities,dc=nkf", "product":"cn
+ =YiNuo,ou=products,dc=nkf"}
+
+# huang.xinmin, staffs, nkf.dev-prod.jyx365.top
+dn: cn=huang.xinmin,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: huang.xinmin
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6buE5qyj5pWP
+uid: null
+ou: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=SiChuan,ou=localities,dc=nkf", "product":"cn=
+ YiNuo,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ChongQing,ou=localities,dc=nkf", "product":"c
+ n=YiNuo,ou=products,dc=nkf"}
+
+# sun.jihui, staffs, nkf.dev-prod.jyx365.top
+dn: cn=sun.jihui,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: sun.jihui
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5a2Z5ZCJ6L6J
+uid: null
+businessCategory: {"locality":"l=HeBei,ou=localities,dc=nkf", "product":"cn=Da
+ Gan,ou=products,dc=nkf"}
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+
+# zhao.lanlan, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhao.lanlan,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhao.lanlan
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6LW15YWw5YWw
+uid: null
+businessCategory: {"locality":"l=HeBei,ou=localities,dc=nkf", "product":"cn=Na
+ Qu,ou=products,dc=nkf"}
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+
+# yan.xiaoxia, staffs, nkf.dev-prod.jyx365.top
+dn: cn=yan.xiaoxia,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: yan.xiaoxia
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6Zer5bCP6Zye
+uid: null
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=ShanXi,ou=localities,dc=nkf", "product":"cn=D
+ aGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ShanXi,ou=localities,dc=nkf", "product":"cn=N
+ aQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ShanXi,ou=localities,dc=nkf", "product":"cn=Y
+ iNuo,ou=products,dc=nkf"}
+
+# chen.hao, staffs, nkf.dev-prod.jyx365.top
+dn: cn=chen.hao,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: chen.hao
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6ZmI5rWp
+uid: null
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=YunNan,ou=localities,dc=nkf", "product":"cn=D
+ aGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=YunNan,ou=localities,dc=nkf", "product":"cn=N
+ aQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=YunNan,ou=localities,dc=nkf", "product":"cn=Y
+ iNuo,ou=products,dc=nkf"}
+
+# tong.guowei, staffs, nkf.dev-prod.jyx365.top
+dn: cn=tong.guowei,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: tong.guowei
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 56ul5Zu95Lyf
+uid: null
+
+# ling.fang, staffs, nkf.dev-prod.jyx365.top
+dn: cn=ling.fang,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: ling.fang
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5YeM6Iqz
+uid: null
+ou: ou=district-3,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=SiChuan,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=ChongQing,ou=localities,dc=nkf", "product":"c
+ n=DaGan,ou=products,dc=nkf"}
+
+# song.xiaozhe, staffs, nkf.dev-prod.jyx365.top
+dn: cn=song.xiaozhe,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: song.xiaozhe
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5a6L5bCP5ZOy
+uid: null
+
+# cao.zhaowei, staffs, nkf.dev-prod.jyx365.top
+dn: cn=cao.zhaowei,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: cao.zhaowei
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5pu55YWG5Lyf
+uid: null
+
+# zhang.he, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhang.he,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhang.he
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5byg6bmk
+uid: null
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=ShangHai,ou=localities,dc=nkf", "product":"cn
+ =DaGan,ou=products,dc=nkf"}
+
+# zhou.songyan, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhou.songyan,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhou.songyan
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Marketing Dept,ou=departments,dc=nkf
+sn:: 5ZGo5p2+6Imz
+uid: null
+
+# huang.yigang, staffs, nkf.dev-prod.jyx365.top
+dn: cn=huang.yigang,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: huang.yigang
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6buE5LmJ5Yia
+uid: null
+ou: ou=district-2,ou=Marketing Dept,ou=departments,dc=nkf
+
+# zhou.qian, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhou.qian,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhou.qian
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5ZGo5YCp
+uid: null
+ou: ou=district-1,ou=Marketing Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=BeiJing,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=TianJin,ou=localities,dc=nkf", "product":"cn=
+ NaQu,ou=products,dc=nkf"}
+businessCategory: {"locality":"l=TianJin,ou=localities,dc=nkf", "product":"cn=
+ DaGan,ou=products,dc=nkf"}
+
+# yi.xianfu, staffs, nkf.dev-prod.jyx365.top
+dn: cn=yi.xianfu,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: yi.xianfu
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 5piT5YWI5a+M
+uid: null
+
+# zhuang.lihong, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhuang.lihong,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhuang.lihong
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 5bqE5Li957qi
+uid: null
+
+# duan.yanbing, staffs, nkf.dev-prod.jyx365.top
+dn: cn=duan.yanbing,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: duan.yanbing
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 5q616Imz5Yaw
+uid: null
+ou: ou=district-5,ou=Academic Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=GuangDong,ou=localities,dc=nkf", "product":"c
+ n=NaQu,ou=products,dc=nkf"}
+
+# chen.qiang, staffs, nkf.dev-prod.jyx365.top
+dn: cn=chen.qiang,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: chen.qiang
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+sn:: 6ZmI5by6
+uid: null
+ou: ou=district-5,ou=Academic Dept,ou=departments,dc=nkf
+businessCategory: {"locality":"l=GuangDong,ou=localities,dc=nkf", "product":"c
+ n=DaGan,ou=products,dc=nkf"}
+
+# mao.hui, staffs, nkf.dev-prod.jyx365.top
+dn: cn=mao.hui,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: mao.hui
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 5q+b5oWn
+uid: null
+
+# zhang.dongmei, staffs, nkf.dev-prod.jyx365.top
+dn: cn=zhang.dongmei,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: zhang.dongmei
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 5byg5Yas5qKF
+uid: null
+
+# jiang.jianmin, staffs, nkf.dev-prod.jyx365.top
+dn: cn=jiang.jianmin,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: jiang.jianmin
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 5rGf5bu65pWP
+uid: null
+
+# chen.zhenzhong, staffs, nkf.dev-prod.jyx365.top
+dn: cn=chen.zhenzhong,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: chen.zhenzhong
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 6ZmI5oyv5Lit
+uid: null
+
+# shen.jiakai, staffs, nkf.dev-prod.jyx365.top
+dn: cn=shen.jiakai,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: shen.jiakai
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Academic Dept,ou=departments,dc=nkf
+sn:: 5rKI5L2z5Yev
+uid: null
+
+# yan.fei, staffs, nkf.dev-prod.jyx365.top
+dn: cn=yan.fei,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: yan.fei
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Business Mgt Dept,ou=departments,dc=nkf
+sn:: 5Lil6I+y
+uid: null
+
+# qian.xiaojie, staffs, nkf.dev-prod.jyx365.top
+dn: cn=qian.xiaojie,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: qian.xiaojie
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Business Mgt Dept,ou=departments,dc=nkf
+sn:: 6ZKx5pmT5o23
+uid: null
+
+# ye.chunmei, staffs, nkf.dev-prod.jyx365.top
+dn: cn=ye.chunmei,ou=staffs,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+cn: ye.chunmei
+o: dc=nkf
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: uidObject
+ou: ou=Business Mgt Dept,ou=departments,dc=nkf
+sn:: 5Y+25pil5qKF
+uid: null
+
+# products, nkf.dev-prod.jyx365.top
+dn: ou=products,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+ou: products
+objectClass: organizationalUnit
+objectClass: top
+
+# DaGan, products, nkf.dev-prod.jyx365.top
+dn: cn=DaGan,ou=products,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+documentIdentifier: null
+description:: 6L6+6LWb55WFKOi+vuiCnee0oOmSoOazqOWwhOa2su+8iQ==
+o: dc=nkf
+objectClass: document
+cn: DaGan
+
+# YiNuo, products, nkf.dev-prod.jyx365.top
+dn: cn=YiNuo,ou=products,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6LWb5YCN55WF77yI5LyK6K+66ZKZ57Sg6ZKg5rOo5bCE5ray77yJ
+documentIdentifier: null
+o: dc=nkf
+objectClass: document
+cn: YiNuo
+
+# NaQu, products, nkf.dev-prod.jyx365.top
+dn: cn=NaQu,ou=products,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6YKj6LWb55WF77yI6YKj5puy6IKd57Sg6ZKZ5rOo5bCE5ray77yJ
+documentIdentifier: null
+o: dc=nkf
+objectClass: document
+cn: NaQu
+
+# localities, nkf.dev-prod.jyx365.top
+dn: ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+ou: localities
+objectClass: organizationalUnit
+objectClass: top
+
+# BeiJing, localities, nkf.dev-prod.jyx365.top
+dn: l=BeiJing,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5YyX5Lqs
+l: BeiJing
+objectClass: locality
+
+# ShangHai, localities, nkf.dev-prod.jyx365.top
+dn: l=ShangHai,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5LiK5rW3
+l: ShangHai
+objectClass: locality
+
+# TianJin, localities, nkf.dev-prod.jyx365.top
+dn: l=TianJin,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5aSp5rSl
+l: TianJin
+objectClass: locality
+
+# ChongQing, localities, nkf.dev-prod.jyx365.top
+dn: l=ChongQing,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6YeN5bqG
+l: ChongQing
+objectClass: locality
+
+# XiangGang, localities, nkf.dev-prod.jyx365.top
+dn: l=XiangGang,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6aaZ5riv
+l: XiangGang
+objectClass: locality
+
+# Aomen, localities, nkf.dev-prod.jyx365.top
+dn: l=Aomen,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5r6z6Zeo
+l: Aomen
+objectClass: locality
+
+# AnHui, localities, nkf.dev-prod.jyx365.top
+dn: l=AnHui,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5a6J5b69
+l: AnHui
+objectClass: locality
+
+# FuJian, localities, nkf.dev-prod.jyx365.top
+dn: l=FuJian,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 56aP5bu6
+l: FuJian
+objectClass: locality
+
+# GuangDong, localities, nkf.dev-prod.jyx365.top
+dn: l=GuangDong,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5bm/5Lic
+l: GuangDong
+objectClass: locality
+
+# GuangXi, localities, nkf.dev-prod.jyx365.top
+dn: l=GuangXi,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5bm/6KW/
+l: GuangXi
+objectClass: locality
+
+# GuiZhou, localities, nkf.dev-prod.jyx365.top
+dn: l=GuiZhou,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6LS15bee
+l: GuiZhou
+objectClass: locality
+
+# GanSu, localities, nkf.dev-prod.jyx365.top
+dn: l=GanSu,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 55SY6IKD
+l: GanSu
+objectClass: locality
+
+# HaiNan, localities, nkf.dev-prod.jyx365.top
+dn: l=HaiNan,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rW35Y2X
+l: HaiNan
+objectClass: locality
+
+# HeBei, localities, nkf.dev-prod.jyx365.top
+dn: l=HeBei,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rKz5YyX
+l: HeBei
+objectClass: locality
+
+# HeNan, localities, nkf.dev-prod.jyx365.top
+dn: l=HeNan,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rKz5Y2X
+l: HeNan
+objectClass: locality
+
+# HeiLongJiang, localities, nkf.dev-prod.jyx365.top
+dn: l=HeiLongJiang,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6buR6b6Z5rGf
+l: HeiLongJiang
+objectClass: locality
+
+# HuBei, localities, nkf.dev-prod.jyx365.top
+dn: l=HuBei,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rmW5YyX
+l: HuBei
+objectClass: locality
+
+# HuNan, localities, nkf.dev-prod.jyx365.top
+dn: l=HuNan,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rmW5Y2X
+l: HuNan
+objectClass: locality
+
+# JiLin, localities, nkf.dev-prod.jyx365.top
+dn: l=JiLin,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5ZCJ5p6X
+l: JiLin
+objectClass: locality
+
+# JiangSu, localities, nkf.dev-prod.jyx365.top
+dn: l=JiangSu,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rGf6IuP
+l: JiangSu
+objectClass: locality
+
+# JiangXi, localities, nkf.dev-prod.jyx365.top
+dn: l=JiangXi,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rGf6KW/
+l: JiangXi
+objectClass: locality
+
+# LiaoNing, localities, nkf.dev-prod.jyx365.top
+dn: l=LiaoNing,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6L695a6B
+l: LiaoNing
+objectClass: locality
+
+# NeiMengGu, localities, nkf.dev-prod.jyx365.top
+dn: l=NeiMengGu,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5YaF6JKZ5Y+k
+l: NeiMengGu
+objectClass: locality
+
+# NingXia, localities, nkf.dev-prod.jyx365.top
+dn: l=NingXia,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5a6B5aSP
+l: NingXia
+objectClass: locality
+
+# QingHai, localities, nkf.dev-prod.jyx365.top
+dn: l=QingHai,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6Z2S5rW3
+l: QingHai
+objectClass: locality
+
+# ShaanXi, localities, nkf.dev-prod.jyx365.top
+dn: l=ShaanXi,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6ZmV6KW/
+l: ShaanXi
+objectClass: locality
+
+# ShanXi, localities, nkf.dev-prod.jyx365.top
+dn: l=ShanXi,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5bGx6KW/
+l: ShanXi
+objectClass: locality
+
+# ShanDong, localities, nkf.dev-prod.jyx365.top
+dn: l=ShanDong,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5bGx5Lic
+l: ShanDong
+objectClass: locality
+
+# SiChuan, localities, nkf.dev-prod.jyx365.top
+dn: l=SiChuan,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5Zub5bed
+l: SiChuan
+objectClass: locality
+
+# TaiWan, localities, nkf.dev-prod.jyx365.top
+dn: l=TaiWan,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5Y+w5rm+
+l: TaiWan
+objectClass: locality
+
+# XiZang, localities, nkf.dev-prod.jyx365.top
+dn: l=XiZang,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 6KW/6JeP
+l: XiZang
+objectClass: locality
+
+# XinJiang, localities, nkf.dev-prod.jyx365.top
+dn: l=XinJiang,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5paw55aG
+l: XinJiang
+objectClass: locality
+
+# YunNan, localities, nkf.dev-prod.jyx365.top
+dn: l=YunNan,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5LqR5Y2X
+l: YunNan
+objectClass: locality
+
+# ZheJiang, localities, nkf.dev-prod.jyx365.top
+dn: l=ZheJiang,ou=localities,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+description:: 5rWZ5rGf
+l: ZheJiang
+objectClass: locality
+
+# groups, nkf.dev-prod.jyx365.top
+dn: ou=groups,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+ou: groups
+objectClass: organizationalUnit
+objectClass: top
+
+# invitees, nkf.dev-prod.jyx365.top
+dn: ou=invitees,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+ou: invitees
+objectClass: organizationalUnit
+objectClass: top
+
+# applicants, nkf.dev-prod.jyx365.top
+dn: ou=applicants,dc=nkf,dc=dev-prod,dc=jyx365,dc=top
+ou: applicants
+objectClass: organizationalUnit
+objectClass: top
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 106
+# numEntries: 105
