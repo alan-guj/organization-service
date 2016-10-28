@@ -1,17 +1,24 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import javax.naming.Name;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import org.springframework.context.annotation.Bean;
+
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
@@ -21,13 +28,9 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.hateoas.core.Relation;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +41,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
+
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import top.jyx365.organizationService.Company;
 
 @Relation(collectionRelation="departments", value="department")
 class DepartmentResource extends ResourceSupport {
@@ -62,11 +74,11 @@ class DepartmentResource extends ResourceSupport {
         return this.dept.getDescription();
     }
 
-    public String getCompany() {
+    public Name getCompany() {
         return this.dept.getCompany();
     }
 
-    public String getParent() {
+    public Name getParent() {
         return this.dept.getParent();
     }
 
@@ -89,7 +101,7 @@ class DepartmentResourceAssembler
                     dept.getId().toString(),dept,dept.getCompany());
             resource.add(linkTo(
                         methodOn(RoleController.class)
-                        .getRoles(dept.getCompany(),dept.getId().toString())
+                        .getRoles(dept.getCompany().toString(),dept.getId().toString())
                         ).withRel("roles"));
             return resource;
         }
@@ -127,44 +139,51 @@ public class DepartmentController {
             return new Resources<DepartmentResource>(deptAssember.toResources(result));
         }
 
-    @RequestMapping(value="/{parentDepartmentId}/departments",method = RequestMethod.GET)
-        public Resources<DepartmentResource> getSubDepartments(
-                @PathVariable String companyId,
-                @PathVariable String parentDepartmentId)
-        {
-            return new Resources<DepartmentResource>(
-                    deptAssember.toResources(
-                        repository.findSubDepartments(parentDepartmentId,false)
-                        )
-                    );
-        }
+    //@RequestMapping(value="/{parentDepartmentId}/departments",method = RequestMethod.GET)
+        //public Resources<DepartmentResource> getSubDepartments(
+                //@PathVariable String companyId,
+                //@PathVariable String parentDepartmentId)
+        //{
+            //return new Resources<DepartmentResource>(
+                    //deptAssember.toResources(
+                        //repository.findSubDepartments(parentDepartmentId,false)
+                        //)
+                    //);
+        //}
 
     @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<DepartmentResource> addDepartment(
                 @PathVariable String companyId,
                 @RequestBody Department dept)
         {
-            dept.setCompany(companyId);
+            Company company = repository.findCompany(companyId);
+            dept.setCompany(company.getId());
             repository.addDepartment(dept);
             return new ResponseEntity<DepartmentResource>(
                     deptAssember.toResource(dept),HttpStatus.CREATED);
         }
 
-    @RequestMapping(value="/{parentDepartmentId}/departments",method = RequestMethod.POST)
-        public ResponseEntity<DepartmentResource> addSubDepartments(
-                @PathVariable String companyId,
-                @PathVariable String parentDepartmentId,
-                @RequestBody Department dept)
-        {
-            dept.setParent(parentDepartmentId);
-            repository.addDepartment(dept);
-            return new ResponseEntity<DepartmentResource>(
-                    deptAssember.toResource(dept),HttpStatus.CREATED);
-        }
+    //@RequestMapping(value="/{parentDepartmentId}/departments",method = RequestMethod.POST)
+        //public ResponseEntity<DepartmentResource> addSubDepartments(
+                //@PathVariable String companyId,
+                //@PathVariable String parentDepartmentId,
+                //@RequestBody Department dept)
+        //{
+            //dept.setParent(parentDepartmentId);
+            //repository.addDepartment(dept);
+            //return new ResponseEntity<DepartmentResource>(
+                    //deptAssember.toResource(dept),HttpStatus.CREATED);
+        //}
 
     @RequestMapping(value = "/{departmentId}", method = RequestMethod.GET)
         public DepartmentResource getDepartment(@PathVariable String companyId, @PathVariable String departmentId) {
             return deptAssember.toResource(repository.findDepartment(departmentId));
+        }
+
+    @RequestMapping(value = "/{departmentId}", method = RequestMethod.DELETE)
+        public void deleteDepartment(@PathVariable String companyId, @PathVariable String departmentId) {
+            Department dept = repository.findDepartment(departmentId);
+            repository.deleteDepartment(dept,true);
         }
 
 }

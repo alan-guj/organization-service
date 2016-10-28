@@ -1,75 +1,25 @@
 package top.jyx365.organizationService;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import org.springframework.core.env.Environment;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.context.WebApplicationContext;
-
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapNameBuilder;
-
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
 import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static top.jyx365.organizationService.CompanyTests.TestProfileValueSource;
+import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -79,11 +29,11 @@ import static top.jyx365.organizationService.CompanyTests.TestProfileValueSource
 @Slf4j
 public class DepartmentTests extends OrganizationServiceApplicationTests {
 
-    public static class TestProfileValueSource implements ProfileValueSource {
-        public String get(String key) {
-            return "department";
-        }
-    }
+    //public static class TestProfileValueSource implements ProfileValueSource {
+        //public String get(String key) {
+            //return "department";
+        //}
+    //}
     /*2. Department Service*/
     /*2.1 Add */
     /*2.1.1 Add new 1st level department*/
@@ -243,6 +193,22 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$._embedded.departments[0].parent",is(d_1.getId().toString())));
     }
 
+
+    /*2.3 Delete*/
+    /*2.3.1 delete a exist dept*/
+    @Test
+    @IfProfileValue(name="test-group", values={"all","department"})
+    public void _2_3_1_delExistDept() throws Exception {
+        this.mockMvc.perform(delete("/api/v1.0/companies/"+
+                    d_1.getCompany()+
+                    "/departments/"+
+                    d_1.getId())
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findDepartment(d_1.getId()));
+    }
+
     /*4 Role Service*/
     /*4.1 Add */
 
@@ -342,10 +308,11 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
         }
     }
 
-    /*4.1.4 get all roles of a dept*/
+    /*4.2 Query*/
+    /*4.2.1 get all roles of a dept*/
     @Test
     @IfProfileValue(name="test-group", values={"all","role"})
-    public void _4_1_4_getAllDeptRoles() throws Exception {
+    public void _4_2_1_getAllDeptRoles() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                         d_2.getCompany()+
                         "/departments/"+
@@ -365,10 +332,10 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
                             )));
     }
 
-    /*4.1.5 get one role of a dept*/
+    /*4.2.1 get one role of a dept*/
     @Test
     @IfProfileValue(name="test-group", values={"all","role"})
-    public void _4_1_5_getOneDeptRole() throws Exception {
+    public void _4_2_1_getOneDeptRole() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                         d_2.getCompany()+
                         "/departments/"+
@@ -388,7 +355,22 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
                             )));
     }
 
-
+    /*4.3 delete*/
+    /*4.3.1 delete an exist role*/
+    @Test
+    @IfProfileValue(name="test-group", values={"all","role"})
+    public void _4_3_1_delExistRole() throws Exception {
+        this.mockMvc.perform(delete("/api/v1.0/companies/"+
+                    r_2.getCompany()+
+                    "/departments/"+
+                    r_2.getDepartment()+
+                    "/roles/"+
+                    r_2.getId())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findRole(r_2.getId()));
+    }
 
 }
 

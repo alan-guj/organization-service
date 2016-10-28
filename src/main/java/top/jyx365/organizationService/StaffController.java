@@ -227,6 +227,15 @@ public class StaffController {
         }
 
 
+    @RequestMapping(value="/{staffId}",method = RequestMethod.DELETE)
+        public void deleteStaff(
+                @PathVariable String staffId
+                )
+        {
+            Staff staff = repository.findStaff(staffId);
+            repository.deleteStaff(staff);
+        }
+
     @RestController
     @EnableResourceServer
     @RequestMapping("/api/v1.0/companies/{companyId}/applicants")
@@ -250,6 +259,12 @@ public class StaffController {
             public ApplicantResource getApplicant(@PathVariable String applicantId) {
                 return assember.toResource(
                         repository.findStaff(applicantId));
+            }
+
+        @RequestMapping(value = "/{applicantId}", method = RequestMethod.DELETE)
+            public void deleteApplicant(@PathVariable String applicantId) {
+                Staff a = repository.findStaff(applicantId);
+                repository.deleteStaff(a);
             }
 
 
@@ -315,6 +330,12 @@ public class StaffController {
             public InviteeResource getInvitee(@PathVariable String inviteeId) {
                 return assember.toResource(
                         repository.findStaff(inviteeId));
+            }
+
+        @RequestMapping(value = "/{inviteeId}", method = RequestMethod.DELETE)
+            public void deleteInvitee(@PathVariable String inviteeId) {
+                Staff i = repository.findStaff(inviteeId);
+                repository.deleteStaff(i);
             }
 
 

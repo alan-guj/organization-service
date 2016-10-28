@@ -68,7 +68,7 @@ public final class Department {
         return id;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Name company) {
         if(this.id == null)
             this.id = LdapNameBuilder.newInstance(company)
                 .add("ou","departments")
@@ -76,17 +76,17 @@ public final class Department {
                 .build();
     }
 
-    public String getCompany() {
-        return (id==null)?null:id.getPrefix(1).toString();
+    public Name getCompany() {
+        return (id==null)?null:id.getPrefix(1);
     }
 
-    public void setParent(String parent) {
+    public void setParent(Name parent) {
         this.id = LdapNameBuilder.newInstance(parent)
             .add("ou",this.name)
             .build();
     }
 
-    public String getParent() {
-        return (id==null)?null:id.getPrefix(id.size()-1).toString();
+    public Name getParent() {
+        return (id==null)?null:id.getPrefix(id.size()-1);
     }
 }

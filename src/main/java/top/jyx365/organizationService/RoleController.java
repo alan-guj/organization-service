@@ -63,11 +63,11 @@ class RoleResource extends ResourceSupport {
         return this.role.getDescription();
     }
 
-    public String getDepartment() {
+    public Name getDepartment() {
         return this.role.getDepartment();
     }
 
-    public List<String> getOccupants() {
+    public List<Name> getOccupants() {
         return this.role.getOccupants();
     }
 
@@ -113,7 +113,8 @@ class RoleController {
                 @PathVariable String departmentId,
                 @RequestBody Role role)
         {
-            role.setDepartment(departmentId);
+            Department dept = repository.findDepartment(departmentId);
+            role.setDepartment(dept.getId());
             repository.addRole(role);
             return new ResponseEntity<RoleResource>(
                     assember.toResource(role),HttpStatus.CREATED);
@@ -136,5 +137,12 @@ class RoleController {
         public RoleResource getRole(@PathVariable String roleId) {
             return assember.toResource(repository.findRole(roleId));
         }
+
+    @RequestMapping(value="/{roleId}", method = RequestMethod.DELETE)
+        public void deleteRole(@PathVariable String roleId) {
+            Role role = repository.findRole(roleId);
+            repository.deleteRole(role);
+        }
+
 }
 

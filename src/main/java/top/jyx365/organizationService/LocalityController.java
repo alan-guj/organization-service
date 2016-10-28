@@ -102,6 +102,16 @@ public class LocalityController {
                     assember.toResources(repository.findLocalities(root,true)));
         }
 
+    @RequestMapping(value="/{localityId}",method = RequestMethod.DELETE)
+        public void deleteLocality(
+                @PathVariable String companyId,
+                @PathVariable String localityId
+                )
+        {
+            Locality l = repository.findLocality(localityId);
+            repository.deleteLocality(l,true);
+        }
+
     @RequestMapping(value="/{localityId}",method = RequestMethod.GET)
         public LocalityResource getLocality(
                 @PathVariable String companyId,

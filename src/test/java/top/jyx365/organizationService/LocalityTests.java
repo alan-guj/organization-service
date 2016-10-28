@@ -1,75 +1,24 @@
 package top.jyx365.organizationService;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import org.springframework.core.env.Environment;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.context.WebApplicationContext;
-
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapNameBuilder;
-
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
 import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static top.jyx365.organizationService.CompanyTests.TestProfileValueSource;
+import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -81,10 +30,9 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
 
     public static class TestProfileValueSource implements ProfileValueSource {
         public String get(String key) {
-            return "all";
+            return "none";
         }
     }
-
 
     /*8. Locality*/
     /*8.1 Add*/
@@ -221,7 +169,20 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.localityId",is(l.getLocalityId())));
     }
 
-
+    /*8.3 delete */
+    /*8.3.1 delete an exist locality*/
+    @Test
+    @IfProfileValue(name="test-group", values={"all","locality"})
+    public void _8_3_1_delExistLocality() throws Exception {
+        this.mockMvc.perform(delete("/api/v1.0/companies/"+
+                    l_1.getCompany()+
+                    "/localities/"+
+                    l_1.getId())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findLocality(l_1.getId()));
+    }
 
 }
 

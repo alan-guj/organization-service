@@ -18,12 +18,12 @@ public final class Role {
     private String name;
 
     @Attribute(name="roleOccupant")
-    private List<String> occupants;
+    private List<Name> occupants;
 
     private String description;
 
     @Attribute(name="ou")
-    private String department;
+    private Name department;
 
 
 
@@ -39,20 +39,20 @@ public final class Role {
         return name;
     }
 
-    public void setOccupants(List<String> occupants) {
+    public void setOccupants(List<Name> occupants) {
         this.occupants = occupants;
     }
 
-    public void addOccupant(String occupant) {
-        if(this.occupants == null) this.occupants = new ArrayList<String>();
+    public void addOccupant(Name occupant) {
+        if(this.occupants == null) this.occupants = new ArrayList<Name>();
         this.occupants.add(occupant);
     }
 
-    public void removeOccupant(String occupant) {
+    public void removeOccupant(Name occupant) {
         this.occupants.remove(occupant);
     }
 
-    public List<String> getOccupants() {
+    public List<Name> getOccupants() {
         return occupants;
     }
 
@@ -64,7 +64,7 @@ public final class Role {
         return description;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Name department) {
         this.department = department;
         if(this.id == null && this.name != null)
             this.id = LdapNameBuilder.newInstance(department)
@@ -72,7 +72,7 @@ public final class Role {
                 .build();
     }
 
-    public String getDepartment() {
+    public Name getDepartment() {
         return department;
     }
 

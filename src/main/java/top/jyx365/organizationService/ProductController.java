@@ -98,6 +98,16 @@ public class ProductController {
             return assember.toResource(repository.findProduct(productId));
         }
 
+    @RequestMapping(value="/{productId}",method = RequestMethod.DELETE)
+        public void deleteProduct(
+                @PathVariable String companyId,
+                @PathVariable String productId
+                )
+        {
+            Product prod = repository.findProduct(productId);
+            repository.deleteProduct(prod);
+        }
+
     @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<ProductResource> addProduct(
                 @PathVariable String companyId,

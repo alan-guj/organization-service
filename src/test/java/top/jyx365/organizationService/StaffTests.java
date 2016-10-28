@@ -1,75 +1,26 @@
 package top.jyx365.organizationService;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import org.springframework.core.env.Environment;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.context.WebApplicationContext;
-
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapNameBuilder;
-
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
 import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static top.jyx365.organizationService.CompanyTests.TestProfileValueSource;
+import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -81,7 +32,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     public static class TestProfileValueSource implements ProfileValueSource {
         public String get(String key) {
-            return "all";
+            return "none";
         }
     }
 
@@ -300,13 +251,31 @@ public class StaffTests extends OrganizationServiceApplicationTests {
         }
     }
 
+    /*3.3 Delete*/
+    /*3.3.1 delete an exist staff*/
+    @Test
+    @IfProfileValue(name="test-group", values={"all","staff"})
+    public void _3_3_1_delExistStaff() throws Exception {
+        this.mockMvc.perform(delete(
+                    "/api/v1.0/companies/"+
+                    s_1.getCompany()+
+                    "/staffs/"+
+                    s_1.getId()
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                )
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findStaff(s_1.getId()));
+    }
+
     /*6. Applicant and Invitee*/
-    /*6.1 Add*/
-    /*6.1.1 Applicant*/
-    /*6.1.1.1 add*/
+    /*6.1 Applicant*/
+    /*6.1.1 add*/
     @Test
     @IfProfileValue(name="test-group", values = {"all", "staff"})
-    public void _6_1_1_1_addNewApplicant() throws Exception {
+    public void _6_1_1_addNewApplicant() throws Exception {
         Staff s = new Staff();
         s.setName("new_applicant");
         s.setSurname("新增申请员工");
@@ -339,10 +308,10 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     }
 
-    /*6.1.1.2 get one*/
+    /*6.1.2 get one*/
     @Test
     @IfProfileValue(name="test-group", values = {"all", "staff"})
-    public void _6_1_1_2_getOneApplicant() throws Exception {
+    public void _6_1_2_getOneApplicant() throws Exception {
         Staff s = s_a_1;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     s.getCompany().toString()+
@@ -358,10 +327,10 @@ public class StaffTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.company",is(s.getCompany().toString())));
     }
 
-    /*6.1.1.3 approval*/
+    /*6.1.3 approval*/
     @Test
     @IfProfileValue(name="test-group", values = {"all", "staff"})
-    public void _6_1_1_3_approveApplicant() throws Exception {
+    public void _6_1_3_approveApplicant() throws Exception {
         Staff s = s_a_1;
         String id = LdapNameBuilder.newInstance(s.getCompany())
             .add("ou","staffs")
@@ -393,11 +362,25 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     }
 
-    /*6.1.2 Invitee*/
-    /*6.1.2.1 add*/
+    /*6.1.4 delete*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","staff"})
+    public void _6_1_4_delExistApplicant() throws Exception {
+        this.mockMvc.perform(delete("/api/v1.0/companies/"+
+                    s_a_1.getCompany()+
+                    "/applicants/"+
+                    s_a_1.getId())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findStaff(s_a_1.getId()));
+    }
+
+    /*6.2 Invitee*/
+    /*6.2.1 add*/
     @Test
     @IfProfileValue(name="test-group", values = {"all", "staff"})
-    public void _6_1_2_1_addNewInvitee() throws Exception {
+    public void _6_2_1_addNewInvitee() throws Exception {
         Staff s = new Staff();
         s.setName("new_invitee");
         s.setSurname("新增邀请员工");
@@ -431,10 +414,10 @@ public class StaffTests extends OrganizationServiceApplicationTests {
     }
 
 
-    /*6.1.2.2 get one*/
+    /*6.2.2 get one*/
     @Test
     @IfProfileValue(name="test-group", values = {"all", "staff"})
-    public void _6_1_2_2_getOneInvitee() throws Exception {
+    public void _6_2_2_getOneInvitee() throws Exception {
         Staff s = s_i_1;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     s.getCompany().toString()+
@@ -450,10 +433,10 @@ public class StaffTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.company",is(s.getCompany().toString())));
     }
 
-    /*6.1.2.3 confirm*/
+    /*6.2.3 confirm*/
     @Test
     @IfProfileValue(name="test-group", values = {"all", "staff"})
-    public void _6_1_2_3_confirmInivtee() throws Exception {
+    public void _6_2_3_confirmInivtee() throws Exception {
         Staff s = s_i_1;
         String id = LdapNameBuilder.newInstance(s.getCompany())
             .add("ou","staffs")
@@ -482,6 +465,20 @@ public class StaffTests extends OrganizationServiceApplicationTests {
         } finally {
         }
     }
+    /*6.2.4 delete*/
+    @Test
+    @IfProfileValue(name="test-group", values = {"all","staff"})
+    public void _6_2_4_delExistInvitee() throws Exception {
+        this.mockMvc.perform(delete("/api/v1.0/companies/"+
+                    s_i_1.getCompany()+
+                    "/invitees/"+
+                    s_i_1.getId())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findStaff(s_i_1.getId()));
+    }
+
 }
 
 
