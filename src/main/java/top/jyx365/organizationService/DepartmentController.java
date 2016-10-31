@@ -186,6 +186,14 @@ public class DepartmentController {
             repository.deleteDepartment(dept,true);
         }
 
+    @RequestMapping(value = "/{departmentId}", method = RequestMethod.PUT)
+        public DepartmentResource updateDepartment(@PathVariable String companyId,
+                @PathVariable String departmentId,
+                @RequestBody Department department) {
+            repository.updateDepartment(department);
+            return deptAssember.toResource(department);
+        }
+
 }
 
 

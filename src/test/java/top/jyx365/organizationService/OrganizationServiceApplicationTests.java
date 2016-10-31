@@ -1,30 +1,50 @@
 package top.jyx365.organizationService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
 import org.springframework.ldap.core.LdapTemplate;
+
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.ProfileValueSource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,18 +67,45 @@ class OAuth2ClientConfigure {
     }
 }
 
+//@ConfigurationProperties(prefix="testGroups")
+//class TestGroupsConfig {
+    //private String  groups;
+
+
+    //public void setGroups(String groups) {
+        //this.groups = groups;
+    //}
+
+    //public String  getGroups() {
+        //return groups;
+    //}
+//}
 
 public abstract class OrganizationServiceApplicationTests {
 
+
     public static class TestProfileValueSource implements ProfileValueSource {
+
+        //private TestGroupsConfig config = new TestGroupsConfig();
+        @Value("{$testGroups.groups}")
+        private String groups;
+        private Logger logger = LoggerFactory.getLogger(this.getClass());
+
         public String get(String key) {
-            return "all";
+
+
+            logger.debug(groups);
+            String ret = System.getProperty(key);
+            if(ret != null) return ret;
+            return groups;
         }
     }
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     protected MockMvc mockMvc;
+
     @SuppressWarnings("rawtypes")
     protected HttpMessageConverter mappingJackson2HttpMessageConverter;
 
@@ -70,6 +117,8 @@ public abstract class OrganizationServiceApplicationTests {
 
 
     protected String AUTHORIZATION = "Authorization";
+
+    protected final String PATH_PREFIX_v1 = "/api/v1.0/companies/";
 
     @Autowired
     protected OAuth2RestOperations systemRestTemplate;
@@ -267,9 +316,9 @@ public abstract class OrganizationServiceApplicationTests {
         }
     }
 
-    @Test
-    public void contextLoads() {
-    }
+    //@Test
+    //public void contextLoads() {
+    //}
 
     @SuppressWarnings("unchecked")
     protected String json(Object o) throws IOException {
@@ -278,6 +327,13 @@ public abstract class OrganizationServiceApplicationTests {
                 o, MediaType.APPLICATION_JSON, mockHttpOutputMessage
                 );
         return mockHttpOutputMessage.getBodyAsString();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    protected Map<String,Object> json2Map(String json) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, Map.class);
     }
 }
 

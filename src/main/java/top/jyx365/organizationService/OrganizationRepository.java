@@ -130,6 +130,11 @@ public class OrganizationRepository {
         ldapTemplate.unbind(dept.getId(),recursive);
     }
 
+
+    public void updateDepartment(Department dept) {
+        ldapTemplate.update(dept);
+    }
+
     /*department role*/
     public Role findRole(String roleId) {
         Name dn = LdapNameBuilder.newInstance(roleId).build();
@@ -176,6 +181,10 @@ public class OrganizationRepository {
 
     public void deleteRole(Role role) {
         ldapTemplate.delete(role);
+    }
+
+    public void updateRole(Role role) {
+        ldapTemplate.update(role);
     }
 
     /*Staffs*/

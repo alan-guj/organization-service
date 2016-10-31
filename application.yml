@@ -49,9 +49,6 @@ logging:
         top.jyx365: DEBUG
         #org.springframework.core.env: DEBUG
     file: ./springboot.log
-lombok:
-    log:
-        fieldName: logger
 ---
 #单元测试
 spring:
@@ -76,7 +73,6 @@ ldap:
     url: ldap://localhost:389
     base: dc=development,dc=jyx365,dc=top
     userDn: cn=Manager,dc=jyx365,dc=top
-access_token: bearer etM1tZkFRwDrLzCJrRi74USMcdPWYN
 ---
 spring:
     profiles: dev-prod
