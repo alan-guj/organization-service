@@ -20,29 +20,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-int-test")
-@ProfileValueSourceConfiguration(TestProfileValueSource.class)
+@ProfileValueSourceConfiguration(Configuration.class)
 @Slf4j
 public class StaffTests extends OrganizationServiceApplicationTests {
-
-    public static class TestProfileValueSource implements ProfileValueSource {
-        public String get(String key) {
-            return "none";
-        }
-    }
-
 
     /*3 Staff*/
     /*3.1 query */
 
     /*3.1.1 Get a non-department staff*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_1_1_getOneNonDeptStaff() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     s_1.getCompany().toString()+
@@ -61,12 +53,15 @@ public class StaffTests extends OrganizationServiceApplicationTests {
                                 .build().toString()
                             )))
             .andExpect(jsonPath("$.company",is(s_1.getCompany().toString())))
+            .andExpect(jsonPath("$.businessCategories",hasSize(1)))
+            .andExpect(jsonPath("$.businessCategories[0].product",is(bc_1.getProduct())))
+            .andExpect(jsonPath("$.businessCategories[0].locality",is(bc_1.getLocality())))
             .andExpect(jsonPath("$.departments").doesNotExist());
     }
 
     /*3.1.2 Get a department staff*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_1_2_getOneDeptStaff() throws Exception {
         Staff s = s_2;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
@@ -92,7 +87,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*3.1.3 Get all staffs*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_1_3_getAllStaffs() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     c_1.getId().toString()+
@@ -105,7 +100,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*3.1.4 Get dept staffs*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_1_4_getDeptStaffs() throws Exception {
         Staff s = s_2;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
@@ -121,7 +116,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*3.1.5 query by mobile*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_1_5_getStaffsByMobile() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/**/staffs?mobile=13851811909")
                 .header(AUTHORIZATION,ACCESS_TOKEN))
@@ -133,7 +128,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*3.1.6 query by name*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_1_6_getStaffsByName() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/**/staffs?name=staff2")
                 .header(AUTHORIZATION,ACCESS_TOKEN))
@@ -147,7 +142,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*3.2.1 add non-department staff*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_2_1_addNonDeptStaff() throws Exception {
         Staff s = new Staff();
         s.setName("new_staff");
@@ -183,7 +178,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*3.2.2 add department staff*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_2_2_addDeptStaff() throws Exception {
         Staff s = new Staff();
         Department d = d_1;
@@ -221,7 +216,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
     /*3.2.3 add multi-department staff */
     @Test
     @Ignore
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_2_3_addMultiDeptStaff() throws Exception {
         Staff s = s_2;
         try {
@@ -254,7 +249,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
     /*3.3 Delete*/
     /*3.3.1 delete an exist staff*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","staff"})
+    @IfProfileValue(name="staff-test-group", values={"all","staff"})
     public void _3_3_1_delExistStaff() throws Exception {
         this.mockMvc.perform(delete(
                     "/api/v1.0/companies/"+
@@ -270,11 +265,41 @@ public class StaffTests extends OrganizationServiceApplicationTests {
         assertNull(repository.findStaff(s_1.getId()));
     }
 
+    /*3.4 update*/
+    /*3.4.1 update an exist staff*/
+    @Test
+    @IfProfileValue(name="staff-test-group", values={"all","staff","update"})
+    public void _3_4_1_updateExistStaff() throws Exception {
+        Staff s = s_1;
+        String _id = s.getId().toString();
+        s.setSurname("修改测试员工1");
+        s.setMobile("13851811111");
+        s.setDescription("修改测试员工描述");
+        s.addDepartment(d_1_2.getId());
+        this.mockMvc.perform(put(PATH_PREFIX_v1+
+                    s.getCompany()+
+                    "/staffs/"+
+                    _id
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(s))
+                )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(_id)))
+            .andExpect(jsonPath("$.surname",is(s.getSurname())))
+            .andExpect(jsonPath("$.mobile", is(s.getMobile())))
+            .andExpect(jsonPath("$.description",is(s.getDescription())))
+            .andExpect(jsonPath("$.departments",hasSize(1)))
+            .andExpect(jsonPath("$.departments[0]",is(d_1_2.getId().toString())));
+    }
+
     /*6. Applicant and Invitee*/
     /*6.1 Applicant*/
     /*6.1.1 add*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
     public void _6_1_1_addNewApplicant() throws Exception {
         Staff s = new Staff();
         s.setName("new_applicant");
@@ -310,7 +335,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*6.1.2 get one*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
     public void _6_1_2_getOneApplicant() throws Exception {
         Staff s = s_a_1;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
@@ -329,7 +354,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*6.1.3 approval*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
     public void _6_1_3_approveApplicant() throws Exception {
         Staff s = s_a_1;
         String id = LdapNameBuilder.newInstance(s.getCompany())
@@ -364,7 +389,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*6.1.4 delete*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all","staff"})
     public void _6_1_4_delExistApplicant() throws Exception {
         this.mockMvc.perform(delete("/api/v1.0/companies/"+
                     s_a_1.getCompany()+
@@ -379,7 +404,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
     /*6.2 Invitee*/
     /*6.2.1 add*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
     public void _6_2_1_addNewInvitee() throws Exception {
         Staff s = new Staff();
         s.setName("new_invitee");
@@ -416,7 +441,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*6.2.2 get one*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
     public void _6_2_2_getOneInvitee() throws Exception {
         Staff s = s_i_1;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
@@ -435,7 +460,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     /*6.2.3 confirm*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
     public void _6_2_3_confirmInivtee() throws Exception {
         Staff s = s_i_1;
         String id = LdapNameBuilder.newInstance(s.getCompany())
@@ -467,7 +492,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
     }
     /*6.2.4 delete*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","staff"})
+    @IfProfileValue(name="staff-test-group", values = {"all","staff"})
     public void _6_2_4_delExistInvitee() throws Exception {
         this.mockMvc.perform(delete("/api/v1.0/companies/"+
                     s_i_1.getCompany()+

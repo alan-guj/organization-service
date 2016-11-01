@@ -133,4 +133,21 @@ public class GroupController {
                     assember.toResource(group),HttpStatus.CREATED
                     );
         }
+    @RequestMapping(value = "/{groupId}",method = RequestMethod.DELETE)
+        public void deleteDepartment(@PathVariable String groupId) {
+            Group g = repository.findGroup(groupId);
+            repository.deleteGroup(g);
+        }
+    @RequestMapping(value = "/{groupId}", method = RequestMethod.PUT)
+        public GroupResource updateGroup(
+                @PathVariable String companyId,
+                @PathVariable String groupId,
+                @RequestBody Group group) {
+            Group _group = repository.findGroup(groupId);
+            group.setId(_group.getId());
+            Company _company = repository.findCompany(companyId);
+            group.setCompany(_company.getId());
+            repository.updateGroup(group);
+            return assember.toResource(group);
+        }
 }

@@ -28,6 +28,10 @@ public final class Locality {
         return id;
     }
 
+    public void setId(Name id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

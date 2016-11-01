@@ -82,7 +82,7 @@ class DepartmentResource extends ResourceSupport {
         return this.dept.getParent();
     }
 
-    public List<String> getBusinessCategories() {
+    public List<BusinessCategory> getBusinessCategories() {
         return this.dept.getBusinessCategories();
     }
 

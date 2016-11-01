@@ -1,94 +1,37 @@
 package top.jyx365.organizationService;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import org.springframework.core.env.Environment;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.context.WebApplicationContext;
-
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.support.LdapNameBuilder;
-
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
 import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-int-test")
-@ProfileValueSourceConfiguration(TestProfileValueSource.class)
+@ProfileValueSourceConfiguration(Configuration.class)
 @Slf4j
 public class GroupTests extends OrganizationServiceApplicationTests {
-
-    public static class TestProfileValueSource implements ProfileValueSource {
-        public String get(String key) {
-            return "all";
-        }
-    }
     /*5. Group*/
     /*5.1 Query*/
     /*5.1.1 get all groups*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","group"})
+    @IfProfileValue(name="group-test-group", values = {"all","group"})
     public void _5_1_1_getAllGroups() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     c_1.getId().toString()+
@@ -114,7 +57,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
     }
     /*5.1.2 get one group*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","group"})
+    @IfProfileValue(name="group-test-group", values = {"all","group"})
     public void _5_1_2_getOneGroup() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     c_1.getId().toString()+
@@ -137,7 +80,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
     /*5.2 Add*/
     /*5.2.1 add new group*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "group"})
+    @IfProfileValue(name="group-test-group", values = {"all", "group"})
     public void _5_2_1_addNewGroup() throws Exception {
         Group g = new Group();
         g.setName("新增测试组");
@@ -171,7 +114,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
 
     /*5.2.2 add exist group*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "group"})
+    @IfProfileValue(name="group-test-group", values = {"all", "group"})
     public void _5_2_2_addExistGroup() throws Exception {
         Group g = new Group();
         g.setName("测试组-1");
@@ -196,7 +139,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
 
     /*5.2.3 add new group with members*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "group"})
+    @IfProfileValue(name="group-test-group", values = {"all", "group"})
     public void _5_2_3_addNewGroupWithMembers() throws Exception {
         Group g = new Group();
         g.setName("新增测试组(有成员)");
@@ -230,6 +173,46 @@ public class GroupTests extends OrganizationServiceApplicationTests {
         }
     }
 
+    /*5.3 delete*/
+    /*5.3.1 delete an exist Group*/
+    @Test
+    @IfProfileValue(name = "group-test-group", values = {"all","delete"})
+    public void _5_3_1_delExistGroup() throws Exception {
+        this.mockMvc.perform(delete(PATH_PREFIX_v1+
+                    g_1.getCompany()+
+                    "/groups/"+
+                    g_1.getId())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk());
+        assertNull(repository.findGroup(g_1.getId()));
+    }
+
+    /*5.4 update*/
+    /*5.4.1 update an exist Group*/
+    @Test
+    @IfProfileValue(name = "group-test-group", values = {"all","update"})
+    public void _5_4_1_updateExistGroup() throws Exception {
+        String _id = g_1.getId().toString();
+
+        Group g = g_1;
+        g.setDescription("修改测试组-1");
+        g.removeMember(s_1.getId());
+
+        this.mockMvc.perform(put(PATH_PREFIX_v1+
+                    g.getCompany()+
+                    "/groups/"+
+                    _id)
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(g)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(_id)))
+            .andExpect(jsonPath("$.description",is(g.getDescription())))
+            .andExpect(jsonPath("$.members",hasSize(1)))
+            .andExpect(jsonPath("$.members[0]",is(s_2.getId().toString())));
+    }
 
 }
 

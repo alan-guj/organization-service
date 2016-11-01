@@ -6,15 +6,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -37,7 +32,6 @@ import org.springframework.ldap.core.LdapTemplate;
 
 import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.annotation.ProfileValueSource;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -152,6 +146,7 @@ public abstract class OrganizationServiceApplicationTests {
     protected Staff s_a_1,s_i_1;
     protected Product p_1,p_2;
     protected Locality l_1,l_1_1,l_2;
+    protected BusinessCategory bc_1,bc_2;
 
     @Before
     public void setup() {
@@ -175,6 +170,48 @@ public abstract class OrganizationServiceApplicationTests {
         c_2.setDomain("company2");
         repository.addCompany(c_2);
         testCompanies.add(c_2);
+
+        p_1 = new Product();
+        p_1.setName("test_product_1");
+        p_1.setDescription("test_product_1");
+        p_1.setProductId("test_product_ID1");
+        p_1.setCompany(c_1.getId());
+        repository.addProduct(p_1);
+
+        p_2 = new Product();
+        p_2.setName("test_product_2");
+        p_2.setDescription("test_product_2");
+        p_2.setCompany(c_1.getId());
+        repository.addProduct(p_2);
+
+        l_1 = new Locality();
+        l_1.setName("test_locality_1");
+        l_1.setDescription("test_locality_1_desc");
+        l_1.setLocalityId("test_locality_1_localId");
+        l_1.setCompany(c_1.getId());
+        repository.addLocality(l_1);
+
+        l_1_1 = new Locality();
+        l_1_1.setName("test_locality_1_1");
+        l_1_1.setDescription("test_locality_1_1_desc");
+        l_1_1.setLocalityId("test_locality_1_1_localId");
+        l_1_1.setParent(l_1.getId());
+        repository.addLocality(l_1_1);
+
+
+        l_2 = new Locality();
+        l_2.setName("test_locality_2");
+        l_2.setDescription("test_locality_2_desc");
+        l_2.setCompany(c_1.getId());
+        repository.addLocality(l_2);
+
+        bc_1 = new BusinessCategory();
+        bc_1.setLocality(l_1_1.getId().toString());
+        bc_1.setProduct(p_1.getId().toString());
+
+        bc_2 = new BusinessCategory();
+        bc_2.setLocality(l_2.getId().toString());
+        bc_2.setProduct(p_2.getId().toString());
 
 
         /*Add test department*/
@@ -206,7 +243,7 @@ public abstract class OrganizationServiceApplicationTests {
         d_3.setName("测试部门3");
         d_3.setDescription("测试部门3描述");
         d_3.setCompany(c_2.getId());
-        d_3.addBusinessCategory("locality:jiangsu;product:nasaichang");
+        d_3.addBusinessCategory(bc_2);
         repository.addDepartment(d_3);
 
         /*Add test staffs*/
@@ -215,8 +252,7 @@ public abstract class OrganizationServiceApplicationTests {
         s_1.setSurname("测试员工1");
         s_1.setMobile("13851811909");
         s_1.setDescription("无部门员工");
-        //s_1.addBusinessCategory("locality:jiangsu;product:nasaichang");
-        //s_1.addBusinessCategory("locality:jiangsu1;product:nasaichang");
+        s_1.addBusinessCategory(bc_1);
         s_1.setCompany(c_1.getId());
         repository.addStaff(s_1);
 
@@ -269,41 +305,6 @@ public abstract class OrganizationServiceApplicationTests {
         g_2.setDescription("空测试组2描述");
         g_2.setCompany(c_1.getId());
         repository.addGroup(g_2);
-
-
-        p_1 = new Product();
-        p_1.setName("test_product_1");
-        p_1.setDescription("test_product_1");
-        p_1.setProductId("test_product_ID1");
-        p_1.setCompany(s_1.getId());
-        repository.addProduct(p_1);
-
-        p_2 = new Product();
-        p_2.setName("test_product_2");
-        p_2.setDescription("test_product_2");
-        p_2.setCompany(s_1.getId());
-        repository.addProduct(p_2);
-
-        l_1 = new Locality();
-        l_1.setName("test_locality_1");
-        l_1.setDescription("test_locality_1_desc");
-        l_1.setLocalityId("test_locality_1_localId");
-        l_1.setCompany(c_1.getId());
-        repository.addLocality(l_1);
-
-        l_1_1 = new Locality();
-        l_1_1.setName("test_locality_1_1");
-        l_1_1.setDescription("test_locality_1_1_desc");
-        l_1_1.setLocalityId("test_locality_1_1_localId");
-        l_1_1.setParent(l_1.getId());
-        repository.addLocality(l_1_1);
-
-
-        l_2 = new Locality();
-        l_2.setName("test_locality_2");
-        l_2.setDescription("test_locality_2_desc");
-        l_2.setCompany(c_1.getId());
-        repository.addLocality(l_2);
 
     }
 

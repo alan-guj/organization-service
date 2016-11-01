@@ -280,7 +280,11 @@ public class OrganizationRepository {
     }
 
     public Group findGroup(Name dn) {
-        return ldapTemplate.findByDn(dn, Group.class);
+        try{
+            return ldapTemplate.findByDn(dn, Group.class);
+        } catch(Exception e) {
+            return null;
+        }
     }
 
 

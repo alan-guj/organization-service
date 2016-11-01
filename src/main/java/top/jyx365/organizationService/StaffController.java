@@ -236,6 +236,21 @@ public class StaffController {
             repository.deleteStaff(staff);
         }
 
+    @RequestMapping(value="/{staffId}",method = RequestMethod.PUT)
+        public StaffResource updateStaff(
+                @PathVariable String companyId,
+                @PathVariable String staffId,
+                @RequestBody Staff staff
+                )
+        {
+            Staff _staff = repository.findStaff(staffId);
+            staff.setId(_staff.getId());
+            Company c = repository.findCompany(companyId);
+            staff.setCompany(c.getId());
+            repository.updateStaff(staff);
+            return resourceAssember.toResource(staff);
+        }
+
     @RestController
     @EnableResourceServer
     @RequestMapping("/api/v1.0/companies/{companyId}/applicants")

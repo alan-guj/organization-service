@@ -18,27 +18,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-int-test")
-@ProfileValueSourceConfiguration(TestProfileValueSource.class)
+@ProfileValueSourceConfiguration(Configuration.class)
 @Slf4j
 public class LocalityTests extends OrganizationServiceApplicationTests {
-
-    public static class TestProfileValueSource implements ProfileValueSource {
-        public String get(String key) {
-            return "none";
-        }
-    }
-
     /*8. Locality*/
     /*8.1 Add*/
     /*8.1.1 Add new locality*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","locality"})
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
     public void _8_1_1_addNewLocality() throws Exception {
         Locality l = new Locality();
         l.setName("test_add_locality");
@@ -71,7 +63,7 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
     }
     /*8.1.2 Add new sub locality*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","locality"})
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
     public void _8_1_1_addNewSubLocality() throws Exception {
         Locality l = new Locality();
         l.setName("test_add_locality");
@@ -106,7 +98,7 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
     /*8.2 Query*/
     /*8.2.1 get all Localities*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","locality"})
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
     public void _8_2_1_getAllLocalities() throws Exception {
         RequestBuilder request = get(
                 "/api/v1.0/companies/"+
@@ -123,7 +115,7 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
 
     /*8.2.2 get one Locality*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","locality"})
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
     public void _8_2_2_getOneLocality() throws Exception {
         Locality l = l_2;
         RequestBuilder request = get(
@@ -147,7 +139,7 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
 
     /*8.2.3 get one Sub Locality*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","locality"})
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
     public void _8_2_3_getOneSubLocality() throws Exception {
         Locality l = l_1_1;
         RequestBuilder request = get(
@@ -172,7 +164,7 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
     /*8.3 delete */
     /*8.3.1 delete an exist locality*/
     @Test
-    @IfProfileValue(name="test-group", values={"all","locality"})
+    @IfProfileValue(name="locality-test-group", values={"all","locality"})
     public void _8_3_1_delExistLocality() throws Exception {
         this.mockMvc.perform(delete("/api/v1.0/companies/"+
                     l_1.getCompany()+
@@ -182,6 +174,29 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
             .andDo(print())
             .andExpect(status().isOk());
         assertNull(repository.findLocality(l_1.getId()));
+    }
+
+    /*8.4 update*/
+    /*8.4.1 update an exist locality*/
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","update"})
+    public void _8_4_1_updateExistLocality() throws Exception {
+        String _id = l_1.getId().toString();
+        l_1.setDescription("mod_locality_1");
+        l_1.setLocalityId("mod_locality_1_id");
+
+        this.mockMvc.perform(put(PATH_PREFIX_v1+
+                    l_1.getCompany()+
+                    "/localities/"+
+                    _id)
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(l_1)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(_id)))
+            .andExpect(jsonPath("$.description",is(l_1.getDescription())))
+            .andExpect(jsonPath("$.localityId",is(l_1.getLocalityId())));
     }
 
 }

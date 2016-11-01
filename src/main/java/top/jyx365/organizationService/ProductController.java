@@ -121,6 +121,18 @@ public class ProductController {
                     assember.toResource(prod),HttpStatus.CREATED
                     );
         }
+    @RequestMapping(value="/{productId}", method = RequestMethod.PUT)
+        public ProductResource updateProduct(
+                @PathVariable String companyId,
+                @PathVariable String productId,
+                @RequestBody Product prod) {
+            Product _prod = repository.findProduct(productId);
+            prod.setId(_prod.getId());
+            Company c = repository.findCompany(companyId);
+            prod.setCompany(c.getId());
+            repository.updateProduct(prod);
+            return assember.toResource(prod);
+        }
 }
 
 

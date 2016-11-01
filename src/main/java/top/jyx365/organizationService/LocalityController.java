@@ -133,4 +133,12 @@ public class LocalityController {
             return new ResponseEntity<LocalityResource>(
                     assember.toResource(l), HttpStatus.CREATED);
         }
+
+    @RequestMapping(value = "/{localityId}", method = RequestMethod.PUT)
+        public LocalityResource updateLocality(@PathVariable String localityId,@RequestBody Locality l) {
+            Locality _l = repository.findLocality(localityId);
+            l.setId(_l.getId());
+            repository.updateLocality(l);
+            return assember.toResource(l);
+        }
 }

@@ -19,27 +19,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static top.jyx365.organizationService.OrganizationServiceApplicationTests.TestProfileValueSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-int-test")
-@ProfileValueSourceConfiguration(TestProfileValueSource.class)
+@ProfileValueSourceConfiguration(Configuration.class)
 @Slf4j
 public class ProductTests extends OrganizationServiceApplicationTests {
 
-    public static class TestProfileValueSource implements ProfileValueSource {
-        public String get(String key) {
-            return "none";
-        }
-    }
 
     /*7. Product*/
     /*7.1 Add*/
     /*7.1.1 Add new product*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "product"})
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
     public void _7_1_1_addNewProduct() throws Exception {
         Product p = new Product();
         p.setName("test_add_product");
@@ -71,7 +65,7 @@ public class ProductTests extends OrganizationServiceApplicationTests {
     /*7.2 Query*/
     /*7.2.1 Get all product*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "product"})
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
     public void _7_2_1_getAllProducts() throws Exception {
         RequestBuilder request = get(
                 "/api/v1.0/companies/"+
@@ -98,7 +92,7 @@ public class ProductTests extends OrganizationServiceApplicationTests {
 
     /*7.2.2 Get one product*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all", "product"})
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
     public void _7_2_2_getOneProduct() throws Exception {
         Product p = p_2;
         RequestBuilder request = get(
@@ -122,7 +116,7 @@ public class ProductTests extends OrganizationServiceApplicationTests {
     /*7.3 delete*/
     /*7.3.1 delete an exist product*/
     @Test
-    @IfProfileValue(name="test-group", values = {"all","product"})
+    @IfProfileValue(name="product-test-group", values = {"all","product"})
     public void _7_3_1_delExistProduct() throws Exception {
         this.mockMvc.perform(delete("/api/v1.0/companies/"+
                     p_1.getCompany()+
@@ -132,6 +126,29 @@ public class ProductTests extends OrganizationServiceApplicationTests {
             .andDo(print())
             .andExpect(status().isOk());
         assertNull(repository.findProduct(p_1.getId()));
+    }
+
+    /*7.4 update*/
+    /*7.4.1 update an exist product*/
+    @Test
+    @IfProfileValue(name="product-test-group", values = {"all", "upadte"})
+    public void _7_4_1_updateExistProduct() throws Exception {
+        String _id = p_1.getId().toString();
+        p_1.setDescription("mod_test_product_1");
+        p_1.setProductId("test_product_1_mod_desc");
+
+        this.mockMvc.perform(put(PATH_PREFIX_v1+
+                    p_1.getCompany()+
+                    "/products/"+
+                    _id)
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(p_1)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(_id)))
+            .andExpect(jsonPath("$.description",is(p_1.getDescription())))
+            .andExpect(jsonPath("$.productId",is(p_1.getProductId())));
     }
 }
 
