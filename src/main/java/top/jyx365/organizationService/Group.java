@@ -28,9 +28,6 @@ public final class Group {
     @DnAttribute(value="cn", index=2)
     private String name;
 
-    //@Attribute(name="ou")
-    //private List<Name> departments;
-
     @Attribute(name="member")
     private List<Name> members = new ArrayList<Name>();
 
@@ -97,23 +94,6 @@ public final class Group {
     public String getName() {
         return name;
     }
-
-    //public void setDepartments(List<Name> departments) {
-        //this.departments = departments;
-    //}
-
-    //public List<Name> getDepartments() {
-        //return departments;
-    //}
-
-    //public void addDepartment(Name department) {
-        //if(this.departments == null) this.departments = new ArrayList<Name>();
-        //this.departments.add(department);
-    //}
-
-    //public void removeDepartment(Name department) {
-        //if(this.departments != null) this.departments.remove(department);
-    //}
 
     public void setCompany(Name company) {
         this.company = company;

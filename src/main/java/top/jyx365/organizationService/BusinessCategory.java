@@ -33,7 +33,7 @@ public class BusinessCategory {
     }
 
     public String toString() {
-        return "{\"product\":\""+this.product+"\","+
-            "\"locality\":\""+this.locality+"\"}";
+        return "{\"locality\":\""+this.locality+"\","+
+            "\"product\":\""+this.product+"\"}";
     }
 }

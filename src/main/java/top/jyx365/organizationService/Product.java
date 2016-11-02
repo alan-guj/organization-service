@@ -46,6 +46,9 @@ public final class Product {
         return id;
     }
 
+    public void setId(Name id) {
+        this.id = id;
+    }
     public void setProductId(String productId) {
         this.productId = productId==null?"null":productId;
     }

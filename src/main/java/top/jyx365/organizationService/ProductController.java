@@ -98,6 +98,16 @@ public class ProductController {
             return assember.toResource(repository.findProduct(productId));
         }
 
+    @RequestMapping(value="/{productId}",method = RequestMethod.DELETE)
+        public void deleteProduct(
+                @PathVariable String companyId,
+                @PathVariable String productId
+                )
+        {
+            Product prod = repository.findProduct(productId);
+            repository.deleteProduct(prod);
+        }
+
     @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<ProductResource> addProduct(
                 @PathVariable String companyId,
@@ -110,6 +120,18 @@ public class ProductController {
             return new ResponseEntity<ProductResource>(
                     assember.toResource(prod),HttpStatus.CREATED
                     );
+        }
+    @RequestMapping(value="/{productId}", method = RequestMethod.PUT)
+        public ProductResource updateProduct(
+                @PathVariable String companyId,
+                @PathVariable String productId,
+                @RequestBody Product prod) {
+            Product _prod = repository.findProduct(productId);
+            prod.setId(_prod.getId());
+            Company c = repository.findCompany(companyId);
+            prod.setCompany(c.getId());
+            repository.updateProduct(prod);
+            return assember.toResource(prod);
         }
 }
 

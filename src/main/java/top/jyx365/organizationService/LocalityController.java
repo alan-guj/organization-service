@@ -102,6 +102,16 @@ public class LocalityController {
                     assember.toResources(repository.findLocalities(root,true)));
         }
 
+    @RequestMapping(value="/{localityId}",method = RequestMethod.DELETE)
+        public void deleteLocality(
+                @PathVariable String companyId,
+                @PathVariable String localityId
+                )
+        {
+            Locality l = repository.findLocality(localityId);
+            repository.deleteLocality(l,true);
+        }
+
     @RequestMapping(value="/{localityId}",method = RequestMethod.GET)
         public LocalityResource getLocality(
                 @PathVariable String companyId,
@@ -122,5 +132,13 @@ public class LocalityController {
             repository.addLocality(l);
             return new ResponseEntity<LocalityResource>(
                     assember.toResource(l), HttpStatus.CREATED);
+        }
+
+    @RequestMapping(value = "/{localityId}", method = RequestMethod.PUT)
+        public LocalityResource updateLocality(@PathVariable String localityId,@RequestBody Locality l) {
+            Locality _l = repository.findLocality(localityId);
+            l.setId(_l.getId());
+            repository.updateLocality(l);
+            return assember.toResource(l);
         }
 }
