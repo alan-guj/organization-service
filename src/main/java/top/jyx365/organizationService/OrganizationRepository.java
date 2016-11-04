@@ -200,17 +200,17 @@ public class OrganizationRepository {
         }
     }
 
-    public List<Staff> findStaffs(String companyId,Map<String, String> searchCondition) {
+    public List<Staff> findStaffs(String companyId,Map<String, String> searchCondition,String type) {
         try {
             ContainerCriteria query;
             if(companyId != null) {
                 Name dn = LdapNameBuilder.newInstance(companyId)
-                    .add("ou","staffs")
+                    .add("ou",type)
                     .build();
                 query = query().base(dn).where("objectclass").is("inetOrgPerson");
             }else {
                 query = query().where("objectclass").is("inetOrgPerson")
-                    .and("employeeType").is("staffs");
+                    .and("employeeType").is(type);
             }
             for(Map.Entry<String,String> entry:searchCondition.entrySet()){
                 if(entry.getValue()!= null)
