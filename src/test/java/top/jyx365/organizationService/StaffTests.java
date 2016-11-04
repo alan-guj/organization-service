@@ -333,10 +333,11 @@ public class StaffTests extends OrganizationServiceApplicationTests {
 
     }
 
-    /*6.1.2 get one*/
+    /*6.1.2 Query*/
+    /*6.1.2.1 get one*/
     @Test
     @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
-    public void _6_1_2_getOneApplicant() throws Exception {
+    public void _6_1_2_1_getOneApplicant() throws Exception {
         Staff s = s_a_1;
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                     s.getCompany().toString()+
@@ -350,6 +351,60 @@ public class StaffTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.mobile",is(s.getMobile())))
             .andExpect(jsonPath("$.id",is(s.getId().toString())))
             .andExpect(jsonPath("$.company",is(s.getCompany().toString())));
+    }
+    /*6.1.2.2 query by mobile found*/
+    @Test
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
+    public void _6_1_2_2_getApplicantByMobile_found() throws Exception {
+        Staff s = s_a_1;
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/applicants?mobile=13813812345")
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.applicants",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.applicants[0].id",is(s.getId().toString())));
+    }
+    /*6.1.2.2 query by mobile not found*/
+    @Test
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
+    public void _6_1_2_2_getApplicantByMobile_notFound() throws Exception {
+        Staff s = s_a_1;
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/applicants?mobile=1381345")
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded").doesNotExist());
+    }
+    /*6.1.2.3 query by name found*/
+    @Test
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
+    public void _6_1_2_3_getApplicantByName_found() throws Exception {
+        Staff s = s_a_1;
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/applicants?name=applicant-1")
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.applicants",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.applicants[0].id",is(s.getId().toString())));
+    }
+    /*6.1.2.2 query by mobile not found*/
+    @Test
+    @IfProfileValue(name="staff-test-group", values = {"all", "staff"})
+    public void _6_1_2_4_getApplicantByName_notFound() throws Exception {
+        Staff s = s_a_1;
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                    s.getCompany().toString()+
+                    "/applicants?name=nobody")
+                .header(AUTHORIZATION,ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded").doesNotExist());
     }
 
     /*6.1.3 approval*/

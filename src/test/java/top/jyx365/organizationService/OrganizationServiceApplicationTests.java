@@ -269,7 +269,7 @@ public abstract class OrganizationServiceApplicationTests {
         s_a_1.setType("applicants");
         s_a_1.setName("applicant-1");
         s_a_1.setSurname("申请加入员工1");
-        s_a_1.setMobile("123");
+        s_a_1.setMobile("13813812345");
         s_a_1.setDescription("申请加入员工1");
         s_a_1.setCompany(c_1.getId());
         repository.addStaff(s_a_1);
