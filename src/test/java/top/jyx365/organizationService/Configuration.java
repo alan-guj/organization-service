@@ -22,8 +22,8 @@ public class Configuration implements ProfileValueSource {
 
     public Configuration() {
         //groups.put("company-test-group", "all");
-        //groups.put("dept-test-group", "all");
-        groups.put("staff-test-group", "all");
+        groups.put("dept-test-group", "all");
+        //groups.put("staff-test-group", "all");
         //groups.put("group-test-group", "all");
         //groups.put("locality-test-group", "all");
         //groups.put("product-test-group", "all");

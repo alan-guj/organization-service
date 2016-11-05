@@ -141,7 +141,7 @@ public abstract class OrganizationServiceApplicationTests {
     protected Company c_1,c_2;
     protected Department d_1, d_1_1, d_1_2, d_2, d_3;
     protected Staff s_1, s_2;
-    protected Role r_2;
+    protected Role r_2,r_1,r_1_1,r_1_2;
     protected Group g_1, g_2;
     protected Staff s_a_1,s_i_1;
     protected Product p_1,p_2;
@@ -284,6 +284,32 @@ public abstract class OrganizationServiceApplicationTests {
         repository.addStaff(s_i_1);
 
 
+        /*r_1--d_1--s_2*/
+        r_1 = new Role();
+        r_1.setName("VP");
+        r_1.setDescription("测试角色：部门1VP");
+        r_1.setDepartment(d_1.getId());
+        r_1.addOccupant(s_2.getId());
+        repository.addRole(r_1);
+
+        /*r_1_1--d_1_1--s_1*/
+        r_1_1 = new Role();
+        r_1_1.setName("manager");
+        r_1_1.setDescription("测试角色：部门1_1经理");
+        r_1_1.setDepartment(d_1_1.getId());
+        r_1_1.addOccupant(s_1.getId());
+        repository.addRole(r_1_1);
+
+        /*r_1_2--d_1_2--none*/
+        r_1_2 = new Role();
+        r_1_2.setName("manager");
+        r_1_2.setDescription("测试角色：部门1_2经理");
+        r_1_2.setDepartment(d_1_2.getId());
+        repository.addRole(r_1_2);
+
+
+
+        /*r_2--d_2--s_1*/
         r_2 = new Role();
         r_2.setName("director");
         r_2.setDescription("测试角色：部门2总监");

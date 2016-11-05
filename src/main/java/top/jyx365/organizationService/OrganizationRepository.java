@@ -149,6 +149,28 @@ public class OrganizationRepository {
         }
     }
 
+    public List<Role> findRoles(
+            Name departmentId,
+            Map<String, String> sc,
+            boolean recursive)
+    {
+        try {
+            SearchScope ss = recursive?SearchScope.SUBTREE:SearchScope.ONELEVEL;
+            Name dn = LdapNameBuilder.newInstance(departmentId).build();
+            ContainerCriteria query = query()
+                .base(dn)
+                    .searchScope(ss)
+                .where("objectClass").is("organizationalRole");
+            for(Map.Entry<String, String> entry:sc.entrySet()) {
+                if(entry.getValue()!=null)
+                    query=query.and(entry.getKey()).like(entry.getValue());
+            }
+            return ldapTemplate.find(query,Role.class);
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
     public List<Role> findDepartmentRoles(String department) {
         try {
             SearchControls sc = new SearchControls();

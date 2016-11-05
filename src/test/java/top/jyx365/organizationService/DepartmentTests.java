@@ -241,7 +241,7 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
         Role role = new Role();
         Department dept = d_1_1;
         role.setDepartment(dept.getId());
-        role.setName("manager");
+        role.setName("director");
         role.setDescription("测试角色-经理");
         String roleId = LdapNameBuilder.newInstance(dept.getId())
                                                 .add("cn",role.getName())
@@ -301,28 +301,34 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
     @IfProfileValue(name="dept-test-group", values={"all","role"})
     public void _4_2_1_getAllDeptRoles() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
-                        d_2.getCompany()+
+                        d_1.getCompany()+
                         "/departments/"+
-                        d_2.getId().toString()+
+                        d_1.getId().toString()+
+                        "/roles?recursive=true")
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.roles",hasSize(3)));
+    }
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_1_getDeptRoles() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        d_1.getCompany()+
+                        "/departments/"+
+                        d_1.getId().toString()+
                         "/roles")
                     .header(AUTHORIZATION, ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.roles",hasSize(1)))
-            .andExpect(jsonPath("$._embedded.roles[0].id",is(r_2.getId().toString())))
-            .andExpect(jsonPath("$._embedded.roles[0].name",is(r_2.getName())))
-            .andExpect(jsonPath("$._embedded.roles[0].description",is(r_2.getDescription())))
-            .andExpect(jsonPath("$._embedded.roles[0].department",is(r_2.getDepartment().toString())))
-            .andExpect(jsonPath("$._embedded.roles[0].occupants",hasSize(1)))
-            .andExpect(jsonPath("$._embedded.roles[0].occupants",containsInAnyOrder(
-                            s_1.getId().toString()
-                            )));
+            .andExpect(jsonPath("$._embedded.roles",hasSize(1)));
     }
 
-    /*4.2.1 get one role of a dept*/
+
+    /*4.2.2 get one role of a dept*/
     @Test
     @IfProfileValue(name="dept-test-group", values={"all","role"})
-    public void _4_2_1_getOneDeptRole() throws Exception {
+    public void _4_2_2_getOneDeptRole() throws Exception {
         this.mockMvc.perform(get("/api/v1.0/companies/"+
                         d_2.getCompany()+
                         "/departments/"+
@@ -340,6 +346,92 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.occupants",containsInAnyOrder(
                             s_1.getId().toString()
                             )));
+    }
+
+    /*4.2.3 find one role by occupant*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_3_findRoleByOccupant() throws Exception {
+        /*c_1---r_1-occupant-s_2*/
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        c_1.getId()+"/departments/**/roles?occupant="+
+                        s_2.getId())
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.roles",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.roles[0].id",is(r_1.getId().toString())))
+            .andExpect(jsonPath("$._embedded.roles[0].department",is(d_1.getId().toString())));
+    }
+
+    /*4.2.4 find multi roles by occupant*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_4_findMultiRolesByOccupant() throws Exception {
+        /*d_2---r_2---s_1*/
+        /*d_1_1---r_1_1-occupant-s_1*/
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        c_1.getId()+"/departments/**/roles?occupant="+
+                        s_1.getId())
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.roles",hasSize(2)));
+    }
+
+    /*4.2.5 find one role by name*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_5_findRoleByName() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        c_1.getId()+"/departments/**/roles?name=director")
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.roles",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.roles[0].id",is(r_2.getId().toString())))
+            .andExpect(jsonPath("$._embedded.roles[0].department",is(d_2.getId().toString())));
+    }
+
+    /*4.2.6 find multi roles by name*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_6_findMultiRolesByName() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        c_1.getId()+"/departments/**/roles?name=manager")
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.roles",hasSize(2)));
+    }
+
+    /*4.2.6 find multi roles by name ,recursive,Not Exist*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_6_findMultiRolesByNameRecusiveNotExist() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        c_1.getId()+"/departments/"+
+                        d_1.getId()+
+                        "/roles?name=manager")
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded").doesNotExist());
+    }
+
+    /*4.2.6 find multi roles by name ,recursive,Exist*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values={"all","role"})
+    public void _4_2_6_findMultiRolesByNameRecusiveExist() throws Exception {
+        this.mockMvc.perform(get("/api/v1.0/companies/"+
+                        c_1.getId()+"/departments/"+
+                        d_1.getId()+
+                        "/roles?name=VP")
+                    .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.roles",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.roles[0].id",is(r_1.getId().toString())));
     }
 
     /*4.3 delete*/
