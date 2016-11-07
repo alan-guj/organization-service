@@ -206,7 +206,8 @@ public class StaffController {
                 @PathVariable String companyId,
                 @RequestParam(required = false) String mobile,
                 @RequestParam(required = false) String department,
-                @RequestParam(required = false) String name
+                @RequestParam(required = false) String name,
+                @RequestParam(required = false) String uid
                 )
         {
             if(companyId.equals("**")) companyId = null;
@@ -214,6 +215,7 @@ public class StaffController {
             searchCondition.put("mobile",mobile);
             searchCondition.put("ou",department);
             searchCondition.put("name",name);
+            searchCondition.put("uid",uid);
             return new Resources<StaffResource>(resourceAssember.toResources(
                     repository.findStaffs(companyId,searchCondition,"staffs")));
         }
@@ -266,13 +268,15 @@ public class StaffController {
             public Resources<ApplicantResource> getApplicants(
                     @PathVariable String companyId,
                     @RequestParam(required = false) String mobile,
-                    @RequestParam(required = false) String name
+                    @RequestParam(required = false) String name,
+                    @RequestParam(required = false) String uid
                     )
             {
                 if(companyId.equals("**")) companyId = null;
                 Map<String, String> searchCondition = new HashMap<String, String>();
                 searchCondition.put("mobile",mobile);
                 searchCondition.put("name",name);
+                searchCondition.put("uid",uid);
 
                 return new Resources<ApplicantResource>(
                         assember.toResources(
@@ -344,11 +348,22 @@ public class StaffController {
 
 
         @RequestMapping(method = RequestMethod.GET)
-            public Resources<InviteeResource> getInvitees(@PathVariable String companyId) {
+            public Resources<InviteeResource> getInvitees(
+                    @PathVariable String companyId,
+                    @RequestParam(required = false) String mobile,
+                    @RequestParam(required = false) String name,
+                    @RequestParam(required = false) String uid
+                    )
+            {
+                if(companyId.equals("**")) companyId = null;
+                Map<String, String> searchCondition = new HashMap<String, String>();
+                searchCondition.put("mobile",mobile);
+                searchCondition.put("name",name);
+                searchCondition.put("uid",uid);
                 return new Resources<InviteeResource>(
                         assember.toResources(
-                            repository.findAllStaffs(companyId,"invitees"))
-                        );
+                            repository.findStaffs(
+                                companyId,searchCondition,"invitees")));
             }
 
         @RequestMapping(value = "/{inviteeId}", method = RequestMethod.GET)
