@@ -141,7 +141,7 @@ public abstract class OrganizationServiceApplicationTests {
     protected Company c_1,c_2;
     protected Department d_1, d_1_1, d_1_2, d_2, d_3;
     protected Staff s_1, s_2;
-    protected Role r_2;
+    protected Role r_2,r_1,r_1_1,r_1_2;
     protected Group g_1, g_2;
     protected Staff s_a_1,s_i_1;
     protected Product p_1,p_2;
@@ -254,6 +254,7 @@ public abstract class OrganizationServiceApplicationTests {
         s_1.setDescription("无部门员工");
         s_1.addBusinessCategory(bc_1);
         s_1.setCompany(c_1.getId());
+        s_1.setUid("staff1_uid");
         repository.addStaff(s_1);
 
         s_2 = new Staff();
@@ -263,27 +264,56 @@ public abstract class OrganizationServiceApplicationTests {
         s_2.setDescription("有部门员工");
         s_2.setCompany(c_1.getId());
         s_2.addDepartment(d_1.getId());
+        s_2.setUid("staff2_uid");
         repository.addStaff(s_2);
 
         s_a_1 = new Staff();
         s_a_1.setType("applicants");
         s_a_1.setName("applicant-1");
         s_a_1.setSurname("申请加入员工1");
-        s_a_1.setMobile("123");
+        s_a_1.setMobile("13813812345");
         s_a_1.setDescription("申请加入员工1");
         s_a_1.setCompany(c_1.getId());
+        s_a_1.setUid("applicant-1-uid");
         repository.addStaff(s_a_1);
 
         s_i_1 = new Staff();
         s_i_1.setType("invitees");
         s_i_1.setName("invitee-1");
         s_i_1.setSurname("邀请加入员工1");
-        s_i_1.setMobile("123");
+        s_i_1.setMobile("invitee-1-mobile");
         s_i_1.setDescription("邀请加入员工1");
         s_i_1.setCompany(c_1.getId());
+        s_i_1.setUid("invitee-1-uid");
         repository.addStaff(s_i_1);
 
 
+        /*r_1--d_1--s_2*/
+        r_1 = new Role();
+        r_1.setName("VP");
+        r_1.setDescription("测试角色：部门1VP");
+        r_1.setDepartment(d_1.getId());
+        r_1.addOccupant(s_2.getId());
+        repository.addRole(r_1);
+
+        /*r_1_1--d_1_1--s_1*/
+        r_1_1 = new Role();
+        r_1_1.setName("manager");
+        r_1_1.setDescription("测试角色：部门1_1经理");
+        r_1_1.setDepartment(d_1_1.getId());
+        r_1_1.addOccupant(s_1.getId());
+        repository.addRole(r_1_1);
+
+        /*r_1_2--d_1_2--none*/
+        r_1_2 = new Role();
+        r_1_2.setName("manager");
+        r_1_2.setDescription("测试角色：部门1_2经理");
+        r_1_2.setDepartment(d_1_2.getId());
+        repository.addRole(r_1_2);
+
+
+
+        /*r_2--d_2--s_1*/
         r_2 = new Role();
         r_2.setName("director");
         r_2.setDescription("测试角色：部门2总监");

@@ -101,7 +101,11 @@ class DepartmentResourceAssembler
                     dept.getId().toString(),dept,dept.getCompany());
             resource.add(linkTo(
                         methodOn(RoleController.class)
-                        .getRoles(dept.getCompany().toString(),dept.getId().toString())
+                        .getRoles(
+                            dept.getCompany().toString(),
+                            dept.getId().toString(),
+                            null,null,null
+                            )
                         ).withRel("roles"));
             return resource;
         }

@@ -38,7 +38,7 @@ security:
         resource:
             userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
 authority:
-    authorities: system_service, system_web, enterprise_user, system_admin
+    authorities: system_service, system_web, enterprise_user, system_admin, system_operator
 server:
     port: 8810
     address: cc-dev.jyx365.top
