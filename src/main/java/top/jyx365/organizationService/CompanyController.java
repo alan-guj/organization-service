@@ -52,8 +52,12 @@ class CompanyResource extends ResourceSupport {
     }
 
     @JsonProperty("id")
-    public Name getCompanyId() {
+    public Name getCompanyDn() {
         return this.company.getId();
+    }
+
+    public String getCompanyId() {
+        return this.company.getCompanyId();
     }
 
     public String getName() {

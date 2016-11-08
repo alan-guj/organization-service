@@ -47,6 +47,10 @@ class ProductResource extends ResourceSupport {
     public Name getCompany() {
         return this.prod.getCompany();
     }
+
+    public String getProductName() {
+        return this.prod.getProductName();
+    }
 }
 
 

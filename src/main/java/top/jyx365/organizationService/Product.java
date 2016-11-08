@@ -22,6 +22,9 @@ public final class Product {
     @Attribute(name="documentIdentifier")
     private String productId="null";
 
+    @Attribute(name="documentTitle")
+    private String productName;
+
     @Attribute(name="cn")
     @DnAttribute(value="cn", index=2)
     private String name;
@@ -80,5 +83,13 @@ public final class Product {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductName() {
+        return productName;
     }
 }

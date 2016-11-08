@@ -22,6 +22,8 @@ public final class Company {
     @DnAttribute(value="dc",index=0)
     private String domain;
 
+    @Attribute(name="st")
+    private String companyId;
 
     private String description;
 
@@ -55,5 +57,13 @@ public final class Company {
 
     public String getDomain() {
         return domain;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
     }
 }
