@@ -1,0 +1,7 @@
+spring:
+    cloud:
+        consul:
+            discovery:
+                tags: ${spring.profiles.active}
+            config:
+                format: YAML

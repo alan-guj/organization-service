@@ -5,10 +5,6 @@ spring:
          serialization-inclusion: NON_EMPTY
     application:
         name: OrganizationService
-    cloud:
-        consul:
-            discovery:
-                tags: ${spring.profiles.active}
 app:
     key: OrganizationService
     name: 企业管理
@@ -41,7 +37,6 @@ authority:
     authorities: system_service, system_web, enterprise_user, system_admin, system_operator
 server:
     port: 8810
-    address: cc-dev.jyx365.top
 logging:
     level:
         #org.springframework.ldap: DEBUG
@@ -74,28 +69,28 @@ ldap:
     base: dc=development,dc=jyx365,dc=top
     userDn: cn=Manager,dc=jyx365,dc=top
 ---
-spring:
-    profiles: dev-prod
-security:
-    oauth2:
-        client:
-            client-id: customer_care_web_server_guj
-            clientSecret: 654322
-            accessTokenUri: http://dev.jyx365.top/oauth/access_token
-            userAuthorizationUri: http://dev.jyx365.top/sso/login
-            tokenName: access_token
-            #authenticationScheme: query
-            #clientAuthenticationScheme: form
-            scope: userinfo
-        resource:
-            userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
-server:
-    port: 8810
-ldap:
-    password: 6Jw8fd7TfnPRd7Gr
-    url: ldap://localhost:389
-    base: dc=dev-prod,dc=jyx365,dc=top
-    userDn: cn=Manager,dc=jyx365,dc=top
+#spring:
+    #profiles: dev-prod
+#security:
+    #oauth2:
+        #client:
+            #client-id: customer_care_web_server_guj
+            #clientSecret: 654322
+            #accessTokenUri: http://dev.jyx365.top/oauth/access_token
+            #userAuthorizationUri: http://dev.jyx365.top/sso/login
+            #tokenName: access_token
+            ##authenticationScheme: query
+            ##clientAuthenticationScheme: form
+            #scope: userinfo
+        #resource:
+            #userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
+#server:
+    #port: 8810
+#ldap:
+    #password: 6Jw8fd7TfnPRd7Gr
+    #url: ldap://localhost:389
+    #base: dc=dev-prod,dc=jyx365,dc=top
+    #userDn: cn=Manager,dc=jyx365,dc=top
 ---
 spring:
     profiles: dev-test
