@@ -72,6 +72,7 @@ class CompanyResource extends ResourceSupport {
         return this.company.getDomain();
     }
 
+
 }
 
 
@@ -86,7 +87,8 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
         resource.add(
                 linkTo(
                     methodOn(DepartmentController.class)
-                    .getDepartments(company.getId().toString(),null)
+                    .getDepartments(company.getId().toString(),
+                        null,null)
                     ).withRel("departments"));
         resource.add(
                 linkTo(
