@@ -131,14 +131,15 @@ public class DepartmentController {
     @RequestMapping(method = RequestMethod.GET)
         public Resources<DepartmentResource> getDepartments(
                 @PathVariable String companyId,
-                @RequestParam(required=false) String parent
+                @RequestParam(required=false) String parent,
+                @RequestParam(required=false,defaultValue="false") String recursive
                 )
         {
             List<Department> result;
             if(parent == null)
                 result = repository.findCompanyDepartments(companyId,true);
             else
-                result = repository.findSubDepartments(parent,false);
+                result = repository.findSubDepartments(parent,recursive.equals("true"));
 
             return new Resources<DepartmentResource>(deptAssember.toResources(result));
         }

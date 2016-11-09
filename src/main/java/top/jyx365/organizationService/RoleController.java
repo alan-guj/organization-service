@@ -140,7 +140,7 @@ class RoleController {
                 @PathVariable String departmentId,
                 @RequestParam(required = false) String occupant,
                 @RequestParam(required = false) String name,
-                @RequestParam(required = false) String recursive
+                @RequestParam(required = false, defaultValue="false") String recursive
                 )
         {
 
@@ -148,7 +148,6 @@ class RoleController {
             searchCondition.put("roleOccupant", occupant);
             searchCondition.put("cn", name);
             Name _departmentId;
-
             if(departmentId.equals("**")) {
                 recursive="true";
                 Company company = repository.findCompany(companyId);
@@ -165,7 +164,7 @@ class RoleController {
                         repository.findRoles(
                             _departmentId,
                             searchCondition,
-                            recursive!=null)
+                            recursive.equals("true"))
                         )
                     );
         }
