@@ -21,12 +21,12 @@ public class Configuration implements ProfileValueSource {
     private Map<String ,String> groups = new HashMap<String, String>();
 
     public Configuration() {
-        //groups.put("company-test-group", "all");
+        groups.put("company-test-group", "all");
         groups.put("dept-test-group", "all");
-        //groups.put("staff-test-group", "all");
-        //groups.put("group-test-group", "all");
-        //groups.put("locality-test-group", "all");
-        //groups.put("product-test-group", "all");
+        groups.put("staff-test-group", "all");
+        groups.put("group-test-group", "all");
+        groups.put("locality-test-group", "all");
+        groups.put("product-test-group", "all");
     }
 
     public String get(String key) {

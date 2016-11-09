@@ -52,8 +52,12 @@ class CompanyResource extends ResourceSupport {
     }
 
     @JsonProperty("id")
-    public Name getCompanyId() {
+    public Name getCompanyDn() {
         return this.company.getId();
+    }
+
+    public String getCompanyId() {
+        return this.company.getCompanyId();
     }
 
     public String getName() {
@@ -67,6 +71,7 @@ class CompanyResource extends ResourceSupport {
     public String getDomain() {
         return this.company.getDomain();
     }
+
 
 }
 
@@ -82,7 +87,8 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
         resource.add(
                 linkTo(
                     methodOn(DepartmentController.class)
-                    .getDepartments(company.getId().toString(),null)
+                    .getDepartments(company.getId().toString(),
+                        null,null)
                     ).withRel("departments"));
         resource.add(
                 linkTo(
