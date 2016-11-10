@@ -18,3 +18,15 @@
 * http://cc-dev.jyx365.top:8810/api/v1.0
 
 * Swagger UI : http://cc-dev.jyx365.top:8810/swagger-ui.html
+
+## 编译
+```shell
+./gradlew build
+```
+编译结果为`./build/libs/organizationService-0.0.1-SNAPSHOT.jar`
+
+## 运行
+```shell
+java -Dspring.profiles.active={profile-name} -jar ./build/libs/organizationService-0.0.1-SNAPSHOT.jar
+```
+> 注： `{profile-name}`是当前配置的名称，对应到consul中`config/OrganizationService,{profile-name}/data`的内容
