@@ -137,8 +137,9 @@ public class LocalityController {
     @RequestMapping(value = "/{localityId}", method = RequestMethod.PUT)
         public LocalityResource updateLocality(@PathVariable String localityId,@RequestBody Locality l) {
             Locality _l = repository.findLocality(localityId);
-            l.setId(_l.getId());
-            repository.updateLocality(l);
-            return assember.toResource(l);
+            _l.setDescription(l.getDescription());
+            _l.setLocalityId(l.getLocalityId());
+            repository.updateLocality(_l);
+            return assember.toResource(_l);
         }
 }

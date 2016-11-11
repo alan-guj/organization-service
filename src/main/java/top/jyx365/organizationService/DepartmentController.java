@@ -195,8 +195,10 @@ public class DepartmentController {
         public DepartmentResource updateDepartment(@PathVariable String companyId,
                 @PathVariable String departmentId,
                 @RequestBody Department department) {
-            repository.updateDepartment(department);
-            return deptAssember.toResource(department);
+            Department _dept = repository.findDepartment(departmentId);
+            _dept.setDescription(department.getDescription());
+            repository.updateDepartment(_dept);
+            return deptAssember.toResource(_dept);
         }
 
 }

@@ -65,6 +65,9 @@ public final class Staff {
     @JsonIgnore
     private Name company;
 
+    @Attribute(name="mail")
+    private String email;
+
     @DnAttribute(value="ou", index=1)
     @Attribute(name="employeeType")
     @JsonIgnore
@@ -193,5 +196,13 @@ public final class Staff {
 
     public Name getRelatedStaff() {
         return relatedStaff;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

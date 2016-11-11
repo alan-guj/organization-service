@@ -131,11 +131,11 @@ public class ProductController {
                 @PathVariable String productId,
                 @RequestBody Product prod) {
             Product _prod = repository.findProduct(productId);
-            prod.setId(_prod.getId());
-            Company c = repository.findCompany(companyId);
-            prod.setCompany(c.getId());
-            repository.updateProduct(prod);
-            return assember.toResource(prod);
+            _prod.setDescription(prod.getDescription());
+            _prod.setProductId(prod.getProductId());
+            _prod.setProductName(prod.getProductName());
+            repository.updateProduct(_prod);
+            return assember.toResource(_prod);
         }
 }
 
