@@ -109,6 +109,10 @@ class StaffResource extends ResourceSupport {
     public Name getRelatedStaff() {
         return this.staff.getRelatedStaff();
     }
+
+    public String getEmail() {
+        return this.staff.getEmail();
+    }
 }
 
 
@@ -247,6 +251,7 @@ public class StaffController {
         {
             Staff _staff = repository.findStaff(staffId);
             staff.setId(_staff.getId());
+            staff.setName(_staff.getName());
             Company c = repository.findCompany(companyId);
             staff.setCompany(c.getId());
             repository.updateStaff(staff);

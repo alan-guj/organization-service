@@ -184,9 +184,10 @@ class RoleController {
     @RequestMapping(value="/{roleId}", method = RequestMethod.PUT)
         public RoleResource updateRole(@PathVariable String roleId,@RequestBody Role role) {
             Role _role = repository.findRole(roleId);
-            role.setId(_role.getId());
-            repository.updateRole(role);
-            return assember.toResource(role);
+            _role.setOccupants(role.getOccupants());
+            _role.setDescription(role.getDescription());
+            repository.updateRole(_role);
+            return assember.toResource(_role);
         }
 
 }

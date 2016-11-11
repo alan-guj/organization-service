@@ -307,6 +307,40 @@ public class StaffTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.departments",hasSize(1)))
             .andExpect(jsonPath("$.departments[0]",is(d_1_2.getId().toString())));
     }
+    /*3.4.2 update the name of an exist staff,should ignore the name*/
+    @Test
+    @IfProfileValue(name="staff-test-group", values={"all","staff","update"})
+    public void _3_4_2_updateNameOfExistStaff() throws Exception {
+        Staff s = s_1;
+        String _id = s.getId().toString();
+        String _name = s.getName();
+        s.setName("修改名称");
+        s.setSurname("修改测试员工1");
+        s.setMobile("13851811111");
+        s.setDescription("修改测试员工描述");
+        s.addDepartment(d_1_2.getId());
+        this.mockMvc.perform(put(PATH_PREFIX_v1+
+                    s.getCompany()+
+                    "/staffs/"+
+                    _id
+                    )
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(s))
+                )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(_id)))
+            .andExpect(jsonPath("$.name",is(_name)))
+            .andExpect(jsonPath("$.surname",is(s.getSurname())))
+            .andExpect(jsonPath("$.mobile", is(s.getMobile())))
+            .andExpect(jsonPath("$.description",is(s.getDescription())))
+            .andExpect(jsonPath("$.departments",hasSize(1)))
+            .andExpect(jsonPath("$.departments[0]",is(d_1_2.getId().toString())));
+        Staff _s = repository.findStaff(_id);
+        assertNotNull(_s);
+        assertTrue(_s.getName().equals(_name));
+    }
 
     /*6. Applicant and Invitee*/
     /*6.1 Applicant*/
