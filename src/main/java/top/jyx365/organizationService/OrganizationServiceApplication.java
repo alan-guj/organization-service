@@ -1,5 +1,9 @@
 package top.jyx365.organizationService;
 
+
+
+
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -31,7 +35,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import org.springframework.ldap.InvalidNameException;
 import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -84,12 +90,40 @@ public class OrganizationServiceApplication {
 }
 
 @ControllerAdvice
+@Slf4j
 class OrganizationServiceContollerAdvice {
+
+
     @ResponseBody
     @ExceptionHandler(NameAlreadyBoundException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     VndErrors nameAlreadyBoundExceptionHandler(NameAlreadyBoundException ex) {
-        return new VndErrors(ex.getRemainingName().toString(),"object already exist");
+        log.debug("Caught exception while handling a request",ex);
+        return new VndErrors(ex.getClass().getSimpleName(),ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(NameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    VndErrors nameNotFoundExceptionHandler(NameNotFoundException ex) {
+        log.debug("Caught exception while handling a request",ex);
+        return new VndErrors(ex.getClass().getSimpleName(),ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidNameException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    VndErrors invalidNameExceptionHandler(InvalidNameException ex) {
+        log.debug("Caught exception while handling a request",ex);
+        return new VndErrors(ex.getClass().getSimpleName(),ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    VndErrors exceptionHandler(Exception ex) {
+        log.info("Caught exception while handling a request",ex);
+        return new VndErrors(ex.getClass().getSimpleName(),ex.getMessage());
     }
 }
 

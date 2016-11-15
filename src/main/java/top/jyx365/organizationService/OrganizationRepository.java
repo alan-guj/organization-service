@@ -262,15 +262,11 @@ public class OrganizationRepository {
     public Staff findStaff(String staffId) {
         Name dn = LdapNameBuilder.newInstance(staffId)
             .build();
-        return ldapTemplate.findByDn(dn, Staff.class);
+        return findStaff(dn);
     }
 
     public Staff findStaff(Name dn) {
-        try {
-            return ldapTemplate.findByDn(dn, Staff.class);
-        } catch(Exception e) {
-            return null;
-        }
+        return ldapTemplate.findByDn(dn, Staff.class);
     }
 
 
