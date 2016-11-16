@@ -256,6 +256,7 @@ public abstract class OrganizationServiceApplicationTests {
         s_1.addBusinessCategory(bc_1);
         s_1.setCompany(c_1.getId());
         s_1.setUid("staff1_uid");
+        s_1.setLocality("jiangsu");
         repository.addStaff(s_1);
 
         s_2 = new Staff();

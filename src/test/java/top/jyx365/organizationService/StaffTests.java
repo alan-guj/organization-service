@@ -63,6 +63,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.businessCategories",hasSize(1)))
             .andExpect(jsonPath("$.businessCategories[0].product",is(bc_1.getProduct())))
             .andExpect(jsonPath("$.businessCategories[0].locality",is(bc_1.getLocality())))
+            .andExpect(jsonPath("$.locality",is(s_1.getLocality()))) //Check Locality
             .andExpect(jsonPath("$.departments").doesNotExist());
     }
 
