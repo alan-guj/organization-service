@@ -2,18 +2,25 @@ package top.jyx365.organizationService;
 
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.support.LdapNameBuilder;
+
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
 import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.RequestBuilder;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -56,6 +63,7 @@ public class StaffTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.businessCategories",hasSize(1)))
             .andExpect(jsonPath("$.businessCategories[0].product",is(bc_1.getProduct())))
             .andExpect(jsonPath("$.businessCategories[0].locality",is(bc_1.getLocality())))
+            .andExpect(jsonPath("$.locality",is(s_1.getLocality()))) //Check Locality
             .andExpect(jsonPath("$.departments").doesNotExist());
     }
 
@@ -275,7 +283,8 @@ public class StaffTests extends OrganizationServiceApplicationTests {
                 )
             .andDo(print())
             .andExpect(status().isOk());
-        assertNull(repository.findStaff(s_1.getId()));
+        thrown.expect(NameNotFoundException.class);
+        repository.findStaff(s_1.getId());
     }
 
     /*3.4 update*/
@@ -529,7 +538,8 @@ public class StaffTests extends OrganizationServiceApplicationTests {
                 .header(AUTHORIZATION, ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk());
-        assertNull(repository.findStaff(s_a_1.getId()));
+        thrown.expect(NameNotFoundException.class);
+        repository.findStaff(s_a_1.getId());
     }
 
     /*6.2 Invitee*/
@@ -715,7 +725,8 @@ public class StaffTests extends OrganizationServiceApplicationTests {
                 .header(AUTHORIZATION, ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk());
-        assertNull(repository.findStaff(s_i_1.getId()));
+        thrown.expect(NameNotFoundException.class);
+        repository.findStaff(s_i_1.getId());
     }
 
 }

@@ -134,8 +134,7 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
                 .content(json(dept));
             this.mockMvc.perform(request)
                 .andDo(print())
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$[0].message",is("object already exist")));
+                .andExpect(status().isConflict());
         } catch(Exception e) {
             throw(e);
         } finally {

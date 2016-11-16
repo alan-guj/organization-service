@@ -127,8 +127,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
                 .content(json(g));
             this.mockMvc.perform(request)
                 .andDo(print())
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$[0].message",is("object already exist")));
+                .andExpect(status().isConflict());
         } catch(Exception e) {
             e.printStackTrace();
             throw e;

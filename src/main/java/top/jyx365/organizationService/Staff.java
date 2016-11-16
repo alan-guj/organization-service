@@ -65,6 +65,9 @@ public final class Staff {
     @JsonIgnore
     private Name company;
 
+    @Attribute(name="l")
+    private String locality;
+
     @Attribute(name="mail")
     private String email;
 
@@ -204,5 +207,13 @@ public final class Staff {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setLocality(String locality) {
+        this.locality = locality;
+    }
+
+    public String getLocality() {
+        return locality;
     }
 }

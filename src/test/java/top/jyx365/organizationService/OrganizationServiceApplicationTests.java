@@ -9,9 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,6 +256,7 @@ public abstract class OrganizationServiceApplicationTests {
         s_1.addBusinessCategory(bc_1);
         s_1.setCompany(c_1.getId());
         s_1.setUid("staff1_uid");
+        s_1.setLocality("jiangsu");
         repository.addStaff(s_1);
 
         s_2 = new Staff();
@@ -366,6 +368,9 @@ public abstract class OrganizationServiceApplicationTests {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, Map.class);
     }
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 }
 
 
