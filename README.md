@@ -21,7 +21,10 @@
 
 ## 编译
 ```shell
+#编译并执行单元测试
 ./gradlew build
+#编译不进行单元测试
+./gradlew assemble
 ```
 编译结果为`./build/libs/organizationService-0.0.1-SNAPSHOT.jar`
 
