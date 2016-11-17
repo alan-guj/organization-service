@@ -143,7 +143,7 @@ public abstract class OrganizationServiceApplicationTests {
     protected Department d_1, d_1_1, d_1_2, d_2, d_3;
     protected Staff s_1, s_2;
     protected Role r_2,r_1,r_1_1,r_1_2;
-    protected Group g_1, g_2;
+    protected Group g_1, g_2, g_3;
     protected Staff s_a_1,s_i_1;
     protected Product p_1,p_2;
     protected Locality l_1,l_1_1,l_2;
@@ -324,7 +324,7 @@ public abstract class OrganizationServiceApplicationTests {
         repository.addRole(r_2);
 
         g_1 = new Group();
-        g_1.setName("测试组-1");
+        g_1.setName("testgroup-1");
         g_1.setDescription("测试组1描述");
         g_1.setCompany(c_1.getId());
         g_1.addMember(s_1.getId());
@@ -333,10 +333,17 @@ public abstract class OrganizationServiceApplicationTests {
 
 
         g_2 = new Group();
-        g_2.setName("空测试组-2");
+        g_2.setName("testgroup-2");
         g_2.setDescription("空测试组2描述");
         g_2.setCompany(c_1.getId());
         repository.addGroup(g_2);
+
+        g_3 = new Group();
+        g_3.setName("testgroup-3");
+        g_3.setDescription("测试组3描述");
+        g_3.setCompany(c_1.getId());
+        g_3.addMember(s_1.getId());
+        repository.addGroup(g_3);
 
     }
 

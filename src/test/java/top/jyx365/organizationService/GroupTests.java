@@ -39,7 +39,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
                 .header(AUTHORIZATION, ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.groups",hasSize(2)))
+            .andExpect(jsonPath("$._embedded.groups",hasSize(3)))
             .andExpect(jsonPath("$._embedded.groups[0].id",is(g_1.getId().toString())))
             .andExpect(jsonPath("$._embedded.groups[0].name",is(g_1.getName())))
             .andExpect(jsonPath("$._embedded.groups[0].description",is(g_1.getDescription())))
@@ -55,6 +55,9 @@ public class GroupTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$._embedded.groups[1].company",is(g_2.getCompany().toString())))
             .andExpect(jsonPath("$._embedded.groups[1].members").doesNotExist());
     }
+
+
+
     /*5.1.2 get one group*/
     @Test
     @IfProfileValue(name="group-test-group", values = {"all","group"})
@@ -74,6 +77,37 @@ public class GroupTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.members",containsInAnyOrder(
                             s_1.getId().toString(),
                             s_2.getId().toString()
+                            )));
+    }
+
+    /*5.1.3 Query group by name*/
+    @Test
+    @IfProfileValue(name="group-test-group", values = {"all","group"})
+    public void _5_1_3_findGroupByName() throws Exception {
+        this.mockMvc.perform(get(PATH_PREFIX_v1+
+                    c_1.getId().toString()+
+                    "/groups?name="+g_1.getName())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.groups",hasSize(1)))
+            .andExpect(jsonPath("$._embedded.groups[0].id",is(g_1.getId().toString())));
+    }
+
+    /*5.1.4 Query group by member*/
+    @Test
+    @IfProfileValue(name="group-test-group", values = {"all","group"})
+    public void _5_1_4_findGroupByMember() throws Exception {
+        this.mockMvc.perform(get(PATH_PREFIX_v1+
+                    c_1.getId().toString()+
+                    "/groups?member="+s_1.getId().toString())
+                .header(AUTHORIZATION, ACCESS_TOKEN))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.groups",hasSize(2)))
+            .andExpect(jsonPath("$._embedded.groups[*].id",containsInAnyOrder(
+                            g_1.getId().toString(),
+                            g_3.getId().toString()
                             )));
     }
 
@@ -117,7 +151,7 @@ public class GroupTests extends OrganizationServiceApplicationTests {
     @IfProfileValue(name="group-test-group", values = {"all", "group"})
     public void _5_2_2_addExistGroup() throws Exception {
         Group g = new Group();
-        g.setName("测试组-1");
+        g.setName(g_1.getName());
         try {
             RequestBuilder request = post("/api/v1.0/companies/"+
                     c_1.getId().toString()+

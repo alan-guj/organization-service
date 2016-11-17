@@ -291,6 +291,24 @@ public class OrganizationRepository {
         return ldapTemplate.findAll(dn,sc,Group.class);
     }
 
+
+    public List<Group> findGroups(String companyId,Map<String,String> sc) {
+        ContainerCriteria query;
+        if(companyId != null) {
+            Name dn = LdapNameBuilder.newInstance(companyId)
+                .add("ou","groups")
+                .build();
+            query = query().base(dn).where("objectclass").is("groupOfNames");
+        }else {
+            query = query().where("objectclass").is("groupOfNames");
+        }
+        for(Map.Entry<String,String> entry:sc.entrySet()){
+            if(entry.getValue()!= null)
+                query=query.and(entry.getKey()).like(entry.getValue());
+        }
+        return ldapTemplate.find(query,Group.class);
+    }
+
     public Group findGroup(String groupId) {
         Name dn = LdapNameBuilder.newInstance(groupId)
             .build();
@@ -304,6 +322,7 @@ public class OrganizationRepository {
             return null;
         }
     }
+
 
 
     public void addGroup(Group group) {
