@@ -114,8 +114,8 @@ class StaffResource extends ResourceSupport {
         return this.staff.getEmail();
     }
 
-    public String getLocality() {
-        return this.staff.getLocality();
+    public List<String> getLocalities() {
+        return this.staff.getLocalities();
     }
 }
 
