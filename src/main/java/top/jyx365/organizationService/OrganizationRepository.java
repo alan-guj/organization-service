@@ -85,11 +85,7 @@ public class OrganizationRepository {
     }
 
     public Department findDepartment(Name dn) {
-        try {
-            return ldapTemplate.findByDn(dn, Department.class);
-        } catch(Exception e) {
-            return null;
-        }
+        return ldapTemplate.findByDn(dn, Department.class);
     }
 
     public List<Department> findCompanyDepartments(String companyId,boolean recursive) {
@@ -142,11 +138,7 @@ public class OrganizationRepository {
     }
 
     public Role findRole(Name dn) {
-        try {
-            return ldapTemplate.findByDn(dn, Role.class);
-        } catch(Exception e) {
-            return null;
-        }
+        return ldapTemplate.findByDn(dn, Role.class);
     }
 
     public List<Role> findRoles(
@@ -154,46 +146,34 @@ public class OrganizationRepository {
             Map<String, String> sc,
             boolean recursive)
     {
-        try {
-            SearchScope ss = recursive?SearchScope.SUBTREE:SearchScope.ONELEVEL;
-            Name dn = LdapNameBuilder.newInstance(departmentId).build();
-            ContainerCriteria query = query()
-                .base(dn)
-                    .searchScope(ss)
-                .where("objectClass").is("organizationalRole");
-            for(Map.Entry<String, String> entry:sc.entrySet()) {
-                if(entry.getValue()!=null)
-                    query=query.and(entry.getKey()).like(entry.getValue());
-            }
-            return ldapTemplate.find(query,Role.class);
-        } catch(Exception e) {
-            return null;
+        SearchScope ss = recursive?SearchScope.SUBTREE:SearchScope.ONELEVEL;
+        Name dn = LdapNameBuilder.newInstance(departmentId).build();
+        ContainerCriteria query = query()
+            .base(dn)
+            .searchScope(ss)
+            .where("objectClass").is("organizationalRole");
+        for(Map.Entry<String, String> entry:sc.entrySet()) {
+            if(entry.getValue()!=null)
+                query=query.and(entry.getKey()).like(entry.getValue());
         }
+        return ldapTemplate.find(query,Role.class);
     }
 
     public List<Role> findDepartmentRoles(String department) {
-        try {
-            SearchControls sc = new SearchControls();
-            Name dn = LdapNameBuilder.newInstance(department).build();
-            return ldapTemplate.findAll(dn, sc, Role.class);
-        } catch(Exception e) {
-            return null;
-        }
+        SearchControls sc = new SearchControls();
+        Name dn = LdapNameBuilder.newInstance(department).build();
+        return ldapTemplate.findAll(dn, sc, Role.class);
     }
 
     public List<Role> findAllRoles(String companyId) {
-        try {
-            SearchControls sc = new SearchControls();
-            Name dn = LdapNameBuilder.newInstance(companyId).build();
-            return ldapTemplate.find(
-                    query().base(dn)
-                    .searchScope(SearchScope.SUBTREE)
-                    .where("objectClass").is("organizationalRole"),
-                    Role.class
-                    );
-        } catch (Exception e) {
-            return null;
-        }
+        SearchControls sc = new SearchControls();
+        Name dn = LdapNameBuilder.newInstance(companyId).build();
+        return ldapTemplate.find(
+                query().base(dn)
+                .searchScope(SearchScope.SUBTREE)
+                .where("objectClass").is("organizationalRole"),
+                Role.class
+                );
     }
 
 
@@ -211,52 +191,40 @@ public class OrganizationRepository {
 
     /*Staffs*/
     public List<Staff> findAllStaffs(String companyId, String type) {
-        try {
-            SearchControls sc = new SearchControls();
-            Name dn = LdapNameBuilder.newInstance(companyId)
-                .add("ou",type)
-                .build();
-            return ldapTemplate.findAll(dn,sc,Staff.class);
-        } catch(Exception e) {
-            return null;
-        }
+        SearchControls sc = new SearchControls();
+        Name dn = LdapNameBuilder.newInstance(companyId)
+            .add("ou",type)
+            .build();
+        return ldapTemplate.findAll(dn,sc,Staff.class);
     }
 
     public List<Staff> findStaffs(String companyId,Map<String, String> searchCondition,String type) {
-        try {
-            ContainerCriteria query;
-            if(companyId != null) {
-                Name dn = LdapNameBuilder.newInstance(companyId)
-                    .add("ou",type)
-                    .build();
-                query = query().base(dn).where("objectclass").is("inetOrgPerson");
-            }else {
-                query = query().where("objectclass").is("inetOrgPerson")
-                    .and("employeeType").is(type);
-            }
-            for(Map.Entry<String,String> entry:searchCondition.entrySet()){
-                if(entry.getValue()!= null)
-                    query=query.and(entry.getKey()).like(entry.getValue());
-            }
-            return ldapTemplate.find(query,Staff.class);
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    public List<Staff> findStaffs(String companyId, String departmentId,String type) {
-        try {
+        ContainerCriteria query;
+        if(companyId != null) {
             Name dn = LdapNameBuilder.newInstance(companyId)
                 .add("ou",type)
                 .build();
-            return ldapTemplate.find(
-                    query().base(dn)
-                    .where("objectclass").is("inetOrgPerson")
-                    .and("ou").is(departmentId),
-                    Staff.class);
-        } catch(Exception e) {
-            return null;
+            query = query().base(dn).where("objectclass").is("inetOrgPerson");
+        }else {
+            query = query().where("objectclass").is("inetOrgPerson")
+                .and("employeeType").is(type);
         }
+        for(Map.Entry<String,String> entry:searchCondition.entrySet()){
+            if(entry.getValue()!= null)
+                query=query.and(entry.getKey()).like(entry.getValue());
+        }
+        return ldapTemplate.find(query,Staff.class);
+    }
+
+    public List<Staff> findStaffs(String companyId, String departmentId,String type) {
+        Name dn = LdapNameBuilder.newInstance(companyId)
+            .add("ou",type)
+            .build();
+        return ldapTemplate.find(
+                query().base(dn)
+                .where("objectclass").is("inetOrgPerson")
+                .and("ou").is(departmentId),
+                Staff.class);
     }
 
     public Staff findStaff(String staffId) {
@@ -316,11 +284,7 @@ public class OrganizationRepository {
     }
 
     public Group findGroup(Name dn) {
-        try{
-            return ldapTemplate.findByDn(dn, Group.class);
-        } catch(Exception e) {
-            return null;
-        }
+        return ldapTemplate.findByDn(dn, Group.class);
     }
 
 
@@ -340,15 +304,11 @@ public class OrganizationRepository {
 
     /*Products*/
     public List<Product> findProducts(String companyId) {
-        try {
-            SearchControls sc = new SearchControls();
-            Name dn = LdapNameBuilder.newInstance(companyId)
-                .add("ou","products")
-                .build();
-            return ldapTemplate.findAll(dn,sc,Product.class);
-        } catch(Exception e) {
-            return null;
-        }
+        SearchControls sc = new SearchControls();
+        Name dn = LdapNameBuilder.newInstance(companyId)
+            .add("ou","products")
+            .build();
+        return ldapTemplate.findAll(dn,sc,Product.class);
     }
 
     public Product findProduct(String productId) {
@@ -358,11 +318,7 @@ public class OrganizationRepository {
     }
 
     public Product findProduct(Name dn) {
-        try {
-            return ldapTemplate.findByDn(dn, Product.class);
-        } catch(Exception e) {
-            return null;
-        }
+        return ldapTemplate.findByDn(dn, Product.class);
     }
 
 
@@ -380,21 +336,17 @@ public class OrganizationRepository {
 
     /*Locality*/
     public List<Locality> findLocalities(Name root, boolean recursive) {
-        try {
-            SearchControls sc = new SearchControls();
-            List<Locality> firstLevel = ldapTemplate.findAll(root,sc,Locality.class);
-            if(recursive) {
-                List<Locality> allLevel = new ArrayList<Locality>();
-                sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
-                firstLevel.forEach(l->{
-                    allLevel.addAll(ldapTemplate.findAll(l.getId(),sc,Locality.class));
-                });
-                return allLevel;
-            } else {
+        SearchControls sc = new SearchControls();
+        List<Locality> firstLevel = ldapTemplate.findAll(root,sc,Locality.class);
+        if(recursive) {
+            List<Locality> allLevel = new ArrayList<Locality>();
+            sc.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            firstLevel.forEach(l->{
+                allLevel.addAll(ldapTemplate.findAll(l.getId(),sc,Locality.class));
+            });
+            return allLevel;
+        } else {
             return firstLevel;
-            }
-        } catch(Exception e) {
-            return null;
         }
     }
 
@@ -404,11 +356,7 @@ public class OrganizationRepository {
     }
 
     public Locality findLocality(Name dn) {
-        try {
-            return ldapTemplate.findByDn(dn,Locality.class);
-        } catch(Exception e) {
-            return null;
-        }
+        return ldapTemplate.findByDn(dn,Locality.class);
     }
 
     public Locality findLocality(String localityId) {

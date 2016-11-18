@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.support.LdapNameBuilder;
 
 import org.springframework.test.annotation.IfProfileValue;
@@ -207,7 +208,8 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
                 .header(AUTHORIZATION,ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk());
-        assertNull(repository.findDepartment(d_1.getId()));
+        thrown.expect(NameNotFoundException.class);
+        repository.findDepartment(d_1.getId());
     }
 
     /*2.4 Update*/
@@ -447,7 +449,8 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
                 .header(AUTHORIZATION, ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk());
-        assertNull(repository.findRole(r_2.getId()));
+        thrown.expect(NameNotFoundException.class);
+        repository.findRole(r_2.getId());
     }
 
     /*4.4 update*/

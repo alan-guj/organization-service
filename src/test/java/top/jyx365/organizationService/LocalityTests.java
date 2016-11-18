@@ -1,17 +1,24 @@
 package top.jyx365.organizationService;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.ldap.NameNotFoundException;
 import org.springframework.ldap.support.LdapNameBuilder;
+
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.annotation.ProfileValueSource;
 import org.springframework.test.annotation.ProfileValueSourceConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.RequestBuilder;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -173,7 +180,8 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
                 .header(AUTHORIZATION, ACCESS_TOKEN))
             .andDo(print())
             .andExpect(status().isOk());
-        assertNull(repository.findLocality(l_1.getId()));
+        thrown.expect(NameNotFoundException.class);
+        repository.findLocality(l_1.getId());
     }
 
     /*8.4 update*/
