@@ -94,7 +94,7 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
                 linkTo(
                     methodOn(StaffController.class)
                     .getStaffs(company.getId().toString(),
-                        null,null,null,null)
+                        null,null,null,null,null)
                     ).withRel("staffs"));
         resource.add(
                 linkTo(

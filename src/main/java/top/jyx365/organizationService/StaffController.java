@@ -154,6 +154,14 @@ class ApplicantResourceAssembler extends ResourceAssemblerSupport<Staff, Applica
                 staff,
                 staff.getCompany().toString(),
                 "applicants");
+        //resource.add(
+                //linkTo(
+                    //methodOn(DepartmentController.class)
+                    //.getGroups(staff.getCompany().toString(),
+                        //null,staff.getId().toString()
+                    //)
+                //).witRel("groups"));
+
         return resource;
     }
 
@@ -176,6 +184,20 @@ class StaffResourceAssembler extends ResourceAssemblerSupport<Staff, StaffResour
                 staff,
                 staff.getCompany().toString(),
                 "staffs");
+        resource.add(
+                linkTo(
+                    methodOn(GroupController.class)
+                    .getGroups(staff.getCompany().toString(),
+                        null,staff.getId().toString()
+                        )
+                    ).withRel("groups"));
+        resource.add(
+                linkTo(
+                    methodOn(RoleController.class)
+                    .getRoles(staff.getCompany().toString(),
+                        "**",staff.getId().toString(),null,"true"
+                        )
+                    ).withRel("roles"));
         return resource;
     }
 
@@ -215,15 +237,23 @@ public class StaffController {
                 @RequestParam(required = false) String mobile,
                 @RequestParam(required = false) String department,
                 @RequestParam(required = false) String name,
-                @RequestParam(required = false) String uid
+                @RequestParam(required = false) String uid,
+                @RequestParam(required = false, defaultValue="false") String recursive
                 )
         {
             if(companyId.equals("**")) companyId = null;
+
             Map<String, String> searchCondition = new HashMap<String, String>();
+
+            if(recursive.equals("true") && department != null) {
+                /*include all sub departments*/
+                department = "*,"+department;
+            }
             searchCondition.put("mobile",mobile);
             searchCondition.put("ou",department);
             searchCondition.put("name",name);
             searchCondition.put("uid",uid);
+
             return new Resources<StaffResource>(resourceAssember.toResources(
                     repository.findStaffs(companyId,searchCondition,"staffs")));
         }
