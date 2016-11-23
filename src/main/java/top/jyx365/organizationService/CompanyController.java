@@ -94,7 +94,7 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
                 linkTo(
                     methodOn(StaffController.class)
                     .getStaffs(company.getId().toString(),
-                        null,null,null,null)
+                        null,null,null,null,null)
                     ).withRel("staffs"));
         resource.add(
                 linkTo(
@@ -105,13 +105,14 @@ class CompanyResourceAssembler extends ResourceAssemblerSupport<Company, Company
         resource.add(
                 linkTo(
                     methodOn(StaffController.ApplicantController.class)
-                    .getApplicants(company.getId().toString()
-                        ,null,null,null)
+                    .getApplicants(company.getId().toString(),
+                        null,null,null)
                     ).withRel("applicants"));
         resource.add(
                 linkTo(
                     methodOn(GroupController.class)
-                    .getAllGroups(company.getId().toString())
+                    .getGroups(company.getId().toString(),
+                        null,null)
                     ).withRel("groups"));
 
         return resource;

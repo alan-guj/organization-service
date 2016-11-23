@@ -66,7 +66,7 @@ public final class Staff {
     private Name company;
 
     @Attribute(name="l")
-    private String locality;
+    private List<String> localities = new ArrayList<String>();
 
     @Attribute(name="mail")
     private String email;
@@ -209,11 +209,19 @@ public final class Staff {
         return email;
     }
 
-    public void setLocality(String locality) {
-        this.locality = locality;
+    public void setLocalities(List<String> localities) {
+        this.localities = localities;
     }
 
-    public String getLocality() {
-        return locality;
+    public List<String> getLocalities() {
+        return localities;
+    }
+
+    public void addLocality(String locality) {
+        this.localities.add(locality);
+    }
+
+    public void removeLocality(String locality) {
+        this.localities.remove(locality);
     }
 }
