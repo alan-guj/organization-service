@@ -247,7 +247,7 @@ public class StaffController {
 
             if(recursive.equals("true") && department != null) {
                 /*include all sub departments*/
-                department = "*,"+department;
+                department = "*"+department;
             }
             searchCondition.put("mobile",mobile);
             searchCondition.put("ou",department);
