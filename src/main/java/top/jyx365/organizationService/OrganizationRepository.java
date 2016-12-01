@@ -303,19 +303,58 @@ public class OrganizationRepository {
 
 
     /*Products*/
-    public List<Product> findProducts(String companyId) {
-        SearchControls sc = new SearchControls();
-        Name dn = LdapNameBuilder.newInstance(companyId)
+    public List<Product> findCompanyProducts(String companyId,
+            Map<String, String> sc,
+            boolean recursive) {
+        Name dn = null;
+        if(companyId!=null) dn = LdapNameBuilder.newInstance(companyId)
             .add("ou","products")
             .build();
-        return ldapTemplate.findAll(dn,sc,Product.class);
+        return findProducts(dn,sc,recursive);
+    }
+
+    public List<Product> findProducts(
+            String root,
+            Map<String, String> sc,
+            boolean recursive
+            )
+    {
+        Name dn = null;
+        if(root != null)
+            dn = LdapNameBuilder.newInstance(root).build();
+        return findProducts(dn,sc,recursive);
+    }
+
+    public List<Product> findProducts(
+            Name root,
+            Map<String, String> sc,
+            boolean recursive)
+    {
+        ContainerCriteria query;
+        SearchScope ss = recursive?SearchScope.SUBTREE:SearchScope.ONELEVEL;
+        if(root!= null) {
+            Name dn = LdapNameBuilder.newInstance(root)
+                .build();
+            query = query().base(dn)
+                .searchScope(ss)
+                .where("objectclass").is("document");
+        }else {
+            query = query()
+                .searchScope(ss)
+                .where("objectclass").is("document");
+        }
+        for(Map.Entry<String,String> entry:sc.entrySet()){
+            if(entry.getValue()!= null)
+                query=query.and(entry.getKey()).like(entry.getValue());
+        }
+        return ldapTemplate.find(query,Product.class);
     }
 
     public Product findProduct(String productId) {
-        Name dn = LdapNameBuilder.newInstance(productId)
-            .build();
-        return ldapTemplate.findByDn(dn, Product.class);
+        Name dn = LdapNameBuilder.newInstance(productId).build();
+        return findProduct(dn);
     }
+
 
     public Product findProduct(Name dn) {
         return ldapTemplate.findByDn(dn, Product.class);
@@ -335,6 +374,60 @@ public class OrganizationRepository {
     }
 
     /*Locality*/
+
+    public List<Locality> findCompanyLocalties(
+            String companyId,
+            Map<String,String> sc,
+            boolean recursive
+            )
+    {
+        Name dn = null;
+        if(companyId != null)
+            dn = LdapNameBuilder.newInstance(companyId)
+            .add("ou","localities")
+            .build();
+        return findLocalities(dn,sc,recursive);
+    }
+
+    public List<Locality> findLocalities(
+            String parent,
+            Map<String,String> sc,
+            boolean recursive
+            )
+    {
+        Name dn = null;
+        if(parent != null) {
+            dn = LdapNameBuilder.newInstance(parent).build();
+        }
+
+        return findLocalities(dn, sc,recursive);
+    }
+
+    public List<Locality> findLocalities(
+            Name parent,
+            Map<String, String> sc,
+            boolean recursive)
+    {
+        ContainerCriteria query;
+        SearchScope ss = recursive?SearchScope.SUBTREE:SearchScope.ONELEVEL;
+        if(parent!= null) {
+            query = query().base(parent)
+                .searchScope(ss)
+                .where("objectclass").is("locality");
+        }else {
+            query = query()
+                .searchScope(ss)
+                .where("objectclass").is("locality");
+        }
+        for(Map.Entry<String,String> entry:sc.entrySet()){
+            if(entry.getValue()!= null)
+                query=query.and(entry.getKey()).like(entry.getValue());
+        }
+        return ldapTemplate.find(query,Locality.class);
+
+    }
+
+
     public List<Locality> findLocalities(Name root, boolean recursive) {
         SearchControls sc = new SearchControls();
         List<Locality> firstLevel = ldapTemplate.findAll(root,sc,Locality.class);

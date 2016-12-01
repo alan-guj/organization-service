@@ -168,6 +168,143 @@ public class LocalityTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.localityId",is(l.getLocalityId())));
     }
 
+    /*8.2.4 query localities by parent*/
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_4_getLocalitiesByParent() throws Exception {
+        String parent = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","localities")
+            .build().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities?parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.localities",hasSize(2)));
+    }
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_5_getLocalitiesByParentSub() throws Exception {
+        String parent = l_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities?parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.localities",hasSize(1)));
+    }
+
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_6_getLocalitiesByParentRecursive() throws Exception {
+        String parent = l_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities?recursive=true&parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.localities",hasSize(2)));
+    }
+
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_7_getLocalitiesByParentNonResult() throws Exception {
+        String parent = c_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities?parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded").doesNotExist());
+    }
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_8_getLocalitiesByParentRecursive2() throws Exception {
+        String parent = c_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/localities?recursive=true&parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.localities",hasSize(3)));
+    }
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_9_getLocalitiesOfAnyCompany() throws Exception {
+        String parent = c_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/**/localities"
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.localities",hasSize(3)));
+    }
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_10_getLocalitiesOfAnyCompanyWithParent() throws Exception {
+        String parent = c_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/**/localities"+
+                "?recursive=true&parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.localities",hasSize(3)));
+    }
+
+    @Test
+    @IfProfileValue(name="locality-test-group", values = {"all","locality"})
+    public void _8_2_11_getLocalitiesOfAnyCompanyWithParentNonResult() throws Exception {
+        String parent = c_1.getId().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/**/localities"+
+                "?parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded").doesNotExist());
+    }
+
     /*8.3 delete */
     /*8.3.1 delete an exist locality*/
     @Test

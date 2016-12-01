@@ -2,6 +2,9 @@ package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.naming.Name;
 
 import org.slf4j.Logger;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.ldap.support.LdapNameBuilder;
@@ -92,14 +96,26 @@ public class LocalityController {
 
     @RequestMapping(method = RequestMethod.GET)
         public Resources<LocalityResource> getLocalities(
-                @PathVariable String companyId
+                @PathVariable String companyId,
+                @RequestParam(required = false) String parent,
+                @RequestParam(required = false, defaultValue="false") String recursive
                 )
         {
-            Name root = LdapNameBuilder.newInstance(companyId)
-                .add("ou","localities")
-                .build();
+            List<Locality> result;
+            Map<String, String> searchCondition = new HashMap<String, String>();
+            if(companyId.equals("**")) {
+                companyId = null;
+            }
+
+            if(parent == null) {
+                result = repository.findCompanyLocalties(companyId,searchCondition,true);
+            } else {
+                result = repository.findLocalities(parent, searchCondition, recursive.equals("true"));
+            }
+
             return new Resources<LocalityResource>(
-                    assember.toResources(repository.findLocalities(root,true)));
+                    assember.toResources(result)
+                    );
         }
 
     @RequestMapping(value="/{localityId}",method = RequestMethod.DELETE)

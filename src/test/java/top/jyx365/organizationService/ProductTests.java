@@ -70,7 +70,7 @@ public class ProductTests extends OrganizationServiceApplicationTests {
 
 
     /*7.2 Query*/
-    /*7.2.1 Get all product*/
+    /*7.2.1 Get all product of a company*/
     @Test
     @IfProfileValue(name="product-test-group", values = {"all", "product"})
     public void _7_2_1_getAllProducts() throws Exception {
@@ -118,6 +118,88 @@ public class ProductTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.description",is(p.getDescription())))
             .andExpect(jsonPath("$.company",is(p.getCompany().toString())))
             .andExpect(jsonPath("$.productId").doesNotExist());
+    }
+
+    /*7.2.3 Get products of a parent*/
+    @Test
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
+    public void _7_2_3_getProductsOfParent() throws Exception {
+        String parent = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","products").build().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/products?parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.products",hasSize(2)))
+            .andExpect(jsonPath("$._embedded.products[0].id",is(p_1.getId().toString())))
+            .andExpect(jsonPath("$._embedded.products[0].name",is(p_1.getName())))
+            .andExpect(jsonPath("$._embedded.products[0].description",is(p_1.getDescription())))
+            .andExpect(jsonPath("$._embedded.products[0].productId",is(p_1.getProductId())))
+            .andExpect(jsonPath("$._embedded.products[0].company",is(p_1.getCompany().toString())))
+            .andExpect(jsonPath("$._embedded.products[1].id",is(p_2.getId().toString())))
+            .andExpect(jsonPath("$._embedded.products[1].name",is(p_2.getName())))
+            .andExpect(jsonPath("$._embedded.products[1].description",is(p_2.getDescription())))
+            .andExpect(jsonPath("$._embedded.products[1].productId").doesNotExist())
+            .andExpect(jsonPath("$._embedded.products[1].company",is(p_2.getCompany().toString())));
+    }
+
+    @Test
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
+    public void _7_2_4_getProductsOfParentNonResult() throws Exception {
+        String parent = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","products").build().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/products?parent="+c_1.getId().toString()
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded").doesNotExist());
+    }
+
+    @Test
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
+    public void _7_2_5_getProductsOfParentRecursive() throws Exception {
+        String parent = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","products").build().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/"+
+                c_1.getId().toString()+
+                "/products?recursive=true&parent="+c_1.getId().toString()
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.products",hasSize(2)));
+    }
+
+    @Test
+    @IfProfileValue(name="product-test-group", values = {"all", "product"})
+    public void _7_2_6_getProductsOfAnyCompany() throws Exception {
+        String parent = LdapNameBuilder.newInstance(c_1.getId())
+            .add("ou","products").build().toString();
+        RequestBuilder request = get(
+                "/api/v1.0/companies/**"+
+                "/products?parent="+parent
+                )
+            .contentType(CONTENT_TYPE)
+            .header(AUTHORIZATION, ACCESS_TOKEN);
+        this.mockMvc.perform(request)
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$._embedded.products",hasSize(2)));
     }
 
     /*7.3 delete*/

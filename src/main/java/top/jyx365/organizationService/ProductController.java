@@ -1,21 +1,31 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.naming.Name;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.hateoas.ResourceSupport;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.core.Relation;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 
@@ -86,10 +96,27 @@ public class ProductController {
 
     @RequestMapping(method = RequestMethod.GET)
         public Resources<ProductResource> getProducts(
-                @PathVariable String companyId)
+                @PathVariable String companyId,
+                @RequestParam(required = false) String parent,
+                @RequestParam(required = false, defaultValue="false") String recursive
+                )
         {
+            List<Product> result;
+            Map<String, String> searchCondition = new HashMap<String, String>();
+            if(!companyId.equals("**")) {
+                searchCondition.put("o",companyId);
+            }else {
+                companyId=null;
+            }
+            if(parent == null) {
+                result = repository.findCompanyProducts(companyId,searchCondition,true);
+            } else {
+                result = repository.findProducts(parent,searchCondition,recursive.equals("true"));
+            }
+
+
             return new Resources<ProductResource>(
-                    assember.toResources(repository.findProducts(companyId))
+                    assember.toResources(result)
                     );
         }
 
@@ -99,7 +126,8 @@ public class ProductController {
                 @PathVariable String productId
                 )
         {
-            return assember.toResource(repository.findProduct(productId));
+            return assember.toResource(
+                    repository.findProduct(productId));
         }
 
     @RequestMapping(value="/{productId}",method = RequestMethod.DELETE)
