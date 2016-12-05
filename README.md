@@ -33,10 +33,10 @@
 #启动
 #{profile-name}是当前配置的名称，对应到consul中`config/OrganizationService,{profile-name}/data`的内容，默认为dev
 #{hostname}是在consul上注册服务所使用的主机名或地址，默认为hostname
-orgsrvctl start {profile-name} {hostname}
+./orgsrvctl start {profile-name} {hostname}
 
 #停止
-orgsrvctl stop
+./orgsrvctl stop
 
 ```
 
