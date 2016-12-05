@@ -1,16 +1,17 @@
+
 buildscript {
-	ext {
-		springBootVersion = '1.4.1.RELEASE'
-	}
-	repositories {
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
+    repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'  }
         maven { url "https://repo.spring.io/snapshot"  }
         maven { url "https://repo.spring.io/milestone"  }
         mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 plugins {
@@ -22,9 +23,16 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
+springBoot {
+    executable = true
+    embeddedLaunchScriptProperties = [
+        mode: 'service'
+    ]
+}
+
 jar {
-	baseName = 'organizationService'
-	version = '0.0.1-SNAPSHOT'
+    baseName = 'organizationService'
+    version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -39,19 +47,19 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-hateoas')
+    compile('org.springframework.boot:spring-boot-starter-hateoas')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.cloud:spring-cloud-starter-consul-all')
     compile('org.springframework.security.oauth:spring-security-oauth2')
     compile('org.springframework.ldap:spring-ldap-core:2.1.0.RELEASE')
     compile 'org.springframework.hateoas:spring-hateoas:0.20.0.RELEASE'
-	compile('io.springfox:springfox-swagger-ui:2.5.0')
-	compile('io.springfox:springfox-swagger2:2.5.0')
+    compile('io.springfox:springfox-swagger-ui:2.5.0')
+    compile('io.springfox:springfox-swagger2:2.5.0')
     compile('io.springfox:springfox-bean-validators:2.5.0')
     compile('com.jayway.jsonpath:json-path')
     compile('org.projectlombok:lombok')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 }
 
 
@@ -60,3 +68,4 @@ dependencyManagement {
         mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.RELEASE'
     }
 }
+

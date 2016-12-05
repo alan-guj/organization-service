@@ -1,0 +1,12 @@
+#!/bin/sh
+ARGS=$1
+PROFILE=$2
+HOSTNAME=$3
+CMD=`echo ./build/libs/*.jar`
+EXEC_CMD="$CMD $ARGS"
+
+[[ -z "$PROFILE" ]] && PROFILE="dev"
+
+[[ -z "$HOSTNAME" ]] && HOSTNAME=`hostname`
+
+JAVA_OPTS="-Xmx256m -Xms256m -Dspring.profiles.active=$PROFILE -Dspring.cloud.consul.discovery.hostname=$HOSTNAME" sudo $EXEC_CMD
