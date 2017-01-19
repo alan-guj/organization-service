@@ -236,6 +236,7 @@ public class StaffController {
                 @PathVariable String companyId,
                 @RequestParam(required = false) String mobile,
                 @RequestParam(required = false) String department,
+                @RequestParam(required = false) String businesscategory,
                 @RequestParam(required = false) String name,
                 @RequestParam(required = false) String uid,
                 @RequestParam(required = false, defaultValue="false") String recursive
@@ -253,6 +254,7 @@ public class StaffController {
             searchCondition.put("ou",department);
             searchCondition.put("name",name);
             searchCondition.put("uid",uid);
+            searchCondition.put("businessCategory",businesscategory);
 
             return new Resources<StaffResource>(resourceAssember.toResources(
                     repository.findStaffs(companyId,searchCondition,"staffs")));

@@ -79,7 +79,7 @@ server:
     port: 8812
 ldap:
     password: 6Jw8fd7TfnPRd7Gr
-    url: ldap://localhost:389
+    url: ldap://dev2.jyx365.top:389
     base: dc=dev-prod,dc=jyx365,dc=top
     userDn: cn=Manager,dc=jyx365,dc=top
 
