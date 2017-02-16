@@ -46,16 +46,23 @@ repositories {
 
 
 dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: "spring-boot-starter-tomcat"
+
+    }
+    compile('org.springframework.boot:spring-boot-starter-jetty')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-hateoas')
     compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-amqp')
+    compile('org.springframework.boot:spring-boot-starter-aop')
     compile('org.springframework.cloud:spring-cloud-starter-consul-all')
     compile('org.springframework.security.oauth:spring-security-oauth2')
     compile('org.springframework.ldap:spring-ldap-core:2.1.0.RELEASE')
     compile 'org.springframework.hateoas:spring-hateoas:0.20.0.RELEASE'
-    compile('io.springfox:springfox-swagger-ui:2.5.0')
-    compile('io.springfox:springfox-swagger2:2.5.0')
-    compile('io.springfox:springfox-bean-validators:2.5.0')
+    compile('io.springfox:springfox-swagger-ui:2.6.1')
+    compile('io.springfox:springfox-swagger2:2.6.1')
+    compile('io.springfox:springfox-bean-validators:2.6.1')
     compile('com.jayway.jsonpath:json-path')
     compile('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')

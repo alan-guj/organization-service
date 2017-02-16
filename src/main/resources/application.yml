@@ -5,6 +5,8 @@ spring:
          serialization-inclusion: NON_EMPTY
     application:
         name: OrganizationService
+amqp:
+    topic: OrganizationService
 app:
     key: OrganizationService
     name: 企业管理
@@ -62,6 +64,9 @@ ldap:
 ---
 spring:
     profiles: dev-bootRun
+    rabbitmq:
+        username: orgSrv
+        password: uUnD1vpym3dvVxZP
 security:
     oauth2:
         client:

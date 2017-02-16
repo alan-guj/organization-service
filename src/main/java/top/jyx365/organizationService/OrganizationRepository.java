@@ -17,7 +17,10 @@ import org.springframework.ldap.query.SearchScope;
 import org.springframework.ldap.support.LdapNameBuilder;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
+import top.jyx365.amqp.annotation.PublishMessage;
 import top.jyx365.organizationService.Department;
+
+
 public class OrganizationRepository {
     @Autowired
     private LdapTemplate ldapTemplate;
@@ -238,16 +241,22 @@ public class OrganizationRepository {
     }
 
 
-    public void addStaff(Staff staff) {
+    @PublishMessage
+    public Staff addStaff(Staff staff) {
         ldapTemplate.create(staff);
+        return staff;
     }
 
-    public void updateStaff(Staff staff) {
+    @PublishMessage
+    public Staff updateStaff(Staff staff) {
         ldapTemplate.update(staff);
+        return staff;
     }
 
-    public void deleteStaff(Staff staff) {
+    @PublishMessage
+    public Staff deleteStaff(Staff staff) {
         ldapTemplate.delete(staff);
+        return staff;
     }
 
     /*Groups*/

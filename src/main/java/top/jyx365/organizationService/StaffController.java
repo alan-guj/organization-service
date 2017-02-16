@@ -1,20 +1,27 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.naming.Name;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import org.springframework.context.annotation.Bean;
+
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
@@ -24,14 +31,9 @@ import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.hateoas.core.Relation;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,8 +44,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
+
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import top.jyx365.amqp.AmqpSender;
+import top.jyx365.amqp.annotation.PublishMessage;
+import top.jyx365.amqp.annotation.Message;
 
 @Relation(collectionRelation="invitees", value="invitee")
 class InviteeResource extends StaffResource {
@@ -212,6 +226,9 @@ class StaffResourceAssembler extends ResourceAssemblerSupport<Staff, StaffResour
 @RequestMapping("/api/v1.0/companies/{companyId}/staffs")
 public class StaffController {
 
+    @Autowired
+    private AmqpSender amqpSender;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private StaffResourceAssembler resourceAssember= new StaffResourceAssembler();
 
@@ -255,7 +272,7 @@ public class StaffController {
             searchCondition.put("name",name);
             searchCondition.put("uid",uid);
             searchCondition.put("businessCategory",businesscategory);
-
+            //amqpSender.send("GetCompanyStaff", repository.findStaffs(companyId,searchCondition,"staffs"));
             return new Resources<StaffResource>(resourceAssember.toResources(
                     repository.findStaffs(companyId,searchCondition,"staffs")));
         }
@@ -275,8 +292,14 @@ public class StaffController {
                 )
         {
             Staff staff = repository.findStaff(staffId);
-            repository.deleteStaff(staff);
+            this.deleteStaff1(staff);
         }
+
+    @PublishMessage
+    private Staff deleteStaff1(Staff staff) {
+        repository.deleteStaff(staff);
+        return staff;
+    }
 
     @RequestMapping(value="/{staffId}",method = RequestMethod.PUT)
         public StaffResource updateStaff(
