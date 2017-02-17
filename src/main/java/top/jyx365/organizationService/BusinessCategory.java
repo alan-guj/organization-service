@@ -1,7 +1,11 @@
 package top.jyx365.organizationService;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import com.jayway.jsonpath.JsonPath;
 
+
+@JsonPropertyOrder({"locality","product"})
 public class BusinessCategory {
 
     private String product;
