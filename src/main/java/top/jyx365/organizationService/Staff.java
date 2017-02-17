@@ -62,7 +62,6 @@ public final class Staff {
     private String domain;
 
     @Attribute(name="o")
-    @JsonIgnore
     private Name company;
 
     @Attribute(name="l")
