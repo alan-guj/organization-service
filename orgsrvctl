@@ -9,4 +9,4 @@ EXEC_CMD="$CMD $ARGS"
 
 [[ -z "$HOSTNAME" ]] && HOSTNAME=`hostname`
 
-JAVA_OPTS="-Xmx256m -Xms256m -Dspring.profiles.active=$PROFILE -Dspring.cloud.consul.discovery.hostname=$HOSTNAME" sudo $EXEC_CMD
+JAVA_OPTS="-Xmx256m -Xms256m -Dspring.profiles.active=$PROFILE -Dspring.cloud.consul.discovery.hostname=$HOSTNAME" sudo -E $EXEC_CMD
