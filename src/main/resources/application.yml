@@ -5,6 +5,8 @@ spring:
          serialization-inclusion: NON_EMPTY
     application:
         name: OrganizationService
+    rabbitmq:
+        virtual-host: ${spring.profiles.active}
 amqp:
     topic: OrganizationService
 app:
