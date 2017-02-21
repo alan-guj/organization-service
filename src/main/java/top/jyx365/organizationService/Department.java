@@ -41,7 +41,7 @@ public final class Department {
         if(this.businessCategories == null)
             this.businessCategories = new ArrayList<BusinessCategory>();
         //忽略businessCategory的IsOwner
-        if (null != businessCategory && businessCategory.isOwner()) businessCategory.setIsOwner(false);
+        if (null != businessCategory && null != businessCategory.isOwner()) businessCategory.setIsOwner(null);
         this.businessCategories.add(businessCategory);
     }
 

@@ -1,8 +1,12 @@
 package top.jyx365.organizationService;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 
 @JsonPropertyOrder({"locality","product"})
@@ -11,7 +15,8 @@ public class BusinessCategory {
     private String product;
     private String locality;
 
-    private boolean isOwner = false;
+    @JsonProperty("isOwner")
+    private Boolean isOwner;
 
     public BusinessCategory() {
 
@@ -20,7 +25,11 @@ public class BusinessCategory {
     public BusinessCategory(String json) {
         this.product = JsonPath.read(json,"$.product");
         this.locality = JsonPath.read(json, "$.locality");
-        this.isOwner = JsonPath.read(json, "$.isOwner");
+        try {
+            this.isOwner = JsonPath.read(json, "$.isOwner");
+        } catch (PathNotFoundException e) {
+            System.err.println(e);
+        }
     }
 
     public void setLocality(String locality) {
@@ -39,11 +48,11 @@ public class BusinessCategory {
         return product;
     }
 
-    public boolean isOwner() {
+    public Boolean isOwner() {
         return isOwner;
     }
 
-    public void setIsOwner(boolean isOwner) {
+    public void setIsOwner(Boolean isOwner) {
         this.isOwner = isOwner;
     }
 
@@ -51,7 +60,7 @@ public class BusinessCategory {
         StringBuffer buf = new StringBuffer();
         buf.append("{\"locality\":\"").append(this.locality).append("\"")
                 .append(",\"product\":\"").append(this.product).append("\"");
-        if (isOwner) buf.append(",\"isOwner\":true");
+        if (null != isOwner && isOwner) buf.append(",\"isOwner\":true");
         buf.append("}");
         return buf.toString();
     }
