@@ -40,6 +40,8 @@ public final class Department {
     public void addBusinessCategory(BusinessCategory businessCategory) {
         if(this.businessCategories == null)
             this.businessCategories = new ArrayList<BusinessCategory>();
+        //忽略businessCategory的IsOwner
+        if (null != businessCategory && businessCategory.isOwner()) businessCategory.setIsOwner(false);
         this.businessCategories.add(businessCategory);
     }
 
