@@ -56,9 +56,10 @@ public class AmqpPublisherInterceptor {
                 message.put("timestamp",new Date());
                 message.put("method", methodName);
                 sender.send(methodName+"."+publishMessage.key(), message);
+                log.info("sendMessage:{}",message);
             }
 
-            log.info("AfterReturning:{};key:{};methodString:{};target:{};annotations:{}",
+            log.debug("AfterReturning:{};key:{};methodString:{};target:{};annotations:{}",
                     retVal, publishMessage.key(), pjp.toString(),pjp.getTarget(),method.getDeclaredAnnotations());
         }
 }
