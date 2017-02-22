@@ -226,8 +226,8 @@ class StaffResourceAssembler extends ResourceAssemblerSupport<Staff, StaffResour
 @RequestMapping("/api/v1.0/companies/{companyId}/staffs")
 public class StaffController {
 
-    @Autowired
-    private AmqpSender amqpSender;
+    //@Autowired
+    //private AmqpSender amqpSender;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private StaffResourceAssembler resourceAssember= new StaffResourceAssembler();

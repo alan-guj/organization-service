@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=top.jyx365.amqp.AmqpConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+top.jyx365.amqp.AmqpConfig,\
+top.jyx365.swagger.SwaggerConfig

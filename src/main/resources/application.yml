@@ -42,11 +42,13 @@ logging:
 ---
 #单元测试
 spring:
-    profiles: dev-int-test 
+    profiles: dev-int-test
+    autoconfigure:
+        exclude: top.jyx365.amqp.AmqpConfig,top.jyx365.swagger.SwaggerConfig
 security:
     oauth2:
         client:
-            client-id: customer_care_web_server_guj
+            clientId: customer_care_web_server_guj
             clientSecret: 654322
             accessTokenUri: http://dev.jyx365.top/oauth/access_token
             userAuthorizationUri: http://dev.jyx365.top/sso/login
