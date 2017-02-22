@@ -44,7 +44,12 @@ logging:
 spring:
     profiles: dev-int-test
     autoconfigure:
-        exclude: top.jyx365.amqp.AmqpConfig,top.jyx365.swagger.SwaggerConfig
+        exclude: top.jyx365.amqp.AmqpConfig,
+            top.jyx365.swagger.SwaggerConfig
+    cloud:
+        consul:
+            config:
+                enabled: false
 security:
     oauth2:
         client:
