@@ -65,6 +65,7 @@ ldap:
 spring:
     profiles: dev-bootRun
     rabbitmq:
+        host: 121.43.38.169
         username: orgSrv
         password: uUnD1vpym3dvVxZP
 security:

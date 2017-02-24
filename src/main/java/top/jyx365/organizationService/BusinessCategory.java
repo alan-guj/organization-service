@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import com.jayway.jsonpath.Predicate;
+
+import java.util.List;
+import java.util.Map;
 
 
 @JsonPropertyOrder({"locality","product"})
@@ -15,7 +19,6 @@ public class BusinessCategory {
     private String product;
     private String locality;
 
-    @JsonProperty("isOwner")
     private Boolean isOwner;
 
     public BusinessCategory() {
@@ -26,7 +29,8 @@ public class BusinessCategory {
         this.product = JsonPath.read(json,"$.product");
         this.locality = JsonPath.read(json, "$.locality");
         try {
-            this.isOwner = JsonPath.read(json, "$.isOwner");
+            List<Boolean> owners = JsonPath.read(json, "$..isOwner");
+            if (null != owners && 0 < owners.size()) this.isOwner = owners.get(0);
         } catch (PathNotFoundException e) {
             System.err.println(e);
         }
@@ -48,7 +52,7 @@ public class BusinessCategory {
         return product;
     }
 
-    public Boolean isOwner() {
+    public Boolean getIsOwner() {
         return isOwner;
     }
 
