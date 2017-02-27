@@ -44,24 +44,26 @@ public final class Group {
     private final String type = "groups";
 
     @Attribute(name="businessCategory")
-    private List <String> businessCategories;
+    private List <BusinessCategory> businessCategories;
 
 
-    public void setBusinessCategories(List<String> businessCategories) {
+    public void setBusinessCategories(List<BusinessCategory> businessCategories) {
         this.businessCategories = businessCategories;
     }
 
-    public List<String> getBusinessCategories() {
+    public List<BusinessCategory> getBusinessCategories() {
         return businessCategories;
     }
 
-    public void addBusinessCategory(String businessCategory) {
+    public void addBusinessCategory(BusinessCategory businessCategory) {
         if(this.businessCategories == null)
-            this.businessCategories = new ArrayList<String>();
+            this.businessCategories = new ArrayList<BusinessCategory>();
+        //忽略businessCategory的IsOwner
+        if (null != businessCategory && null != businessCategory.getIsOwner()) businessCategory.setIsOwner(null);
         this.businessCategories.add(businessCategory);
     }
 
-    public void removeBusinessCategory(String businessCategory) {
+    public void removeBusinessCategory(BusinessCategory businessCategory) {
         if(this.businessCategories != null)
             this.businessCategories.remove(businessCategory);
     }

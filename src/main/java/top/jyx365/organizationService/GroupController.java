@@ -83,7 +83,7 @@ class GroupResource extends ResourceSupport {
         return this.group.getMembers();
     }
 
-    public List<String> getBusinessCategories() {
+    public List<BusinessCategory> getBusinessCategories() {
         return this.group.getBusinessCategories();
     }
 
