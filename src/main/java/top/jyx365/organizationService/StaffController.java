@@ -375,9 +375,7 @@ public class StaffController {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> principal = (Map<String, Object>)user.getPrincipal();
 
-                staff.setUid(principal.get("id").toString());
-
-                /*TODO: Set Related Staff*/
+                //staff.setUid(principal.get("id").toString());
 
                 repository.addStaff(staff);
                 return new ResponseEntity<ApplicantResource>(
