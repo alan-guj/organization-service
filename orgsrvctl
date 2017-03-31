@@ -4,9 +4,9 @@ PROFILE=$2
 HOSTNAME=$3
 CMD=`echo ./build/libs/*.jar`
 EXEC_CMD="$CMD $ARGS"
-
+PWD=`pwd`
 [[ -z "$PROFILE" ]] && PROFILE="dev"
 
 [[ -z "$HOSTNAME" ]] && HOSTNAME=`hostname`
 
-JAVA_OPTS="-Xmx256m -Xms256m -Dspring.profiles.active=$PROFILE -Dspring.cloud.consul.discovery.hostname=$HOSTNAME" sudo -E $EXEC_CMD
+LOG_FOLDER="$PWD" LOG_FILENAME="$PROFILE.log" JAVA_OPTS="-Xmx256m -Xms256m -Dspring.profiles.active=$PROFILE -Dspring.cloud.consul.discovery.hostname=$HOSTNAME" sudo -E $EXEC_CMD

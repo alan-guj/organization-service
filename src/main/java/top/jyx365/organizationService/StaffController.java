@@ -256,6 +256,7 @@ public class StaffController {
                 @RequestParam(required = false) String businesscategory,
                 @RequestParam(required = false) String name,
                 @RequestParam(required = false) String uid,
+                @RequestParam(required = false) String relatedStaff,
                 @RequestParam(required = false, defaultValue="false") String recursive
                 )
         {
@@ -272,6 +273,7 @@ public class StaffController {
             searchCondition.put("name",name);
             searchCondition.put("uid",uid);
             searchCondition.put("businessCategory",businesscategory);
+                searchCondition.put("seeAlso",relatedStaff);
             //amqpSender.send("GetCompanyStaff", repository.findStaffs(companyId,searchCondition,"staffs"));
             return new Resources<StaffResource>(resourceAssember.toResources(
                     repository.findStaffs(companyId,searchCondition,"staffs")));
@@ -333,7 +335,8 @@ public class StaffController {
                     @PathVariable String companyId,
                     @RequestParam(required = false) String mobile,
                     @RequestParam(required = false) String name,
-                    @RequestParam(required = false) String uid
+                    @RequestParam(required = false) String uid,
+                    @RequestParam(required = false) String relatedStaff
                     )
             {
                 if(companyId.equals("**")) companyId = null;
@@ -341,6 +344,7 @@ public class StaffController {
                 searchCondition.put("mobile",mobile);
                 searchCondition.put("name",name);
                 searchCondition.put("uid",uid);
+                searchCondition.put("seeAlso",relatedStaff);
 
                 return new Resources<ApplicantResource>(
                         assember.toResources(
@@ -375,9 +379,7 @@ public class StaffController {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> principal = (Map<String, Object>)user.getPrincipal();
 
-                staff.setUid(principal.get("id").toString());
-
-                /*TODO: Set Related Staff*/
+                //staff.setUid(principal.get("id").toString());
 
                 repository.addStaff(staff);
                 return new ResponseEntity<ApplicantResource>(
@@ -471,7 +473,7 @@ public class StaffController {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> principal = (Map<String, Object>)user.getPrincipal();
 
-                staff.setUid(principal.get("id").toString());
+                //staff.setUid(principal.get("id").toString());
 
                 repository.updateStaff(staff);
                 return new ResponseEntity<StaffResource>(
