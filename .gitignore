@@ -1,3 +1,9 @@
+build/*
+*.log*
+.gradle/*
+.idea/*
+.syntastic_javac_config
+*.out
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
