@@ -1,0 +1,11 @@
+1) 新增/etc/openldap/slapd.conf，在其中添加
+include /etc/openldap/schema/core.schema
+include /etc/openldap/schema/cosine.schema
+include /etc/openldap/schema/nis.schema
+include /etc/openldap/schema/inetorgperson.schema
+2) 将slapd.conf转换成slapd.d
+slaptest -f slapd.conf -F slapd.d
+3）删除slapd.conf
+rm slapd.conf
+4）重启openldap
+systemctl restart slapd
