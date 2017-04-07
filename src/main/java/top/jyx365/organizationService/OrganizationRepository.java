@@ -68,6 +68,15 @@ public class OrganizationRepository {
         return ldapTemplate.findByDn(dn, Company.class);
     }
 
+    public Company updateCompany(String companyId, Company company) {
+        Company originCompany = findCompany(companyId);
+        if (null != company.getName()) originCompany.setName(company.getName());
+        if (null != company.getLogo()) originCompany.setLogo(company.getLogo());
+        if (null != company.getDescription()) originCompany.setDescription(company.getDescription());
+        ldapTemplate.update(originCompany);
+        return originCompany;
+    }
+
     public void removeCompany(String companyId) {
         Name dn = LdapNameBuilder.newInstance(companyId).build();
         Company company = ldapTemplate.findByDn(dn, Company.class);

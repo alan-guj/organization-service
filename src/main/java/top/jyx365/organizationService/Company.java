@@ -25,6 +25,9 @@ public final class Company {
     @Attribute(name="st")
     private String companyId;
 
+    @Attribute(name="logo")
+    private String logo;
+
     private String description;
 
     //public void setDn(String dn) {
@@ -65,5 +68,13 @@ public final class Company {
 
     public String getCompanyId() {
         return companyId;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

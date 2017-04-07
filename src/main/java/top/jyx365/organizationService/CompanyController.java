@@ -72,6 +72,9 @@ class CompanyResource extends ResourceSupport {
         return this.company.getDomain();
     }
 
+    public String getLogo() {
+        return this.company.getLogo();
+    }
 
 }
 
@@ -143,6 +146,13 @@ public class CompanyController {
             return new ResponseEntity<CompanyResource>(
                     companyAssember.toResource(company),HttpStatus.CREATED);
         }
+
+    @RequestMapping(value = "/{companyId}", method = RequestMethod.PUT)
+    public ResponseEntity<CompanyResource> updateCompany(@PathVariable String companyId, @RequestBody Company company) {
+        Company ncomp = repository.updateCompany(companyId, company);
+        return new ResponseEntity<CompanyResource>(
+                companyAssember.toResource(ncomp),HttpStatus.OK);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
         public Resources<CompanyResource> getCompanies() {
