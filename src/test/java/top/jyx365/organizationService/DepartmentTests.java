@@ -231,6 +231,46 @@ public class DepartmentTests extends OrganizationServiceApplicationTests {
             .andExpect(jsonPath("$.id",is(d.getId().toString())))
             .andExpect(jsonPath("$.description",is(d.getDescription())));
     }
+    /*2.4.2 add a BusinessCategory*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values = {"all","dept-update"})
+    public void _2_4_2__addBCtoDept() throws Exception {
+        Department d = d_1;
+        d.addBusinessCategory(bc_1);
+        this.mockMvc.perform(put("/api/v1.0/companies/"+
+                    d.getCompany()+
+                    "/departments/"+
+                    d.getId())
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(d)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(d.getId().toString())))
+            .andExpect(jsonPath("$.description",is(d.getDescription())))
+            .andExpect(jsonPath("$.businessCategories",hasSize(1)))
+            .andExpect(jsonPath("$.businessCategories[0].product",is(bc_1.getProduct())))
+            .andExpect(jsonPath("$.businessCategories[0].locality",is(bc_1.getLocality())));
+    }
+    /*2.4.3 remove a BusinessCategory*/
+    @Test
+    @IfProfileValue(name="dept-test-group", values = {"all","dept-update"})
+    public void _2_4_3_removeBCfromDept() throws Exception {
+        Department d = d_1_1;
+        d.removeBusinessCategory(bc_2);
+        this.mockMvc.perform(put("/api/v1.0/companies/"+
+                    d.getCompany()+
+                    "/departments/"+
+                    d.getId())
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .content(json(d)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id",is(d.getId().toString())))
+            .andExpect(jsonPath("$.description",is(d.getDescription())))
+            .andExpect(jsonPath("$.businessCategories").doesNotExist());
+    }
 
     /*4 Role Service*/
     /*4.1 Add */
