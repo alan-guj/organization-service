@@ -197,6 +197,7 @@ public class DepartmentController {
                 @RequestBody Department department) {
             Department _dept = repository.findDepartment(departmentId);
             _dept.setDescription(department.getDescription());
+            _dept.setBusinessCategories(department.getBusinessCategories());
             repository.updateDepartment(_dept);
             return deptAssember.toResource(_dept);
         }

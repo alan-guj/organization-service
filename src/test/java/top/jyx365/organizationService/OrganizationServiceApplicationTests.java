@@ -226,6 +226,7 @@ public abstract class OrganizationServiceApplicationTests {
         d_1_1.setName("test_deparment_1.1");
         d_1_1.setDescription("测试部门1.1描述");
         d_1_1.setParent(d_1.getId());
+        d_1_1.addBusinessCategory(bc_2);
         repository.addDepartment(d_1_1);
 
         d_1_2 = new Department();
