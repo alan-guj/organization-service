@@ -152,7 +152,7 @@ public final class Staff {
     }
 
     public void setUid(String uid) {
-        this.uid = uid==null?"null":uid;
+        this.uid = uid.equals("")?"null":uid;
     }
 
     public String getUid() {
