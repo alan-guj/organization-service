@@ -1,10 +1,13 @@
 package top.jyx365.organizationService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.naming.Name;
+
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.DnAttribute;
 import org.springframework.ldap.odm.annotations.Entry;
@@ -65,6 +68,12 @@ public final class Department {
     public String getDescription() {
         return description;
     }
+
+    @JsonProperty
+    public void setId(Name id) {
+        this.id = id;
+    }
+
 
     public Name getId() {
         return id;
