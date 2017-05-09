@@ -129,18 +129,24 @@ public class OrganizationRepository {
         }
     }
 
-    public void addDepartment(Department dept) {
+    @PublishMessage
+    public Department addDepartment(Department dept) {
         ldapTemplate.create(dept);
+        return dept;
     }
 
 
-    public void deleteDepartment(Department dept, boolean recursive) {
+    @PublishMessage
+    public Department deleteDepartment(Department dept, boolean recursive) {
         ldapTemplate.unbind(dept.getId(),recursive);
+        return dept;
     }
 
 
-    public void updateDepartment(Department dept) {
+    @PublishMessage
+    public Department updateDepartment(Department dept) {
         ldapTemplate.update(dept);
+        return dept;
     }
 
     /*department role*/
