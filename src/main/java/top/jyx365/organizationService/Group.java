@@ -108,6 +108,7 @@ public final class Group {
 
     public void setMembers(List<Name> members) {
         this.members = members;
+        this.members.add(DEFAULT_MEMBER_ID);
     }
 
     public List<Name> getMembers() {

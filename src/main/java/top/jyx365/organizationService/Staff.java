@@ -126,7 +126,7 @@ public final class Staff {
 
 
     public void setMobile(String mobile) {
-        this.mobile = mobile;
+        this.mobile = mobile.equals("")?null:mobile;
     }
 
     public String getMobile() {
@@ -144,7 +144,7 @@ public final class Staff {
 
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = description.equals("")?null:description;
     }
 
     public String getDescription() {
@@ -152,11 +152,11 @@ public final class Staff {
     }
 
     public void setUid(String uid) {
-        this.uid = uid;
+        this.uid = uid==null?"null":uid;
     }
 
     public String getUid() {
-        return uid;
+        return uid.equals("null")?null:uid;
     }
 
     public void setBusinessCategories(List<BusinessCategory> businessCategories) {
@@ -187,7 +187,7 @@ public final class Staff {
     }
 
     public void setEmployeeNumber(String employeeNumber) {
-        this.employeeNumber = employeeNumber;
+        this.employeeNumber = employeeNumber.equals("")?null:employeeNumber;
     }
 
     public String getEmployeeNumber() {
