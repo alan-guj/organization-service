@@ -2,6 +2,7 @@ spring:
     cloud:
         consul:
             discovery:
-                tags: ${spring.profiles.active}
+                #tags: ${spring.profiles.active}
+                tags: profile=prod
             config:
                 format: YAML

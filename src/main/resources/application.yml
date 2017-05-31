@@ -29,7 +29,7 @@ security:
         resource:
             userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
 authority:
-    authorities: system_service, system_web, enterprise_user, system_admin, system_operator
+    authorities: system_service, system_web, enterprise_user, system_admin, system_operator,ROLE_ADMIN
 server:
     port: 8810
 logging:
@@ -80,16 +80,18 @@ spring:
 security:
     oauth2:
         client:
-            clientId: customer_care_web_server_guj
-            clientSecret: 654322
-            accessTokenUri: http://dev.jyx365.top/oauth/access_token
-            userAuthorizationUri: http://dev.jyx365.top/sso/login
+            clientId: internal
+            clientSecret: internal
+            accessTokenUri: http://dev3.jyx365.cn:9999/oauth/access_token
+            userAuthorizationUri: http://dev3.jyx365.cn:9999/sso/login
             tokenName: access_token
             #authenticationScheme: query
             #clientAuthenticationScheme: form
             scope: userinfo
         resource:
-            userInfoUri: http://dev.jyx365.top/api/v1.0/users/current
+            tokenType: token
+            tokenInfoUri: http://dev3.jyx365.cn:9999/oauth/check_token
+            #userInfoUri: http://dev3.jyx365.cn:9999/api/v1.0/users/current
 server:
     port: 8812
 ldap:
